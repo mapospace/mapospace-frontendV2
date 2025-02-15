@@ -29,11 +29,10 @@ const Header = () => {
 
             <button onClick={handleMenu}><RiMenuFill className='text-gray-500 lg:hidden' /></button>
             <div className='hidden lg:flex justify-between items-center gap-12 font-inter'>
-                <a href='#' className='font-medium hover:text-primary'>Pricing</a>
-                <a href='#' className='font-medium hover:text-primary'>Doc</a>
-                <a href='#' className='font-medium hover:text-primary'>Changelog</a>
-                <a href='#' className='font-medium hover:text-primary'>Blogs</a>
-                {/* <a href='#' className='font-medium hover:text-primary'>Login</a> */}
+                <a href='#' className='font-medium hover:text-primary-900'>Pricing</a>
+                <a href='#' className='font-medium hover:text-primary-900'>Doc</a>
+                <a href='#' className='font-medium hover:text-primary-900'>Changelog</a>
+                <a href='#' className='font-medium hover:text-primary-900'>Blogs</a>
             </div>
             <div className='flex-1 justify-end hidden lg:flex'>
                 <button className='flex border-2 px-3 p-1 rounded-md items-center gap-2 hover:border-gray-400'>

@@ -76,24 +76,24 @@ const Story3 = () => {
         <div className='flex flex-col m-12 gap-8 '>
             <div className='font-medium text-xl text-white' >ClickUp used ToDesktop to get their desktop app in front of customers in days instead of months.</div>
             <div className='flex gap-3 flex-wrap'>
-                <div className='flex whitespace-nowrap items-center bg-primary text-white  py-1 px-3 gap-2 rounded-lg'>
+                <div className='flex whitespace-nowrap items-center bg-primary-900 text-white  py-1 px-3 gap-2 rounded-lg'>
                     <FaCheck />
                     <div className='text-white '>Chromeless UI</div>
                 </div>
-                <div className='flex whitespace-nowrap items-center bg-primary text-white  py-1 px-3 gap-2 rounded-lg'>
+                <div className='flex whitespace-nowrap items-center bg-primary-900 text-white  py-1 px-3 gap-2 rounded-lg'>
                     <FaCheck />
                     <div className='text-white '>Native spellcheck</div>
                 </div>
-                <div className='flex whitespace-nowrap items-center bg-primary text-white  py-1 px-3 gap-2 rounded-lg'>
+                <div className='flex whitespace-nowrap items-center bg-primary-900 text-white  py-1 px-3 gap-2 rounded-lg'>
                     <FaCheck />
                     <div className='text-white '>Task time in menubar</div>
                 </div>
-                <div className='flex whitespace-nowrap items-center bg-primary text-white  py-1 px-3 gap-2 rounded-lg'>
+                <div className='flex whitespace-nowrap items-center bg-primary-900 text-white  py-1 px-3 gap-2 rounded-lg'>
                     <FaCheck />
                     <div className='text-white '>Notification count in the dock                            </div>
                 </div>
 
-                <div className='flex whitespace-nowrap items-center bg-primary text-white  py-1 px-3 gap-2 rounded-lg'>
+                <div className='flex whitespace-nowrap items-center bg-primary-900 text-white  py-1 px-3 gap-2 rounded-lg'>
                     <FaCheck />
                     <div className='text-white '>Global hotkey to create task
                     </div>

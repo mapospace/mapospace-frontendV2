@@ -8,38 +8,37 @@ import { RiMenuFill } from "react-icons/ri";
 import { FaArrowRightLong } from "react-icons/fa6";
 import { AiOutlineClose } from "react-icons/ai";
 import { PiSignInBold } from "react-icons/pi";
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import logo from '../../public/assets/logo.png'
+import { RxHamburgerMenu } from "react-icons/rx";
 
 const Header = () => {
     const [active, setActive] = useState(false);
-    const router = useRouter()
+    const router = useRouter();
+    const param = usePathname();
 
     const handleMenu = () => {
         setActive((prev) => !prev);
     }
     return (
-        <nav className='text-black flex justify-between items-center bg-opacity-70 p-5 shadow-md absolute bg-white w-full top-0 '>
+        <nav className='fixed top-0 left-0 text-black flex justify-between items-center z-50  p-5 py-m shadow-md  bg-white w-full  '>
             <a href='#' className='flex items-center gap-2 flex-1'>
                 <Image
-                    src={desktop}
+                    src={logo}
                     alt="Picture of the author"
+                    className='w-10 h-10'
                 />
-                <div className='text-lg font-medium font-display'>Todesktop</div>
+                <div className='text-lg font-medium font-display'>MapoSpace</div>
             </a>
 
             <button onClick={handleMenu}><RiMenuFill className='text-gray-500 lg:hidden' /></button>
-            <div className='hidden lg:flex justify-between items-center gap-12 font-inter'>
-                <a href='#' className='font-medium hover:text-primary'>Pricing</a>
-                <a href='#' className='font-medium hover:text-primary'>Doc</a>
-                <a href='#' className='font-medium hover:text-primary'>Changelog</a>
-                <a href='#' className='font-medium hover:text-primary'>Blogs</a>
-                {/* <a href='#' className='font-medium hover:text-primary'>Login</a> */}
-            </div>
+            {/* <div className='hidden lg:flex justify-between items-center font-inter'>
+                <button onClick={() => { router.push('/dashboard') }} className={`font-normal text-f-m  px-xl py-s  rounded-3xl ${param.includes("dashboard") && 'text-white  bg-secondary-900'}`}>Dashboard</button>
+                <button onClick={() => { router.push('/profile') }} className={`font-normal text-f-m  px-xl py-s  rounded-3xl ${param.includes("profile") && 'text-white   bg-secondary-900 '}`}>Profile</button>
+            </div> */}
             <div className='flex-1 justify-end hidden lg:flex'>
-                <button className='flex border-2 px-3 p-1 rounded-md items-center gap-2 hover:border-gray-400'>
-                    <PiSignInBold className='rotate-180' />
-                    <div className=' font-display font-medium ' onClick={() => { router.push('/') }}>Sign Out</div>
-                    <FaArrowRightLong />
+                <button className='flex  rounded-md items-center gap-2 '>
+                    <RxHamburgerMenu className='w-xl h-xl' />
                 </button>
             </div>
 
