@@ -16,6 +16,8 @@ const AddGroup = ({ modalClose, setAddNewGroup, userList }) => {
     });
     const [users, setUsers] = useState([]);
 
+
+
     useEffect(() => {
         setUsers(userList.map(user => ({ value: user._id, label: user.firstName + " " + user.lastName })));
     }, []);
@@ -92,7 +94,6 @@ const AddGroup = ({ modalClose, setAddNewGroup, userList }) => {
                             placeholder='Select Users'
                             isMulti
                             className='text-black'
-                            classNamePrefix='bg-'
                         />
                         {error.firstName && <p className='custom-error'>{error.firstName}</p>}
                     </div>

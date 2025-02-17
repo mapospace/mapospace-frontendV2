@@ -19,6 +19,12 @@ export const API_ENDPOINTS = {
         return `user-group/${group_id}`
     },
 
+
+
+    GeoJson: (loc) => {
+        return `GEO-JSON/geo-json?page=1&search=${loc}`
+    },
+
     PolygonSave: 'geo-json/geo-json',
 
     RefreshToken: 'user/refresh-token-login'

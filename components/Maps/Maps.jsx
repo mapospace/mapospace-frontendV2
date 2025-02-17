@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import { GoogleMap, LoadScriptNext, Polygon, DrawingManager, OverlayView } from "@react-google-maps/api";
+import { GoogleMap, LoadScriptNext, Polygon, DrawingManager, OverlayView, Marker } from "@react-google-maps/api";
 import { IoIosCloseCircle } from "react-icons/io";
 import { MdOutlineDataSaverOn } from "react-icons/md";
 
@@ -9,10 +9,10 @@ const containerStyle = {
     height: "80vh",
 };
 
-const center = {
-    lat: 28.6139, // New Delhi
-    lng: 77.2090,
-};
+// const center = {
+//     lat: 28.6139, // New Delhi
+//     lng: 77.2090,
+// };
 
 const mapStyle = [
     {
@@ -27,7 +27,7 @@ const mapStyle = [
     }
 ];
 
-const Maps = ({ setSaveForm, setCurrentPolygon, polygonSaved }) => {
+const Maps = ({ setSaveFormVisible, setSearchResultVisible, setCurrentPolygon, polygonSaved, polygonCoordinates, latlng }) => {
     const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
     const [polygonPaths, setPolygonPaths] = useState([]); // Temporary polygon coordinates
@@ -47,19 +47,27 @@ const Maps = ({ setSaveForm, setCurrentPolygon, polygonSaved }) => {
         }
     }, []);
 
+    useEffect(() => {
+        if (polygonCoordinates.length > 0) {
+            setPolygonPaths(polygonCoordinates);
+            setShowButtons(true);
+            console.log("calculateCentroid", polygonCoordinates, calculateCentroid(polygonCoordinates));
+            setCentroid(calculateCentroid(polygonCoordinates));
+            setDrawingMode(null);
+        }
+    }, [polygonCoordinates])
     // Function to calculate centroid of polygon
     const calculateCentroid = (coordinates) => {
-        let latSum = 0, lngSum = 0;
-        let minlng = 100000;
-        let maxlng = 0
-        let maxlat = 0
+        // let latSum = 0, lngSum = 0;
+        let minlng = coordinates[0].lng;
+        let maxlng = coordinates[0].lng
+        let maxlat = coordinates[0].lat
         coordinates.forEach(coord => {
-            console.log(coord);
             minlng = Math.min(minlng, coord.lng)
             maxlng = Math.max(maxlng, coord.lng)
             maxlat = Math.max(maxlat, coord.lat)
-            latSum += coord.lat;
-            lngSum += coord.lng;
+            // latSum += coord.lat;
+            // lngSum += coord.lng;
         });
         console.log("calculateCentroid", minlng, maxlat, maxlng)
         return {
@@ -95,8 +103,9 @@ const Maps = ({ setSaveForm, setCurrentPolygon, polygonSaved }) => {
     // Save Handler: Store the polygon and remove temporary one
     const saveHandler = () => {
         // setSavedPolygons([...savedPolygons, polygonPaths]); // Save the polygon
-        setSaveForm(true);
-        setCurrentPolygon()
+        setSaveFormVisible(true);
+        setSearchResultVisible(false)
+        // setCurrentPolygon()
         //    cancelHandler();
         setCurrentPolygon(polygonPaths)
     };
@@ -107,6 +116,11 @@ const Maps = ({ setSaveForm, setCurrentPolygon, polygonSaved }) => {
             drawingManagerRef.current = drawingManager;
         }
     };
+    useEffect(() => {
+        if (mapRef.current && latlng) {
+            mapRef.current.panTo(latlng);
+        }
+    }, [latlng]);
 
     if (!apiKey) return <p>Loading Google Maps...</p>;
 
@@ -114,7 +128,7 @@ const Maps = ({ setSaveForm, setCurrentPolygon, polygonSaved }) => {
         <LoadScriptNext googleMapsApiKey={apiKey} libraries={["drawing"]} onLoad={() => setIsGoogleLoaded(true)}>
             <GoogleMap
                 mapContainerStyle={containerStyle}
-                center={center}
+                center={latlng}
                 zoom={12}
                 options={{
                     styles: mapStyle,
@@ -123,6 +137,8 @@ const Maps = ({ setSaveForm, setCurrentPolygon, polygonSaved }) => {
                     fullscreenControl: false,
                 }}
                 onLoad={(map) => (mapRef.current = map)}
+
+
             >
                 {/* Drawing Manager */}
                 {isGoogleLoaded && !drawingManagerRef.current && (
@@ -132,7 +148,7 @@ const Maps = ({ setSaveForm, setCurrentPolygon, polygonSaved }) => {
 
                             drawingControl: true,
                             drawingControlOptions: {
-                                position: window.google.maps.ControlPosition.RIGHT_TOP,
+                                position: window.google.maps.ControlPosition.TOP_CENTER,
                                 drawingModes: drawingMode,
                             },
                             polygonOptions: {
@@ -161,6 +177,22 @@ const Maps = ({ setSaveForm, setCurrentPolygon, polygonSaved }) => {
                     />
                 )}
 
+                {/* {polygonCoordinates.length > 0 && (
+                    <Polygon
+                        path={polygonCoordinates}
+                        options={{
+                            fillColor: "#0000FF",
+                            fillOpacity: 0.4,
+                            strokeColor: "#0000FF",
+                            strokeOpacity: 1,
+                            strokeWeight: 2,
+                            clickable: false,
+                            editable: false,
+                            draggable: false,
+                        }}
+                    />
+                )} */}
+                {latlng && <Marker position={latlng} />}
                 {/* Overlay Buttons at Polygon Centroid */}
                 {showButtons && centroid && (
                     <OverlayView
