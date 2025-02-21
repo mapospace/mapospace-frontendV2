@@ -1,4 +1,5 @@
 'use client'
+import AuthServices from '@/utils/axios-api';
 import React, { useEffect, useState } from 'react'
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -6,7 +7,7 @@ import { FaFilter } from "react-icons/fa6";
 import { MdOutlineClose } from "react-icons/md";
 import Select from 'react-select';
 
-const Filter = ({ close }) => {
+const Filter = ({ close, catalogList, applyFilterHandler }) => {
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [selectedCategories, setSelectedCategories] = useState([]);
@@ -14,28 +15,18 @@ const Filter = ({ close }) => {
     const [selectedProducts, setSelectedProducts] = useState([]);
     const [mounted, setMounted] = useState(false);
 
-    const categories = [
-        { value: "electronics", label: "Electronics" },
-        { value: "clothing", label: "Clothing" },
-        { value: "clothing2", label: "Clothing" },
-        { value: "clothing21", label: "Clothing" },
-        { value: "clothing212", label: "Clothing" },
-        { value: "clothing212e", label: "Clothing" },
+    const categories = catalogList.categories.map((category) => {
+        return { value: category.category, label: category.category }
+    });
 
-        { value: "home_appliances", label: "Home Appliances" }
-    ];
 
-    const subCategories = [
-        { value: "mobile", label: "Mobile Phones" },
-        { value: "laptop", label: "Laptops" },
-        { value: "tshirt", label: "T-Shirts" }
-    ];
+    const subCategories = catalogList.subcategories.map((subcategory) => {
+        return { value: subcategory.subcategory, label: subcategory.subcategory }
+    });
 
-    const products = [
-        { value: "iphone", label: "iPhone 14" },
-        { value: "macbook", label: "MacBook Air" },
-        { value: "samsung_tv", label: "Samsung 55\" TV" }
-    ];
+    const products = catalogList.productCategories.map((productCategory) => {
+        return { value: productCategory.productName, label: productCategory.productName }
+    });
 
     useEffect(() => {
         setMounted(true); // Ensures that DatePicker only renders on the client
@@ -90,13 +81,13 @@ const Filter = ({ close }) => {
         }),
         menu: (provided) => ({
             ...provided,
-            backgroundColor: "#F3F4F6", // Light gray background
+            backgroundColor: "white", // Light gray background
             borderRadius: "8px",
-            fontSize: "14px"
+            fontSize: "14px",
         }),
         option: (provided, state) => ({
             ...provided,
-            backgroundColor: state.isSelected ? "#4A90E2" : state.isFocused ? "#E5E7EB" : "white",
+            backgroundColor: state.isSelected ? "#4A90E2" : state.isFocused ? "#E5E7EB" : "transparent",
             color: state.isSelected ? "white" : "black",
             "&:hover": {
                 backgroundColor: "#E5E7EB",
@@ -105,9 +96,45 @@ const Filter = ({ close }) => {
         }),
     };
 
+    const resetHandler = () => {
+        setStartDate(null);
+        setEndDate(null)
+        setSelectedCategories([])
+        setSelectedSubCategories([])
+        setSelectedProducts([])
+    }
+
+    const dateTimeConverter = (data) => {
+        const date = new Date(data);
+        const isoDate = date.toISOString();
+        return isoDate;
+    }
+    const applyHandler = () => {
+        const startdateTime = startDate ? dateTimeConverter(startDate) : "";
+        const endDateTime = endDate ? dateTimeConverter(endDate) : "";
+        let newData = { "startDate": startdateTime, "endDate": endDateTime };
+        if (selectedCategories.length > 0) {
+            const categories = selectedCategories.map((category) => { return category.value })
+            newData = { ...newData, "categories": categories }
+        }
+
+        if (selectedSubCategories.length > 0) {
+            const subCategories = selectedSubCategories.map((subCategory) => { return subCategory.value })
+            newData = { ...newData, "subCategories": subCategories }
+        }
+
+        if (selectedProducts.length > 0) {
+            const product = selectedProducts.map((product) => { return product.value })
+            newData = { ...newData, "products": product }
+        }
+        console.log(newData)
+        applyFilterHandler(newData)
+        close(false)
+    }
     if (!mounted) return null;
+
     return (
-        <div className=' absolute w-[400px] z-30 bg-white border border-neutral-400 rounded-m top-16 right-0' >
+        <div id='map-container' className='absolute w-[400px] z-30 bg-white border border-neutral-400 rounded-m top-16 right-0' >
             <div className=' p-m flex gap-s items-center justify-between border-b border-neutral-400'>
                 <div className='flex gap-s items-center text-black'>
                     <FaFilter className='w-4 h-4 ' />
@@ -118,11 +145,16 @@ const Filter = ({ close }) => {
                 </button>
             </div>
 
-            <div className='h-[400px] overflow-y-scroll hide-scrollbar'>
+            <div className='h-[400px] relative overflow-y-scroll hide-scrollbar'>
                 <div className=' p-m flex flex-col border-b border-neutral-400 gap-s'>
                     <div className='flex justify-between items-center text-f-m'>
                         <div>Date Range</div>
-                        <button className='text-secondary-900'>Reset</button>
+                        <button className='text-secondary-900' onClick={() => {
+                            setStartDate(null)
+                            setEndDate(null)
+                        }}>
+                            Reset
+                        </button>
                     </div>
                     <div className=' flex gap-s '>
 
@@ -159,7 +191,7 @@ const Filter = ({ close }) => {
                 <div className=' p-m flex flex-col border-b border-neutral-400 gap-s'>
                     <div className='flex justify-between items-center text-f-m'>
                         <div>Categories</div>
-                        <button className='text-secondary-900'>Reset</button>
+                        <button className='text-secondary-900' onClick={() => { setSelectedCategories([]) }}>Reset</button>
                     </div>
                     <div className="flex flex-col gap-xs">
                         <Select
@@ -176,7 +208,7 @@ const Filter = ({ close }) => {
                 <div className=' p-m flex flex-col border-b border-neutral-400 gap-s'>
                     <div className='flex justify-between items-center text-f-m'>
                         <div>Subcategories</div>
-                        <button className='text-secondary-900'>Reset</button>
+                        <button className='text-secondary-900' onClick={() => { setSelectedSubCategories([]) }}>Reset</button>
                     </div>
                     <div className="flex flex-col gap-xs">
                         <Select
@@ -192,7 +224,7 @@ const Filter = ({ close }) => {
                 <div className=' p-m flex flex-col gap-s'>
                     <div className='flex justify-between items-center text-f-m'>
                         <div>Products</div>
-                        <button className='text-secondary-900'>Reset</button>
+                        <button className='text-secondary-900' onClick={() => { setSelectedProducts([]) }}>Reset</button>
                     </div>
                     <div className="flex flex-col gap-xs">
                         <Select
@@ -202,15 +234,17 @@ const Filter = ({ close }) => {
                             onChange={setSelectedProducts}
                             placeholder="Select products"
                             styles={customStyles}
+                            menuPlacement="auto" // Automatically adjusts the dropdown direction
+                            menuShouldScrollIntoView={false}  // Prevents auto-scrolling
                         />
                     </div>
                 </div>
             </div>
             <div className=' p-m flex gap-s items-center justify-between border-t border-neutral-400'>
-                <button className='flex gap-s items-center text-f-s text-neutral-1200 bg-neutral-200 px-m py-xs rounded-md hover:bg-neutral-300'>
+                <button className='flex gap-s items-center text-f-s text-neutral-1200 bg-neutral-200 px-m py-xs rounded-md hover:bg-neutral-300' onClick={resetHandler}>
                     Reset
                 </button>
-                <button className='flex gap-s items-center text-f-s text-white bg-secondary-900 px-m py-xs rounded-md hover:bg-secondary-1000'>
+                <button className='flex gap-s items-center text-f-s text-white bg-secondary-900 px-m py-xs rounded-md hover:bg-secondary-1000' onClick={applyHandler}>
                     Apply
                 </button>
             </div>

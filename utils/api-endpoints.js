@@ -27,6 +27,10 @@ export const API_ENDPOINTS = {
 
     PolygonSave: 'geo-json/geo-json',
 
-    RefreshToken: 'user/refresh-token-login'
+    RefreshToken: 'user/refresh-token-login',
+
+    Catalogs: 'catalogs/all-catalogs',
+    TotalSales: 'analytics/total-sales',
+    TotalSalesOverTime: 'analytics/total-sales-over-time'
 
 }

@@ -13,3 +13,17 @@ export const customSuccess = (text) => {
         transition: Bounce,
     });
 }
+
+export const customError = (text) => {
+    return toast.error(text, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+    });
+}

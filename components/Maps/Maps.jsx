@@ -4,9 +4,10 @@ import { GoogleMap, LoadScriptNext, Polygon, DrawingManager, OverlayView, Marker
 import { IoIosCloseCircle } from "react-icons/io";
 import { MdOutlineDataSaverOn } from "react-icons/md";
 
+
 const containerStyle = {
     width: "100%",
-    height: "80vh",
+    height: "100vh",
 };
 
 // const center = {
@@ -25,7 +26,8 @@ const mapStyle = [
         "elementType": "all",
         "stylers": [{ "visibility": "off" }]
     }
-];
+]
+
 
 const Maps = ({ setSaveFormVisible, setSearchResultVisible, setCurrentPolygon, polygonSaved, polygonCoordinates, latlng }) => {
     const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
@@ -135,7 +137,9 @@ const Maps = ({ setSaveFormVisible, setSearchResultVisible, setCurrentPolygon, p
                     streetViewControl: false,
                     zoomControl: true,
                     fullscreenControl: false,
+                    gestureHandling: "greedy",
                 }}
+
                 onLoad={(map) => (mapRef.current = map)}
 
 

@@ -71,10 +71,9 @@ export default class AuthServices {
 
             return { success: true, data: response.data };
         } catch (error) {
-            console.error("API Error:", error);
             return {
                 error: true,
-                message: error.response?.data?.message || "An error occurred",
+                message: error.response?.data?.error || "An error occurred",
                 status: error.response?.status || 500,
             };
         }
@@ -97,10 +96,9 @@ export default class AuthServices {
 
             return { success: true, data: response.data };
         } catch (error) {
-            console.error("API Error:", error);
             return {
                 error: true,
-                message: error.response?.data?.message || "An error occurred",
+                message: error.response?.data?.error || "An error occurred",
                 status: error.response?.status || 500,
             };
         }
@@ -121,10 +119,9 @@ export default class AuthServices {
             });
             return { success: true, data: response.data };
         } catch (error) {
-            console.error("API Error:", error);
             return {
                 error: true,
-                message: error.response?.data?.message || "An error occurred",
+                message: error.response?.data?.error || "An error occurred",
                 status: error.response?.status || 500,
             };
         }
@@ -146,10 +143,9 @@ export default class AuthServices {
 
             return { success: true, data: response.data };
         } catch (error) {
-            console.error("API Error:", error);
             return {
                 error: true,
-                message: error.response?.data?.message || "An error occurred",
+                message: error.response?.data?.error || "An error occurred",
                 status: error.response?.status || 500,
             };
         }

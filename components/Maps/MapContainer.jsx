@@ -3,7 +3,7 @@ import Maps from './Maps'
 import { IoCloseSharp } from "react-icons/io5";
 import AuthServices from '@/utils/axios-api';
 import { API_ENDPOINTS } from '@/utils/api-endpoints';
-import { customSuccess } from '../Common/Toast';
+import { customSuccess, customError } from '../Common/Toast';
 import { ImSearch } from "react-icons/im";
 import { FaMapLocationDot } from "react-icons/fa6";
 import axios from 'axios';
@@ -11,16 +11,18 @@ import Select from "react-select";
 import { PiPolygonFill } from "react-icons/pi";
 import { GrLocationPin } from "react-icons/gr";
 import { GiHamburgerMenu } from "react-icons/gi";
-import { FaFilter } from "react-icons/fa6";
+import { LuFilter } from "react-icons/lu";
 import Filter from '../Common/Filter';
-
+import clsx from 'clsx';
+import { TbLocationSearch } from "react-icons/tb";
+import { RiCloseFill } from "react-icons/ri";
 
 const options = [
     { value: "all", label: "All" },
     { value: "self", label: "Self" },
 ];
 
-const MapContainer = () => {
+const MapContainer = ({ catalogList, setAppliedFilter }) => {
     const [formData, setFormData] = useState({
         name: "",
         description: "",
@@ -34,7 +36,7 @@ const MapContainer = () => {
     const [searchResultVisible, setSearchResultVisible] = useState(false);
     const [currentPolygon, setCurrentPolygon] = useState([]);
     const [polygonSaved, setPolygonSaved] = useState(false);
-    const [mapVisible, setMapVisible] = useState(false);
+    const [onSearch, setOnSearch] = useState(false);
     const [showFilter, setShowFilter] = useState(false);
     const [search, setSearch] = useState("");
     const [polygonData, setPolygonData] = useState([]);
@@ -44,6 +46,7 @@ const MapContainer = () => {
     const [selectedOption, setSelectedOption] = useState(options[0]);
 
 
+    const [OpenSearchBar, setOpenSearchBar] = useState(false)
 
     const ChangeHandler = (e) => {
         const { id, value } = e.target;
@@ -96,7 +99,6 @@ const MapContainer = () => {
 
     };
 
-
     const fetchDataFromNominatim = async () => {
         try {
             const response = await axios.get(`https://nominatim.openstreetmap.org/search.php?q=${search}&polygon_geojson=1&format=jsonv2`);
@@ -106,7 +108,6 @@ const MapContainer = () => {
                 console.log("fetch data", response.data)
                 setPolygonData(response.data);
                 !searchResultVisible && setSearchResultVisible(true);
-                !mapVisible && setMapVisible(true);
             }
 
         } catch (err) {
@@ -138,7 +139,6 @@ const MapContainer = () => {
             console.log(newData)
             setSelfPolygonData(newData)
             !searchResultVisible && setSearchResultVisible(true);
-            !mapVisible && setMapVisible(true);
 
         } catch (err) {
             console.error("Error fetching user details:", err);
@@ -186,88 +186,104 @@ const MapContainer = () => {
         }
     }
 
+
+    const applyFilterHandler = (data) => {
+
+        const coordinates = polygonCoordinates.map((coordinate) => {
+            return [coordinate.lng, coordinate.lat]
+        })
+        let newData = {
+            ...data
+        }
+        if (coordinates.length > 0) {
+            newData = {
+                ...newData,
+                "geojson": {
+                    "type": "Polygon",
+                    "coordinates": [coordinates]
+                }
+            }
+        }
+
+        setAppliedFilter(newData)
+    }
+
     const getPolygonCoordinates = (coordinates) => {
         const transformedData = coordinates.map(([lng, lat]) => ({ lat: lat, lng: lng }));
         console.log("transformedData", transformedData)
         setPolygonCoordinates(transformedData);
     }
 
+    const closeSearchHandler = () => {
+        setOnSearch(false);
+        setOpenSearchBar(false)
+    }
     return (
-        <div className='relative '>
-            <div className="flex  flex-1">
-                <div className='flex flex-1  gap-xl'>
-                    <input
-                        type="text"
-                        id="firstName"
-                        className="border-effect flex-1"
-                        placeholder="Search.."
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                    />
-                    <button className='default-button py-xs px-4xl flex items-center justify-center gap-s' onClick={handleSearch}>
-                        <ImSearch />
-                        <span>
-                            Search
-                        </span>
-
-                    </button>
-                </div>
-
-                <div className=' flex flex-[0.7] gap-s items-center justify-end'>
-                    <button className='bg-neutral-200 h-full flex px-l rounded-md items-center justify-end hover:bg-neutral-300' onClick={() => { setMapVisible(prev => !prev) }}>
-                        <FaMapLocationDot className='w-6 h-6 text-neutral-1200' />
-                    </button>
-                    <button className='relative bg-neutral-100 border-2 border-neutral-200 h-full flex px-l rounded-md items-center justify-end hover:border-neutral-500' onClick={() => { setShowFilter(prev => !prev) }}>
-                        <FaFilter className='w-5 h-5 text-neutral-1200' />
-
-                    </button>
-                </div>
-
-            </div>
-            {showFilter && <Filter close={setShowFilter} />}
-            {mapVisible && <div className='h-[80vh] relative'>
-                <div className='mt-xl'><Maps setSaveFormVisible={setSaveFormVisible} setSearchResultVisible={setSearchResultVisible} setCurrentPolygon={setCurrentPolygon} polygonSaved={polygonSaved} polygonCoordinates={polygonCoordinates}
-                    latlng={latlng} /></div>
-
-                {searchResultVisible && <div className="absolute w-[450px] bg-opacity-80 h-full -right-0 top-0 bg-white flex justify-between flex-col transition-transform rounded-l-md">
-                    <div className='py-m px-m text-f-xl bg-white text-black border-b font-semibold flex justify-between items-center rounded-tl-md' >
-
-                        <div className='flex gap-s items-end '>
-                            <div className='text-f-3xl  text-end'>Search Results</div>
-                            <div >
-                                <Select
-                                    options={options}
-                                    value={selectedOption}
-                                    onChange={(selected) => {
-                                        setSelectedOption(selected)
-                                    }}
-                                    isSearchable={false} // Disable search if not needed
-                                    className='text-f-l w-10xl'
+        <div id='map-container' className='relative'>
+            {/* <div cl */}
+            {showFilter && <Filter close={setShowFilter} catalogList={catalogList} applyFilterHandler={applyFilterHandler} />}
+            <div className='h-[100vh] relative rounded-md shadow-md'>
+                {OpenSearchBar && <div className={'absolute z-30 w-full h-full'}>
+                    <div className='relative w-full h-full gap-xl bg-black bg-opacity-40 flex justify-center items-center '>
+                        <div className={clsx('absolute  w-[50%] flex flex-col focus:top-[10%] focus:bottom-0 rounded-lg transition-all duration-200 ease-linear', onSearch ? "top-[10%]" : "top-[40%]")} onClick={() => { setOnSearch(true) }}>
+                            <div className='flex flex-1  bg-white rounded-lg'>
+                                <input
+                                    type="text"
+                                    id="firstName"
+                                    className="focus:outline-none p-l text-f-xl rounded-lg flex-1 border-0 text-black"
+                                    placeholder="Search.."
+                                    value={search}
+                                    onChange={(e) => setSearch(e.target.value)}
+                                    autoComplete='off'
                                 />
+                                <button className='text-secondary-900 py-xs px-xl flex items-center justify-center gap-s' onClick={handleSearch}>
+                                    <ImSearch />
+                                </button>
                             </div>
-
+                            <div className='flex flex-col mt-s bg-white rounded-lg px-l py-l' >
+                                <div className=' w-full  text-neutral-900'>
+                                    Searching For
+                                </div>
+                                {polygonData.length > 0 || selfPolygonData.length > 0 ? <>
+                                    {polygonData.length > 0 && <div className='w-full  border-t-2 border-neutral-200 mt-m'>
+                                        <div className=' w-full pt-l pb-m  text-neutral-900'>
+                                            Global Seaching Results
+                                        </div>
+                                        {polygonData.slice(0, 4).map((area, index) =>
+                                            <SearchResultTab area={area} key={index} getPolygonCoordinates={getPolygonCoordinates} setPolygonCoordinates={setPolygonCoordinates} setLatLng={setLatLng} closeSearchHandler={closeSearchHandler} />
+                                        )}
+                                    </div>}
+                                    {selfPolygonData.length > 0 && <div className='w-full  border-t-2 border-neutral-200 mt-m'>
+                                        <div className=' w-full pt-l pb-m  text-neutral-900'>
+                                            Saved Polygons Results
+                                        </div>
+                                        {selfPolygonData.slice(0, 4).map((area, index) =>
+                                            <SearchResultTab area={area} key={index} getPolygonCoordinates={getPolygonCoordinates} setPolygonCoordinates={setPolygonCoordinates} setLatLng={setLatLng} closeSearchHandler={closeSearchHandler} />
+                                        )}
+                                    </div>}
+                                </> : <div className='text-f-xl text-gray-500'>No data found.</div>}
+                            </div>
                         </div>
-
-                        {/* <IoCloseSharp className='cursor-pointer w-5 h-5' onClick={() => { setSearchResultVisible(false) }} /> */}
+                        <div className='absolute top-2 right-2 cursor-pointer' onClick={closeSearchHandler}>
+                            <RiCloseFill className='w-10 h-10 text-white' />
+                        </div>
                     </div>
-                    <div className='flex-1  overflow-x-scroll hide-scrollbar p-m rounded-bl-md'>
-                        {polygonData.length > 0 || selfPolygonData.length > 0 ?
-                            <ul >
-                                {selectedOption.value == "all" && polygonData.length > 0 && polygonData.map((area, index) =>
-                                    <LocationTab area={area} key={index} getPolygonCoordinates={getPolygonCoordinates} setPolygonCoordinates={setPolygonCoordinates} setLatLng={setLatLng} />
-                                )}
-                                {selfPolygonData.length && selfPolygonData.map((area, index) =>
-                                    <LocationTab area={area} key={index} getPolygonCoordinates={getPolygonCoordinates} setPolygonCoordinates={setPolygonCoordinates} setLatLng={setLatLng} />
-                                )}
-                            </ul>
+                </div>}
 
-                            : <div className='text-f-xl text-gray-500'>No data found.</div>}
-                    </div >
-
-                </div >}
-                <div className=' bg-white  absolute top-2 right-2  w-[40px] h-[40px] flex items-center justify-center hover:text-black cursor-pointer' onClick={() => setSearchResultVisible((prev => !prev))}>
-                    {searchResultVisible ? <IoCloseSharp className='w-6 h-6 font-semibold ' /> : <GiHamburgerMenu className='w-6 h-6 font-semibold ' />}
+                <div className='mt-xl rounded-md shadow-md'>
+                    <Maps setSaveFormVisible={setSaveFormVisible} setSearchResultVisible={setSearchResultVisible} setCurrentPolygon={setCurrentPolygon} polygonSaved={polygonSaved} polygonCoordinates={polygonCoordinates}
+                        latlng={latlng} />
                 </div>
+
+
+                {!OpenSearchBar && <div className=' bg-white  absolute top-2 right-2  w-[40px] h-[40px] flex items-center justify-center hover:text-black cursor-pointer' onClick={() => setOpenSearchBar((true))}>
+
+                    <TbLocationSearch className='w-6 h-6 font-semibold ' />
+                </div>}
+                <button className=' bg-white  absolute top-2 right-16  w-[40px] h-[40px] flex items-center justify-center hover:text-black cursor-pointer' onClick={() => { setShowFilter(prev => !prev) }}>
+                    <LuFilter className='w-6 h-6 font-semibold ' />
+                </button>
+
                 {saveFormVisible && <div className='absolute w-[350px] h-full -right-0 top-0 bg-white bg-opacity-70 flex justify-between flex-col transition-transform rounded-l-md'>
                     <div className=''>
                         <div className='py-l px-m text-f-xl text-black border-b font-semibold flex justify-between bg-white rounded-tl-md'>
@@ -312,8 +328,9 @@ const MapContainer = () => {
                     </div>
 
                 </div>}
+
+
             </div>
-            }
 
         </div >
     )
@@ -321,34 +338,27 @@ const MapContainer = () => {
 
 export default MapContainer
 
-const LocationTab = ({ area, getPolygonCoordinates, setPolygonCoordinates, setLatLng }) => {
-    return <li className="mb-s bg-white">
-        <button className={`w-full text-left text-f-xl p-2 border-b border rounded-md py-l px-s hover:bg-neutral-200 hover:text-black`} onClick={() => {
-            if (area.geojson.type == "Point") {
-                setPolygonCoordinates([])
-            }
-            if (area.geojson.type == "Polygon") {
-                getPolygonCoordinates(area.geojson.coordinates[0])
-            }
-            let newValue = { lat: Number(area.lat), lng: Number(area.lon) }
-            console.log("getPolygonCoordinates", newValue)
-            setLatLng(newValue)
-
-        }}>
-            <div className='flex gap-xs justify-start items-start'>
-                <div className='flex justify-start  mt-xs'>
-                    {(area.geojson.type == "Polygon") ? <PiPolygonFill /> : (area.geojson.type == "Point") ? <GrLocationPin /> : null}
-                </div>
-
-                <div className=''>
-                    {area.display_name} <span className='text-f-m text-neutral-800'>
-                        {area.type}
-                    </span>
-                </div>
 
 
-            </div>
+const SearchResultTab = ({ area, getPolygonCoordinates, setPolygonCoordinates, setLatLng, closeSearchHandler }) => {
+    return <button className=' w-full p-xs items-center text-neutral-900 flex justify-between hover:bg-neutral-50' onClick={() => {
+        if (area.geojson.type == "Point") {
+            setPolygonCoordinates([])
+        }
+        if (area.geojson.type == "Polygon") {
+            getPolygonCoordinates(area.geojson.coordinates[0])
+        }
+        let newValue = { lat: Number(area.lat), lng: Number(area.lon) }
+        console.log("getPolygonCoordinates", newValue)
+        setLatLng(newValue)
+        closeSearchHandler()
 
-        </button>
-    </li>
+    }} >
+        <div className='flex items-center gap-s text-f-l'>
+            {(area.geojson.type == "Polygon") ? <PiPolygonFill /> : (area.geojson.type == "Point") ? <GrLocationPin /> : null} <span>  {area.display_name}</span>
+        </div>
+        <div className='bg-neutral-200 text-f-xs text-center align-middle px-s py-xs rounded-lg'>
+            {area.type}
+        </div>
+    </button>
 }

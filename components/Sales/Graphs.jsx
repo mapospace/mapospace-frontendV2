@@ -2,6 +2,7 @@
 import { Bar, Line, Radar } from 'react-chartjs-2';
 import React, { useState } from 'react'
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, RadialLinearScale, LineElement, PointElement, Tooltip, Legend } from 'chart.js';
+import LineChart from '../Common/LineChart';
 
 ChartJS.register(CategoryScale, LinearScale, RadialLinearScale, BarElement, LineElement, PointElement, Tooltip, Legend);
 
@@ -134,14 +135,9 @@ const Graphs = () => {
                 ))}
             </div>
             <h2 className="text-xl font-bold my-6 text-neutral-1200">Data Overview</h2>
-            <div className="grid grid-cols-1  gap-6  ">
-                <div className="bg-white p-6 rounded-lg shadow-md  flex flex-col max-h-[500px] ">
-                    <h3 className="text-lg font-semibold text-neutral-1000">Engagement</h3>
-                    <div className='w-full  h-[400px]  flex items-center justify-center'>
-                        <Line data={engagementData} options={{ maintainAspectRatio: false }} />
-                    </div>
-
-                </div>
+            <div className="grid grid-cols-2  gap-6  ">
+                <LineChart />
+                <LineChart />
 
             </div>
         </div>
