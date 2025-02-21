@@ -8,8 +8,8 @@ import { MdOutlineClose } from "react-icons/md";
 import Select from 'react-select';
 
 const Filter = ({ close, catalogList, applyFilterHandler }) => {
-    const [startDate, setStartDate] = useState(null);
-    const [endDate, setEndDate] = useState(null);
+    // const [startDate, setStartDate] = useState(null);
+    // const [endDate, setEndDate] = useState(null);
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [selectedSubCategories, setSelectedSubCategories] = useState([]);
     const [selectedProducts, setSelectedProducts] = useState([]);
@@ -97,22 +97,23 @@ const Filter = ({ close, catalogList, applyFilterHandler }) => {
     };
 
     const resetHandler = () => {
-        setStartDate(null);
-        setEndDate(null)
+        // setStartDate(null);
+        // setEndDate(null)
         setSelectedCategories([])
         setSelectedSubCategories([])
         setSelectedProducts([])
     }
 
-    const dateTimeConverter = (data) => {
-        const date = new Date(data);
-        const isoDate = date.toISOString();
-        return isoDate;
-    }
+    // const dateTimeConverter = (data) => {
+    //     const date = new Date(data);
+    //     const isoDate = date.toISOString();
+    //     return isoDate;
+    // }
     const applyHandler = () => {
-        const startdateTime = startDate ? dateTimeConverter(startDate) : "";
-        const endDateTime = endDate ? dateTimeConverter(endDate) : "";
-        let newData = { "startDate": startdateTime, "endDate": endDateTime };
+        // const startdateTime = startDate ? dateTimeConverter(startDate) : "";
+        // const endDateTime = endDate ? dateTimeConverter(endDate) : "";
+        // let newData = { "startDate": startdateTime, "endDate": endDateTime };
+        let newData = {};
         if (selectedCategories.length > 0) {
             const categories = selectedCategories.map((category) => { return category.value })
             newData = { ...newData, "categories": categories }
@@ -134,7 +135,7 @@ const Filter = ({ close, catalogList, applyFilterHandler }) => {
     if (!mounted) return null;
 
     return (
-        <div id='map-container' className='absolute w-[400px] z-30 bg-white border border-neutral-400 rounded-m top-16 right-0' >
+        <div id='map-container' className='absolute w-[400px] z-30 bg-white border border-neutral-400 rounded-m top-20 right-0' >
             <div className=' p-m flex gap-s items-center justify-between border-b border-neutral-400'>
                 <div className='flex gap-s items-center text-black'>
                     <FaFilter className='w-4 h-4 ' />
@@ -145,48 +146,8 @@ const Filter = ({ close, catalogList, applyFilterHandler }) => {
                 </button>
             </div>
 
-            <div className='h-[400px] relative overflow-y-scroll hide-scrollbar'>
-                <div className=' p-m flex flex-col border-b border-neutral-400 gap-s'>
-                    <div className='flex justify-between items-center text-f-m'>
-                        <div>Date Range</div>
-                        <button className='text-secondary-900' onClick={() => {
-                            setStartDate(null)
-                            setEndDate(null)
-                        }}>
-                            Reset
-                        </button>
-                    </div>
-                    <div className=' flex gap-s '>
+            <div className='max-h-[400px] relative overflow-y-scroll hide-scrollbar'>
 
-                        <div className="flex flex-1 flex-col gap-xs">
-                            <label className="block text-sm font-medium text-gray-700">From</label>
-                            <DatePicker
-                                selected={startDate}
-                                onChange={(date) => setStartDate(date)}
-                                showTimeSelect
-                                dateFormat="Pp"
-                                className="border  text-f-m  rounded-md p-2 w-full border-effect focus:border"
-                                placeholderText="Start date and time"
-                                popperPlacement="bottom-start"
-                            />
-                        </div>
-
-                        {/* End Date Picker */}
-                        <div className="flex flex-1 flex-col gap-xs">
-                            <label className="block text-sm font-medium text-gray-700">To</label>
-                            <DatePicker
-                                selected={endDate}
-                                onChange={(date) => setEndDate(date)}
-                                showTimeSelect
-                                dateFormat="Pp"
-                                className="border text-f-m rounded-md p-2 w-full border-effect "
-                                placeholderText="End date and time"
-                                popperPlacement="bottom-end"  // Change this for desired positioning
-
-                            />
-                        </div>
-                    </div>
-                </div>
 
                 <div className=' p-m flex flex-col border-b border-neutral-400 gap-s'>
                     <div className='flex justify-between items-center text-f-m'>

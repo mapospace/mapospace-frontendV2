@@ -1,11 +1,12 @@
 import "./globals.css";
 import { Bounce, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import 'react-loading-skeleton/dist/skeleton.css'
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className="font-inter">
+      <body className="font-inter hide-scrollbar">
         <ToastContainer
           position="top-right"
           autoClose={1000}

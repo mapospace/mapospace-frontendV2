@@ -1,26 +1,21 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Maps from './Maps'
 import { IoCloseSharp } from "react-icons/io5";
 import AuthServices from '@/utils/axios-api';
 import { API_ENDPOINTS } from '@/utils/api-endpoints';
 import { customSuccess, customError } from '../Common/Toast';
 import { ImSearch } from "react-icons/im";
-import { FaMapLocationDot } from "react-icons/fa6";
 import axios from 'axios';
-import Select from "react-select";
 import { PiPolygonFill } from "react-icons/pi";
 import { GrLocationPin } from "react-icons/gr";
-import { GiHamburgerMenu } from "react-icons/gi";
 import { LuFilter } from "react-icons/lu";
 import Filter from '../Common/Filter';
 import clsx from 'clsx';
 import { TbLocationSearch } from "react-icons/tb";
 import { RiCloseFill } from "react-icons/ri";
-
-const options = [
-    { value: "all", label: "All" },
-    { value: "self", label: "Self" },
-];
+import Skeleton from 'react-loading-skeleton'
+import DatePicker from 'react-datepicker';
+import { SlCalender } from "react-icons/sl";
 
 const MapContainer = ({ catalogList, setAppliedFilter }) => {
     const [formData, setFormData] = useState({
@@ -43,10 +38,36 @@ const MapContainer = ({ catalogList, setAppliedFilter }) => {
     const [selfPolygonData, setSelfPolygonData] = useState([]);
     const [polygonCoordinates, setPolygonCoordinates] = useState([]);
     const [latlng, setLatLng] = useState({ lat: 28.7041, lng: 77.1025 })
-    const [selectedOption, setSelectedOption] = useState(options[0]);
+    const [loading, setLoading] = useState(false);
+    const [OpenSearchBar, setOpenSearchBar] = useState(false);
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
 
+    useEffect(() => {
+        if (polygonData.length > 0 || selfPolygonData.length > 0) {
+            setTimeout(() => {
+                setLoading(false);
+            }, 1000)
+        }
+    }, [polygonData, selfPolygonData])
 
-    const [OpenSearchBar, setOpenSearchBar] = useState(false)
+    useEffect(() => {
+        if (startDate && endDate) {
+            const startdateTime = startDate ? dateTimeConverter(startDate) : "";
+            const endDateTime = endDate ? dateTimeConverter(endDate) : "";
+            let newData = { "startDate": startdateTime, "endDate": endDateTime };
+            setAppliedFilter(prev => ({
+                ...(prev ?? {}),
+                ...newData
+            }));
+        }
+    }, [startDate, endDate])
+
+    const dateTimeConverter = (data) => {
+        const date = new Date(data);
+        const isoDate = date.toISOString();
+        return isoDate;
+    }
 
     const ChangeHandler = (e) => {
         const { id, value } = e.target;
@@ -92,7 +113,7 @@ const MapContainer = ({ catalogList, setAppliedFilter }) => {
     const handleSearch = (e) => {
         e.preventDefault();
         if (search.trim() != '') {
-            console.log(search)
+            setLoading(true)
             fetchDataFromNominatim();
             fetchGeoJSONDetails()
         }
@@ -186,7 +207,6 @@ const MapContainer = ({ catalogList, setAppliedFilter }) => {
         }
     }
 
-
     const applyFilterHandler = (data) => {
 
         const coordinates = polygonCoordinates.map((coordinate) => {
@@ -218,14 +238,69 @@ const MapContainer = ({ catalogList, setAppliedFilter }) => {
         setOnSearch(false);
         setOpenSearchBar(false)
     }
+
     return (
         <div id='map-container' className='relative'>
             {/* <div cl */}
+            <div className='flex flex-1 items-end '>
+                <div className=' flex  flex-1 flex-col  gap-s'>
+                    <div className='flex justify-between items-center text-f-m'>
+                        <div>Date Range</div>
+                        <button className='text-secondary-900' onClick={() => {
+                            setStartDate(null)
+                            setEndDate(null)
+                        }}>
+                            Reset
+                        </button>
+                    </div>
+                    <div className='flex gap-s '>
+
+                        <div className="flex flex-1 flex-col gap-xs relative">
+                            {/* <label className="block text-sm font-medium text-gray-700">From</label> */}
+                            <DatePicker
+                                selected={startDate}
+                                onChange={(date) => setStartDate(date)}
+                                showTimeSelect
+                                dateFormat="Pp"
+                                className="border  text-f-m  rounded-md p-2 w-full border-effect focus:border"
+                                placeholderText="Start date and time"
+                                popperPlacement="bottom-start"
+                            />
+                            <div className='absolute top-2 right-2'><SlCalender className='w-6 h-6' /></div>
+                        </div>
+
+                        {/* End Date Picker */}
+                        <div className="flex flex-1 flex-col gap-xs relative">
+                            {/* <label className="block text-sm font-medium text-gray-700">To</label> */}
+                            <DatePicker
+                                selected={endDate}
+                                onChange={(date) => setEndDate(date)}
+                                showTimeSelect
+                                dateFormat="Pp"
+                                className="border text-f-m rounded-md p-2 w-full border-effect "
+                                placeholderText="End date and time"
+                                popperPlacement="bottom-end"  // Change this for desired positioning
+
+                            />
+                            <div className='absolute top-2 right-2'><SlCalender className='w-6 h-6' /></div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+                <div className='flex-1 flex items-end justify-end'>
+                    <button className='bg-neutral-200 text-neutral-1200 shadow-s rounded-md flex px-l py-s items-center gap-s' onClick={() => { setShowFilter(prev => !prev) }}>
+                        <LuFilter /> Filter
+                    </button>
+                </div>
+
+            </div>
             {showFilter && <Filter close={setShowFilter} catalogList={catalogList} applyFilterHandler={applyFilterHandler} />}
             <div className='h-[100vh] relative rounded-md shadow-md'>
                 {OpenSearchBar && <div className={'absolute z-30 w-full h-full'}>
                     <div className='relative w-full h-full gap-xl bg-black bg-opacity-40 flex justify-center items-center '>
-                        <div className={clsx('absolute  w-[50%] flex flex-col focus:top-[10%] focus:bottom-0 rounded-lg transition-all duration-200 ease-linear', onSearch ? "top-[10%]" : "top-[40%]")} onClick={() => { setOnSearch(true) }}>
+                        <div className={clsx('absolute  w-[50%] flex flex-col focus:top-[10%] focus:bottom-0 rounded-lg transition-all duration-200 ease-linear', (!onSearch && polygonData.length == 0 && selfPolygonData == 0) ? "top-[40%]" : "top-[10%]")} onClick={() => { setOnSearch(true) }}>
                             <div className='flex flex-1  bg-white rounded-lg'>
                                 <input
                                     type="text"
@@ -245,22 +320,71 @@ const MapContainer = ({ catalogList, setAppliedFilter }) => {
                                     Searching For
                                 </div>
                                 {polygonData.length > 0 || selfPolygonData.length > 0 ? <>
-                                    {polygonData.length > 0 && <div className='w-full  border-t-2 border-neutral-200 mt-m'>
-                                        <div className=' w-full pt-l pb-m  text-neutral-900'>
-                                            Global Seaching Results
+                                    {loading ? (
+                                        <div className="w-full">
+                                            {/* Skeleton for Global Searching Results */}
+                                            <div className="w-full border-t-2 border-neutral-200 mt-m">
+                                                <div className="w-full pt-l pb-m text-neutral-1100">
+                                                    <Skeleton width={200} height={20} />
+                                                </div>
+                                                {[...Array(2)].map((_, index) => (
+                                                    <Skeleton key={index} height={20} className="mb-2" />
+                                                ))}
+                                            </div>
+
+                                            {/* Skeleton for Saved Polygons Results */}
+                                            <div className="w-full border-t-2 border-neutral-200 mt-m">
+                                                <div className="w-full pt-l pb-m text-neutral-1100">
+                                                    <Skeleton width={200} height={20} />
+                                                </div>
+                                                {[...Array(2)].map((_, index) => (
+                                                    <Skeleton key={index} height={20} className="mb-2" />
+                                                ))}
+                                            </div>
                                         </div>
-                                        {polygonData.slice(0, 4).map((area, index) =>
-                                            <SearchResultTab area={area} key={index} getPolygonCoordinates={getPolygonCoordinates} setPolygonCoordinates={setPolygonCoordinates} setLatLng={setLatLng} closeSearchHandler={closeSearchHandler} />
-                                        )}
-                                    </div>}
-                                    {selfPolygonData.length > 0 && <div className='w-full  border-t-2 border-neutral-200 mt-m'>
-                                        <div className=' w-full pt-l pb-m  text-neutral-900'>
-                                            Saved Polygons Results
-                                        </div>
-                                        {selfPolygonData.slice(0, 4).map((area, index) =>
-                                            <SearchResultTab area={area} key={index} getPolygonCoordinates={getPolygonCoordinates} setPolygonCoordinates={setPolygonCoordinates} setLatLng={setLatLng} closeSearchHandler={closeSearchHandler} />
-                                        )}
-                                    </div>}
+                                    ) : (
+                                        polygonData.length > 0 || selfPolygonData.length > 0 ? (
+                                            <>
+                                                {polygonData.length > 0 && (
+                                                    <div className="w-full border-t-2 border-neutral-200 mt-m">
+                                                        <div className="w-full pt-l pb-m text-neutral-1100">
+                                                            Global Searching Results
+                                                        </div>
+                                                        {polygonData.slice(0, 4).map((area, index) => (
+                                                            <SearchResultTab
+                                                                area={area}
+                                                                key={index}
+                                                                getPolygonCoordinates={getPolygonCoordinates}
+                                                                setPolygonCoordinates={setPolygonCoordinates}
+                                                                setLatLng={setLatLng}
+                                                                closeSearchHandler={closeSearchHandler}
+                                                            />
+                                                        ))}
+                                                    </div>
+                                                )}
+
+                                                {selfPolygonData.length > 0 && (
+                                                    <div className="w-full border-t-2 border-neutral-200 mt-m">
+                                                        <div className="w-full pt-l pb-m text-neutral-1100">
+                                                            Saved Polygons Results
+                                                        </div>
+                                                        {selfPolygonData.slice(0, 4).map((area, index) => (
+                                                            <SearchResultTab
+                                                                area={area}
+                                                                key={index}
+                                                                getPolygonCoordinates={getPolygonCoordinates}
+                                                                setPolygonCoordinates={setPolygonCoordinates}
+                                                                setLatLng={setLatLng}
+                                                                closeSearchHandler={closeSearchHandler}
+                                                            />
+                                                        ))}
+                                                    </div>
+                                                )}
+                                            </>
+                                        ) : (
+                                            <div className="text-f-xl text-gray-500">No data found.</div>
+                                        )
+                                    )}
                                 </> : <div className='text-f-xl text-gray-500'>No data found.</div>}
                             </div>
                         </div>
@@ -280,9 +404,9 @@ const MapContainer = ({ catalogList, setAppliedFilter }) => {
 
                     <TbLocationSearch className='w-6 h-6 font-semibold ' />
                 </div>}
-                <button className=' bg-white  absolute top-2 right-16  w-[40px] h-[40px] flex items-center justify-center hover:text-black cursor-pointer' onClick={() => { setShowFilter(prev => !prev) }}>
+                {/* <button className=' bg-white  absolute top-2 right-16  w-[40px] h-[40px] flex items-center justify-center hover:text-black cursor-pointer' onClick={() => { setShowFilter(prev => !prev) }}>
                     <LuFilter className='w-6 h-6 font-semibold ' />
-                </button>
+                </button> */}
 
                 {saveFormVisible && <div className='absolute w-[350px] h-full -right-0 top-0 bg-white bg-opacity-70 flex justify-between flex-col transition-transform rounded-l-md'>
                     <div className=''>
@@ -354,8 +478,8 @@ const SearchResultTab = ({ area, getPolygonCoordinates, setPolygonCoordinates, s
         closeSearchHandler()
 
     }} >
-        <div className='flex items-center gap-s text-f-l'>
-            {(area.geojson.type == "Polygon") ? <PiPolygonFill /> : (area.geojson.type == "Point") ? <GrLocationPin /> : null} <span>  {area.display_name}</span>
+        <div className='flex items-center gap-s text-f-l text-start'>
+            <div>{(area.geojson.type == "Polygon") ? <PiPolygonFill /> : (area.geojson.type == "Point") ? <GrLocationPin /> : null} </div> <span>  {area.display_name}</span>
         </div>
         <div className='bg-neutral-200 text-f-xs text-center align-middle px-s py-xs rounded-lg'>
             {area.type}

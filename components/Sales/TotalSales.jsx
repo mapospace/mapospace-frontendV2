@@ -141,7 +141,7 @@ const TotalSales = ({ catalogList, setAppliedFilter, appliedFilter }) => {
     }
 
     return (
-        <div className='pb-4xl '>
+        <div className='pb-4xl hide-scrollbar'>
             <div className="text-neutral-1000 pb-xl "><MapContainer catalogList={catalogList} setAppliedFilter={setAppliedFilter} /></div>
             <div className=' gap-l grid  grid-cols-4 '>
                 <div className='relative col-span-1 rounded-md    bg-white text-black border-b-2 border-neutral-200 shadow-md text-center'>
@@ -196,20 +196,8 @@ const TotalSales = ({ catalogList, setAppliedFilter, appliedFilter }) => {
             </div>
             <div className="grid  md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-l mt-l h-[400px]">
 
-                <div className="col-span-1 h-full bg-white rounded-lg flex flex-col border-2 border-neutral-200 shadow-md">
-                    {/* <div className=' text-f-l font-semibold text-neutral-1200 flex  border-b-2 border-neutral-200  '>
-                        <div className='py-m flex-[0.4] text-center px-l '>S. No</div>
-                        <div className='py-m flex-1 text-center px-l  border-neutral-900'>Date</div>
-                        <div className='py-m flex-1 text-center px-l'>Revenue</div>
-                    </div>
-                    <div className=' flex   h-[350px] flex-col overflow-y-scroll hide-scrollbar'>
-                        {totalSalesOverTime.map((sale, index) => (<div className={clsx(' flex  border-b-2 border-neutral-200  text-neutral-1200', index >= totalSalesOverTime.length - 1 && 'border-b-0')} key={index} >
-
-                            <div className='py-m px-l flex-[0.4] text-center'>{index + 1}</div>
-                            <div className='py-m px-l flex-1 text-center  '>{sale._id}</div>
-                            <div className='py-m px-l flex-1 text-center'>{Number(sale.totalRevenue).toFixed(2)}</div>
-                        </div>))}
-                    </div> */}
+                <div className="col-span-1 h-full bg-white text-neutral-1200 p-xl rounded-lg flex flex-col border-2 border-neutral-200 shadow-md">
+                    TODO
                 </div>
                 <div className='col-span-2'>
                     {labels.length > 0 && totalOrders.length > 0 && <BarChart labels={labels} values={totalRevenue} labelName="Total Revenue" period={setBarPeriod} />}
