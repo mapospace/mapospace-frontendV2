@@ -28,16 +28,16 @@ const LineChart = ({ labels, values, labelName, period }) => {
             ? values.map(value => ({
                 label: labelName,
                 data: value,
-                borderColor: '#0136f8',
-                backgroundColor: '#0136f8',
+                borderColor: '#8a8af2',
+                backgroundColor: '#8a8af2',
                 tension: 0.4,
                 fill: true,
             }))
             : [{
                 label: labelName,
                 data: values,
-                borderColor: '#0136f8',
-                backgroundColor: '#0136f8',
+                borderColor: '#8a8af2',
+                backgroundColor: '#8a8af2',
                 tension: 0.4,
                 fill: true,
             }];

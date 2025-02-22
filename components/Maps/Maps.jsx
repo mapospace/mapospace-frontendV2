@@ -137,7 +137,7 @@ const Maps = ({ setSaveFormVisible, setSearchResultVisible, setCurrentPolygon, p
                     streetViewControl: false,
                     zoomControl: true,
                     fullscreenControl: false,
-                    gestureHandling: "greedy",
+                    // gestureHandling: "greedy",
                 }}
 
                 onLoad={(map) => (mapRef.current = map)}

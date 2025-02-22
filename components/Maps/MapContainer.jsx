@@ -225,7 +225,7 @@ const MapContainer = ({ catalogList, setAppliedFilter }) => {
             }
         }
 
-        setAppliedFilter(newData)
+        setAppliedFilter(prev => ({ ...prev, ...newData }))
     }
 
     const getPolygonCoordinates = (coordinates) => {

@@ -5,7 +5,7 @@ import AuthServices from "@/utils/axios-api";
 import { API_ENDPOINTS } from "@/utils/api-endpoints";
 import TotalSales from "@/components/Sales/TotalSales";
 import { useSearchParams } from "next/navigation";
-import Order from "@/components/Sales/Order";
+import Product from "@/components/Sales/Product";
 
 
 const Dashboard = () => {
@@ -50,7 +50,7 @@ const Dashboard = () => {
             </div>
 
             {currentCategory == "total_sale" && <TotalSales catalogList={catalogList} setAppliedFilter={setAppliedFilter} appliedFilter={appliedFilter} />}
-            {currentCategory == "orders" && <Order catalogList={catalogList} setAppliedFilter={setAppliedFilter} appliedFilter={appliedFilter} />}
+            {currentCategory == "products" && <Product catalogList={catalogList} setAppliedFilter={setAppliedFilter} appliedFilter={appliedFilter} />}
 
 
         </div >

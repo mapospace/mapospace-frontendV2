@@ -65,7 +65,6 @@ const TotalSale = ({ setOpenType }) => {
         </div>
         <div className=' border-b border-neutral-300'>
             <div className='text-f-l font-normal m-s p-s cursor-pointer hover:bg-neutral-300 rounded-md' onClick={() => { chnageRouteHandler('/dashboard/sales?category=total_sale') }}>Total Sale</div>
-            <div className='text-f-l font-normal p-s m-s cursor-pointer hover:bg-neutral-300 rounded-md' onClick={() => { chnageRouteHandler('/dashboard/sales?category=orders') }}>Orders</div>
             <div className='text-f-l font-normal p-s m-s cursor-pointer hover:bg-neutral-300 rounded-md' onClick={() => { chnageRouteHandler('/dashboard/sales?category=products') }}>Products</div>
             <div className='text-f-l font-normal p-s m-s cursor-pointer hover:bg-neutral-300 rounded-md' onClick={() => { chnageRouteHandler('/dashboard/sales?category=categories') }}>Categories</div>
             <div className='text-f-l font-normal p-s m-s cursor-pointer hover:bg-neutral-300 rounded-md' onClick={() => { chnageRouteHandler('/dashboard/sales?category=sub_categorie') }}>Sub Categories</div>

@@ -31,7 +31,7 @@ const BarChart = ({ labels, values, height, labelName, period }) => {
             {
                 label: index === 0 ? labelName : `Dataset ${index + 1}`,
                 data: value,
-                backgroundColor: index % 2 == 0 ? '#0136f8' : '#0136f8',
+                backgroundColor: index % 2 == 0 ? '#8a8af2' : '#8a8af2',
             }
         ));
 

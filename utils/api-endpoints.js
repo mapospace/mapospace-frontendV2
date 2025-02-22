@@ -31,6 +31,11 @@ export const API_ENDPOINTS = {
 
     Catalogs: 'catalogs/all-catalogs',
     TotalSales: 'analytics/total-sales',
-    TotalSalesOverTime: 'analytics/total-sales-over-time'
+    TotalSalesOverTime: 'analytics/total-sales-over-time',
+    OrderSales: 'analytics/average-order',
+    OrderSalesOverTime: 'analytics/average-order-over-time',
+
+    TopSellingProduct: 'analytics/top-selling-products',
+    TopSellingProductsOverTime: "analytics/top-selling-products-over-time"
 
 }
