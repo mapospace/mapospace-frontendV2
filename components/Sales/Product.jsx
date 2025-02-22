@@ -8,6 +8,8 @@ import clsx from 'clsx'
 import DoughnutChart from '../Common/Doughnut'
 import HeatmapChart from '../Common/HeatmapChart'
 import SankeyChart from '../Common/SankeyChart'
+import HistogramChart from '../Common/HistogramChart'
+import Heatmap from '../Maps/Heatmap'
 
 const data = [
     {
@@ -39,13 +41,17 @@ const Product = ({ catalogList, setAppliedFilter, appliedFilter }) => {
     const [productList, setProductList] = useState([]);
     const [productListDoughtnutPeriod, setProductListDoughtnutPeriod] = useState([]);
     const [selectedPeriod, setSelectedPeriod] = useState(null)
+    const [sankeyData, setSankeyData] = useState([])
+    const [histogramRanges, setHistogramRanges] = useState([0, 50, 100, 200, 500, 1000, 10000, 20000])
+    const [histogramData, setHistogramData] = useState([])
 
     useEffect(() => {
         console.log("appliedFilter", appliedFilter)
         if (appliedFilter != null) {
-            totalSaleHandler()
-            totalSaleLineOverallHandler()
-            topSellingProductsHandler()
+            totalSaleHandler();
+            totalSaleLineOverallHandler();
+            topSellingProductsHandler();
+            productSankeyHandler();
         }
     }, [appliedFilter])
 
@@ -54,6 +60,12 @@ const Product = ({ catalogList, setAppliedFilter, appliedFilter }) => {
             topSellingProductOverallHandler(productPeriod)
         }
     }, [appliedFilter, productPeriod])
+
+    useEffect(() => {
+        if (appliedFilter != null) {
+            orderValueDistributionHandler(histogramRanges)
+        }
+    }, [histogramRanges, appliedFilter])
 
     useEffect(() => {
         if (selectedPeriod != null) {
@@ -87,6 +99,28 @@ const Product = ({ catalogList, setAppliedFilter, appliedFilter }) => {
 
         }
     }
+
+    const productSankeyHandler = async () => {
+        try {
+            const authService = new AuthServices();
+            const response = await authService.postApiCallHandler(API_ENDPOINTS.TopSellingProductSankey, appliedFilter);
+
+            if (response?.error) {
+                console.log(response)
+                customError(response.message || "Failed to fetch data.");
+                return;
+            }
+            console.log("productSankeyHandler => ", response?.data);
+            // setTotalSales(response.data[0])
+            setSankeyData(response?.data)
+
+
+        } catch (err) {
+            console.error("Error fetching user details:", err);
+
+        }
+    }
+
     function formatNumber(num) {
         if (num >= 1e9) {
             return (num / 1e9).toFixed(2) + 'B'; // Billion
@@ -168,6 +202,29 @@ const Product = ({ catalogList, setAppliedFilter, appliedFilter }) => {
         }
     }
 
+    const orderValueDistributionHandler = async (ranges) => {
+        try {
+            const authService = new AuthServices();
+            const response = await authService.postApiCallHandler(API_ENDPOINTS.OrderValueDistribution, { ...appliedFilter, "ranges": ranges });
+
+            if (response?.error) {
+                console.log(response)
+                customError(response.message || "Failed to fetch data.");
+                return;
+            }
+            console.log("orderValueDistributionHandler", response?.data);
+            const data = response.data.map((data) => { return data.count })
+            setHistogramData(data)
+            // setProductList(response?.data)
+            // setTopProductsByQuantity(response?.data.topProductsByQuantity)
+            // setTopProductsByRevenue(response?.data.topProductsByRevenue)
+
+        } catch (err) {
+            console.error("Error fetching user details:", err);
+
+        }
+    }
+
     return (
         <div className='pb-4xl hide-scrollbar'>
             <div className="text-neutral-1000 pb-xl "><MapContainer catalogList={catalogList} setAppliedFilter={setAppliedFilter} /></div>
@@ -197,6 +254,18 @@ const Product = ({ catalogList, setAppliedFilter, appliedFilter }) => {
                     <InfoToast info="This shows the highest revenue recorded and the corresponding date." top={2} right={2} innerRight={-40} popAlign={false} />
                 </div>
 
+            </div>
+            <div className=' gap-l grid  grid-cols-4 mt-xl'>
+                <div className="col-span-4 h-full bg-white rounded-lg flex flex-col border-2 border-neutral-200 shadow-md">
+                    <div className='px-xl pb-s pt-l text-f-l font-semibold text-neutral-1200 '>
+                        Top Products By Quantity
+                    </div>
+                    <div className='p-xl pt-s h-[450px] '>
+                        {/* <HeatmapChart data={data} /> */}
+                        {sankeyData.length > 0 && <SankeyChart data={sankeyData} />}
+                    </div>
+
+                </div>
             </div>
             <div className=' gap-l grid  grid-cols-4 mt-xl'>
                 <div className="col-span-2 h-full bg-white rounded-lg flex flex-col border-2 border-neutral-200 shadow-md">
@@ -251,7 +320,7 @@ const Product = ({ catalogList, setAppliedFilter, appliedFilter }) => {
 
                 </div>
             </div>
-            <div className=' gap-l grid  grid-cols-4 mt-xl'>
+            <div className=' gap-l grid  grid-cols-4 mt-xl h-[500px]'>
                 <div className="col-span-2 h-full bg-white rounded-lg flex flex-col border-2 border-neutral-200 shadow-md">
 
 
@@ -260,17 +329,18 @@ const Product = ({ catalogList, setAppliedFilter, appliedFilter }) => {
                 </div>
 
                 <div className="col-span-2 h-full bg-white rounded-lg flex flex-col border-2 border-neutral-200 shadow-md">
-                    <div className='px-xl pb-s pt-l text-f-l font-semibold text-neutral-1200 '>
-                        Top Products By Quantity
-                    </div>
-                    <div className='p-xl pt-s h-[350px] '>
-                        {/* <HeatmapChart data={data} /> */}
-                        <SankeyChart />
-                    </div>
+
+                    {histogramData.length > 0 && <HistogramChart data={histogramData} bins={histogramRanges} setBins={setHistogramRanges} />}
+
 
                 </div>
-            </div>
 
+            </div>
+            <div className=' gap-l grid  grid-cols-4 mt-xl h-[500px]'>
+                <div className="col-span-2 h-full bg-white rounded-lg flex flex-col border-2 border-neutral-200 shadow-md">
+                    <Heatmap />
+                </div>
+            </div>
 
         </div>
     )

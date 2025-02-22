@@ -1,52 +1,65 @@
 "use client";
 
-import React from "react";
+import React, { useMemo } from "react";
 import { SankeyController, Flow } from "chartjs-chart-sankey";
 import { Chart as ChartJS, Tooltip, Legend } from "chart.js";
 import { Chart } from "react-chartjs-2";
 
 ChartJS.register(SankeyController, Flow, Tooltip, Legend);
 
-const SankeyChart = () => {
+// Predefined color palette
+const colors = [
+    "#e74c3c", "#f39c12", "#f1c40f", "#1abc9c", "#3498db",
+    "#9b59b6", "#2ecc71", "#34495e", "#16a085", "#27ae60",
+    "#2980b9", "#8e44ad", "#2c3e50", "#c0392b", "#d35400",
+    "#e67e22", "#e74c3c", "#f39c12", "#f1c40f", "#1abc9c",
+    "#3498db", "#9b59b6", "#2ecc71", "#34495e", "#16a085",
+    "#27ae60", "#2980b9", "#8e44ad", "#2c3e50", "#c0392b",
+    "#d35400", "#e67e22", "#ecf0f1", "#bdc3c7", "#95a5a6",
+    "#7f8c8d", "#ff5733", "#c70039", "#900c3f", "#581845",
+    "#6a0572", "#9400d3", "#4a235a", "#154360", "#0e6655",
+    "#145a32", "#512e5f", "#76448a", "#2471a3", "#0b5345"
+];
+
+const SankeyChart = ({ data }) => {
+    // Assign colors sequentially to unique nodes
+    const colorMap = useMemo(() => {
+        const uniqueNodes = new Set();
+        data.forEach(({ from, to }) => {
+            uniqueNodes.add(from);
+            uniqueNodes.add(to);
+        });
+
+        const nodesArray = Array.from(uniqueNodes);
+        const assignedColors = {};
+
+        nodesArray.forEach((node, index) => {
+            assignedColors[node] = colors[index % colors.length]; // Cycle through colors
+        });
+
+        return assignedColors;
+    }, [data]); // Runs only when `data` changes
+
     const chartData = {
         datasets: [
             {
                 label: "Total Sales Distribution",
-                data: [
-                    { from: "Total Sales", to: "Apparels", flow: 3945468.85 },
-                    { from: "Apparels", to: "Round Neck T-Shirt", flow: 657907.24 },
-                    { from: "Apparels", to: "Shorts", flow: 505157.14 },
-                    { from: "Apparels", to: "Jacket", flow: 579053.37 },
-                    { from: "Apparels", to: "V-Neck T-Shirt", flow: 752655.39 },
-                    { from: "Apparels", to: "Polo T-Shirt", flow: 739721.22 },
-                    { from: "Apparels", to: "Jeans", flow: 710974.49 },
-
-                    { from: "Total Sales", to: "Electronics", flow: 3417536.26 },
-                    { from: "Electronics", to: "Dell XPS 13", flow: 418896.66 },
-                    { from: "Electronics", to: "Samsung Galaxy S22", flow: 598493.33 },
-                    { from: "Electronics", to: "Xiaomi Redmi Note 12", flow: 380048.34 },
-                    { from: "Electronics", to: "iPhone 14", flow: 664539.44 },
-                    { from: "Electronics", to: "Lenovo ThinkPad X1", flow: 648848.76 },
-                    { from: "Electronics", to: "MacBook Air", flow: 706709.73 },
-
-                    { from: "Total Sales", to: "Home Appliances", flow: 3656921.05 },
-                    { from: "Home Appliances", to: "Samsung Top Load", flow: 508128.99 },
-                    { from: "Home Appliances", to: "LG Front Load", flow: 584876.17 },
-                    { from: "Home Appliances", to: "Whirlpool Semi-Automatic", flow: 507891.35 },
-                    { from: "Home Appliances", to: "Whirlpool Triple Door", flow: 544679.96 },
-                    { from: "Home Appliances", to: "Samsung Double Door", flow: 770611.46 },
-                    { from: "Home Appliances", to: "LG Single Door", flow: 740733.12 },
-                ],
-                colorFrom: (ctx) => "blue",
-                colorTo: (ctx) => "green",
-                colorMode: "gradient",
+                data: [...data],
+                colorFrom: (ctx) => colorMap[ctx.dataset.data[ctx.dataIndex].from] || "#000000",
+                colorTo: (ctx) => colorMap[ctx.dataset.data[ctx.dataIndex].to] || "#000000",
+                colorMode: "source", // Solid colors instead of gradient
             },
         ],
     };
 
+    const options = {
+        responsive: true,
+        maintainAspectRatio: false,
+    };
+
     return (
-        <div className="w-full max-w-3xl mx-auto">
-            <Chart type="sankey" data={chartData} />
+        <div className="w-full h-full mx-auto">
+            <Chart type="sankey" data={chartData} options={options} />
         </div>
     );
 };
