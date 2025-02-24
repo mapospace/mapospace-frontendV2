@@ -7,7 +7,7 @@ import { FaFilter } from "react-icons/fa6";
 import { MdOutlineClose } from "react-icons/md";
 import Select from 'react-select';
 
-const Filter = ({ close, catalogList, applyFilterHandler }) => {
+const Filter = ({ close, catalogList, applyFilterHandler, appliedFilter }) => {
     // const [startDate, setStartDate] = useState(null);
     // const [endDate, setEndDate] = useState(null);
     const [selectedCategories, setSelectedCategories] = useState([]);
@@ -29,6 +29,28 @@ const Filter = ({ close, catalogList, applyFilterHandler }) => {
     });
 
     useEffect(() => {
+        console.log("applied Filter", appliedFilter)
+        if (appliedFilter?.categories && appliedFilter?.categories.length > 0) {
+            const categories = appliedFilter?.categories.map((category) => {
+                return { value: category, label: category }
+            });
+            console.log("applied categories", categories, appliedFilter?.categories)
+            setSelectedCategories(categories)
+        }
+        if (appliedFilter?.subCategories && appliedFilter?.subCategories.length > 0) {
+            const subCategories = appliedFilter?.subCategories.map((subCategory) => {
+                return { value: subCategory, label: subCategory }
+            });
+            console.log("applied subCategories", subCategories, appliedFilter?.subCategories)
+            setSelectedSubCategories(subCategories)
+        }
+        if (appliedFilter?.products && appliedFilter?.products.length > 0) {
+            const products = appliedFilter?.products.map((product) => {
+                return { value: product, label: product }
+            });
+            console.log("applied products", products, appliedFilter?.products)
+            setSelectedProducts(products)
+        }
         setMounted(true); // Ensures that DatePicker only renders on the client
     }, []);
 
@@ -117,18 +139,27 @@ const Filter = ({ close, catalogList, applyFilterHandler }) => {
         if (selectedCategories.length > 0) {
             const categories = selectedCategories.map((category) => { return category.value })
             newData = { ...newData, "categories": categories }
+        } else {
+            newData = { ...newData, "categories": [] }
         }
 
         if (selectedSubCategories.length > 0) {
             const subCategories = selectedSubCategories.map((subCategory) => { return subCategory.value })
             newData = { ...newData, "subCategories": subCategories }
+        } else {
+            newData = { ...newData, "subCategories": [] }
         }
+
 
         if (selectedProducts.length > 0) {
             const product = selectedProducts.map((product) => { return product.value })
             newData = { ...newData, "products": product }
         }
-        console.log(newData)
+        else {
+            newData = { ...newData, "products": [] }
+        }
+
+        console.log("apply Handler", newData)
         applyFilterHandler(newData)
         close(false)
     }

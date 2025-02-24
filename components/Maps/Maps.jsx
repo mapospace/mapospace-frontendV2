@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import { GoogleMap, LoadScriptNext, Polygon, DrawingManager, OverlayView, Marker } from "@react-google-maps/api";
+import { GoogleMap, Polygon, DrawingManager, OverlayView, Marker } from "@react-google-maps/api";
 import { IoIosCloseCircle } from "react-icons/io";
 import { MdOutlineDataSaverOn } from "react-icons/md";
 
@@ -29,7 +29,7 @@ const mapStyle = [
 ]
 
 
-const Maps = ({ setSaveFormVisible, setSearchResultVisible, setCurrentPolygon, polygonSaved, polygonCoordinates, latlng }) => {
+const Maps = ({ setSaveFormVisible, setSearchResultVisible, setCurrentPolygon, polygonSaved, polygonCoordinates, latlng, setAppliedFilter }) => {
     const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
     const [polygonPaths, setPolygonPaths] = useState([]); // Temporary polygon coordinates
@@ -100,6 +100,10 @@ const Maps = ({ setSaveFormVisible, setSearchResultVisible, setCurrentPolygon, p
         setPolygonPaths([]); // Clear temporary polygon
         setShowButtons(false); // Hide buttons
         setCentroid(null); // Clear centroid
+        setAppliedFilter((prevFilters) => {
+            const { geojson, ...updatedFilters } = prevFilters; // Destructure and remove geojson
+            return updatedFilters; // Return the new object without geojson
+        });
     };
 
     // Save Handler: Store the polygon and remove temporary one
@@ -127,61 +131,61 @@ const Maps = ({ setSaveFormVisible, setSearchResultVisible, setCurrentPolygon, p
     if (!apiKey) return <p>Loading Google Maps...</p>;
 
     return (
-        <LoadScriptNext googleMapsApiKey={apiKey} libraries={["drawing"]} onLoad={() => setIsGoogleLoaded(true)}>
-            <GoogleMap
-                mapContainerStyle={containerStyle}
-                center={latlng}
-                zoom={12}
-                options={{
-                    styles: mapStyle,
-                    streetViewControl: false,
-                    zoomControl: true,
-                    fullscreenControl: false,
-                    // gestureHandling: "greedy",
-                }}
+        // <LoadScriptNext googleMapsApiKey={apiKey} libraries={["drawing"]} onLoad={() => setIsGoogleLoaded(true)}>
+        <GoogleMap
+            mapContainerStyle={containerStyle}
+            center={latlng}
+            zoom={12}
+            options={{
+                styles: mapStyle,
+                streetViewControl: false,
+                zoomControl: false,
+                fullscreenControl: false,
+                // gestureHandling: "greedy",
+            }}
 
-                onLoad={(map) => (mapRef.current = map)}
+            onLoad={(map) => (mapRef.current = map)}
 
 
-            >
-                {/* Drawing Manager */}
-                {isGoogleLoaded && !drawingManagerRef.current && (
-                    <DrawingManager
-                        onLoad={onDrawingManagerLoad}
-                        options={{
+        >
+            {/* Drawing Manager */}
+            {isGoogleLoaded && !drawingManagerRef.current && (
+                <DrawingManager
+                    onLoad={onDrawingManagerLoad}
+                    options={{
 
-                            drawingControl: true,
-                            drawingControlOptions: {
-                                position: window.google.maps.ControlPosition.TOP_CENTER,
-                                drawingModes: drawingMode,
-                            },
-                            polygonOptions: {
-                                fillColor: "#0136f8",
-                                fillOpacity: 0.4,
-                                strokeWeight: 2,
-                                clickable: true,
-                                editable: false,
-                                draggable: false,
-                            },
-                        }}
-                        onPolygonComplete={onPolygonComplete}
-                    />
-                )}
-
-                {polygonPaths.length > 0 && (
-                    <Polygon
-                        paths={polygonPaths}
-                        options={{
-                            fillColor: "#99affc",
+                        drawingControl: true,
+                        drawingControlOptions: {
+                            position: window.google.maps.ControlPosition.TOP_CENTER,
+                            drawingModes: drawingMode,
+                        },
+                        polygonOptions: {
+                            fillColor: "#0136f8",
                             fillOpacity: 0.4,
-                            strokeColor: "#0136f8",
-                            strokeOpacity: 1,
                             strokeWeight: 2,
-                        }}
-                    />
-                )}
+                            clickable: true,
+                            editable: false,
+                            draggable: false,
+                        },
+                    }}
+                    onPolygonComplete={onPolygonComplete}
+                />
+            )}
 
-                {/* {polygonCoordinates.length > 0 && (
+            {polygonPaths.length > 0 && (
+                <Polygon
+                    paths={polygonPaths}
+                    options={{
+                        fillColor: "#99affc",
+                        fillOpacity: 0.4,
+                        strokeColor: "#0136f8",
+                        strokeOpacity: 1,
+                        strokeWeight: 2,
+                    }}
+                />
+            )}
+
+            {/* {polygonCoordinates.length > 0 && (
                     <Polygon
                         path={polygonCoordinates}
                         options={{
@@ -196,33 +200,33 @@ const Maps = ({ setSaveFormVisible, setSearchResultVisible, setCurrentPolygon, p
                         }}
                     />
                 )} */}
-                {latlng && <Marker position={latlng} />}
-                {/* Overlay Buttons at Polygon Centroid */}
-                {showButtons && centroid && (
-                    <OverlayView
-                        position={centroid}
-                        mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
-                    >
-                        <div className="flex items-center gap-2 p-2  shadow-md rounded-lg">
-                            <button
-                                onClick={cancelHandler}
-                                className="bg-neutral-800 text-white  rounded-full relative group "
-                            >
-                                <IoIosCloseCircle className="w-9 h-9" />
-                                <p className='absolute text-white py-xs px-l hidden group-hover:block bg-neutral-700  rounded-lg  -top-7  text-f-s'>Close</p>
-                            </button>
-                            {!polygonSaved && <button
-                                onClick={saveHandler}
-                                className="bg-neutral-800 relative group  text-white rounded-full"
-                            >
-                                <MdOutlineDataSaverOn className="w-9 h-9" />
-                                <p className='absolute text-white py-xs px-l hidden group-hover:block bg-neutral-700  rounded-lg  -top-7  text-f-s'>Save</p>
-                            </button>}
-                        </div>
-                    </OverlayView>
-                )}
-            </GoogleMap>
-        </LoadScriptNext>
+            {latlng && <Marker position={latlng} />}
+            {/* Overlay Buttons at Polygon Centroid */}
+            {showButtons && centroid && (
+                <OverlayView
+                    position={centroid}
+                    mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
+                >
+                    <div className="flex items-center gap-2 p-2  shadow-md rounded-lg">
+                        <button
+                            onClick={cancelHandler}
+                            className="bg-neutral-800 text-white  rounded-full relative group "
+                        >
+                            <IoIosCloseCircle className="w-9 h-9" />
+                            <p className='absolute text-white py-xs px-l hidden group-hover:block bg-neutral-700  rounded-lg  -top-7  text-f-s'>Close</p>
+                        </button>
+                        {!polygonSaved && <button
+                            onClick={saveHandler}
+                            className="bg-neutral-800 relative group  text-white rounded-full"
+                        >
+                            <MdOutlineDataSaverOn className="w-9 h-9" />
+                            <p className='absolute text-white py-xs px-l hidden group-hover:block bg-neutral-700  rounded-lg  -top-7  text-f-s'>Save</p>
+                        </button>}
+                    </div>
+                </OverlayView>
+            )}
+        </GoogleMap>
+        // </LoadScriptNext>
     );
 };
 

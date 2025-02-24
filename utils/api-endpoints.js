@@ -39,6 +39,16 @@ export const API_ENDPOINTS = {
     TopSellingProduct: 'analytics/top-selling-products',
     TopSellingProductsOverTime: "analytics/top-selling-products-over-time",
     TopSellingProductSankey: 'analytics/total-sales-and-sankey-data',
-    OrderValueDistribution: 'analytics/order-value-distribution'
+    OrderValueDistribution: 'analytics/order-value-distribution',
+
+    H3Clusting: "analytics/perform-clustering-h3",
+    SalesDensity: 'analytics/sales-density',
+    PerformClustering: 'analytics/perform-clustering',
+
+    SalesByCategory: 'analytics/sales-by-category',
+    TopSellingCategoryOverTime: 'analytics/sales-by-category-over-time',
+
+    SalesBySubCategory: 'analytics/sales-by-subcategory',
+    TopSellingSubCategoryOverTime: 'analytics/sales-by-subcategory-over-time',
 
 }

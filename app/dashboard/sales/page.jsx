@@ -6,6 +6,9 @@ import { API_ENDPOINTS } from "@/utils/api-endpoints";
 import TotalSales from "@/components/Sales/TotalSales";
 import { useSearchParams } from "next/navigation";
 import Product from "@/components/Sales/Product";
+import MapContainer from "@/components/Maps/MapContainer";
+import Category from "@/components/Sales/Category";
+import SubCategory from "@/components/Sales/SubCategory";
 
 
 const Dashboard = () => {
@@ -48,9 +51,13 @@ const Dashboard = () => {
                     </div>}
                 </div>
             </div>
-
-            {currentCategory == "total_sale" && <TotalSales catalogList={catalogList} setAppliedFilter={setAppliedFilter} appliedFilter={appliedFilter} />}
-            {currentCategory == "products" && <Product catalogList={catalogList} setAppliedFilter={setAppliedFilter} appliedFilter={appliedFilter} />}
+            <div className='pb-xl hide-scrollbar'>
+                <div className="text-neutral-1000  "><MapContainer catalogList={catalogList} setAppliedFilter={setAppliedFilter} appliedFilter={appliedFilter} /></div>
+            </div>
+            {currentCategory == "total_sale" && <TotalSales appliedFilter={appliedFilter} />}
+            {currentCategory == "products" && <Product appliedFilter={appliedFilter} />}
+            {currentCategory == "categories" && <Category appliedFilter={appliedFilter} />}
+            {currentCategory == "sub_categorie" && <SubCategory appliedFilter={appliedFilter} />}
 
 
         </div >

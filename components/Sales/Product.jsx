@@ -10,6 +10,9 @@ import HeatmapChart from '../Common/HeatmapChart'
 import SankeyChart from '../Common/SankeyChart'
 import HistogramChart from '../Common/HistogramChart'
 import Heatmap from '../Maps/Heatmap'
+import ClusterMap from '../Maps/ClusterMap'
+import H3ClustingMap from '../Maps/H3ClustingMap'
+import DoughnutContainer from '../Common/Doughnut/DoughnutContainer'
 
 const data = [
     {
@@ -22,7 +25,7 @@ const data = [
     }
 ];
 
-const Product = ({ catalogList, setAppliedFilter, appliedFilter }) => {
+const Product = ({ appliedFilter }) => {
     const [totalSales, setTotalSales] = useState({
         "totalSales": 0,
         "totalItems": 0,
@@ -35,15 +38,20 @@ const Product = ({ catalogList, setAppliedFilter, appliedFilter }) => {
 
     const [topProductsByQuantity, setTopProductsByQuantity] = useState([]);
     const [topProductsByRevenue, setTopProductsByRevenue] = useState([]);
-    const [productPeriod, setProductPeriod] = useState('day');
-    const [productLabelForDoughnut, setProductLabelForDoughnut] = useState([]);
-    const [productValueForDoughnut, setProductValueForDoughnut] = useState([]);
-    const [productList, setProductList] = useState([]);
-    const [productListDoughtnutPeriod, setProductListDoughtnutPeriod] = useState([]);
-    const [selectedPeriod, setSelectedPeriod] = useState(null)
+    // const [productPeriod, setProductPeriod] = useState('day');
+    // const [productLabelForDoughnut, setProductLabelForDoughnut] = useState([]);
+    // const [productValueForDoughnut, setProductValueForDoughnut] = useState([]);
+    // const [productList, setProductList] = useState([]);
+    // const [productListDoughtnutPeriod, setProductListDoughtnutPeriod] = useState([]);
+    // const [selectedPeriod, setSelectedPeriod] = useState(null)
     const [sankeyData, setSankeyData] = useState([])
     const [histogramRanges, setHistogramRanges] = useState([0, 50, 100, 200, 500, 1000, 10000, 20000])
     const [histogramData, setHistogramData] = useState([])
+    const [h3Data, setH3Data] = useState([])
+    const [heatMapData, setHeatMapData] = useState([])
+    const [h3Resolution, setH3Resolution] = useState(1)
+    const [binSize, setBinSize] = useState(0.01)
+    const [clusterData, setClusterData] = useState([])
 
     useEffect(() => {
         console.log("appliedFilter", appliedFilter)
@@ -52,14 +60,29 @@ const Product = ({ catalogList, setAppliedFilter, appliedFilter }) => {
             totalSaleLineOverallHandler();
             topSellingProductsHandler();
             productSankeyHandler();
+            // h3ClustingHandler()
+            PerformClusteringHandler();
+
         }
     }, [appliedFilter])
 
+    // useEffect(() => {
+    //     if (appliedFilter != null) {
+    //         topSellingProductOverallHandler(productPeriod)
+    //     }
+    // }, [appliedFilter, productPeriod])
+
     useEffect(() => {
         if (appliedFilter != null) {
-            topSellingProductOverallHandler(productPeriod)
+            heatMapHandler(binSize)
         }
-    }, [appliedFilter, productPeriod])
+    }, [appliedFilter, binSize])
+
+    useEffect(() => {
+        if (appliedFilter != null) {
+            h3ClustingHandler(h3Resolution)
+        }
+    }, [appliedFilter, h3Resolution])
 
     useEffect(() => {
         if (appliedFilter != null) {
@@ -67,17 +90,17 @@ const Product = ({ catalogList, setAppliedFilter, appliedFilter }) => {
         }
     }, [histogramRanges, appliedFilter])
 
-    useEffect(() => {
-        if (selectedPeriod != null) {
+    // useEffect(() => {
+    //     if (selectedPeriod != null) {
 
-            const getData = productList.filter((product) => product.period == selectedPeriod)
-            console.log("vsfuyahvfsoyiaspyiughwhshdhdbsahhhjdnsblhdjsdhs", getData[0].period)
-            let getlabels = getData[0].topProductsByRevenue.map(data => { return data.productName })
-            let getValue = getData[0].topProductsByRevenue.map(data => { return data.totalRevenue })
-            setProductLabelForDoughnut(getlabels);
-            setProductValueForDoughnut(getValue);
-        }
-    }, [selectedPeriod])
+    //         const getData = productList.filter((product) => product.period == selectedPeriod)
+    //         console.log("vsfuyahvfsoyiaspyiughwhshdhdbsahhhjdnsblhdjsdhs", getData[0].period)
+    //         let getlabels = getData[0].topProductsByRevenue.map(data => { return data.productName })
+    //         let getValue = getData[0].topProductsByRevenue.map(data => { return data.totalRevenue })
+    //         setProductLabelForDoughnut(getlabels);
+    //         setProductValueForDoughnut(getValue);
+    //     }
+    // }, [selectedPeriod])
 
 
     const totalSaleHandler = async () => {
@@ -132,32 +155,32 @@ const Product = ({ catalogList, setAppliedFilter, appliedFilter }) => {
         return num.toString(); // If less than 1000, return as is
     }
 
-    const topSellingProductOverallHandler = async (period) => {
-        try {
-            const authService = new AuthServices();
-            const response = await authService.postApiCallHandler(API_ENDPOINTS.TopSellingProductsOverTime, { ...appliedFilter, "period": period, "limit": 10 });
+    // const topSellingProductOverallHandler = async (period) => {
+    //     try {
+    //         const authService = new AuthServices();
+    //         const response = await authService.postApiCallHandler(API_ENDPOINTS.TopSellingProductsOverTime, { ...appliedFilter, "period": period, "limit": 10 });
 
-            if (response?.error) {
-                console.log(response)
-                customError(response.message || "Failed to fetch data.");
-                return;
-            }
-            console.log("topSellingProductOverallHandler", response?.data);
-            setProductList(response.data)
-            let periods = response.data.map((data) => { return data.period });
-            console.log("periods", periods)
-            setProductListDoughtnutPeriod(periods)
-            let getlabels = response.data[0].topProductsByRevenue.map(data => { return data.productName })
-            let getValue = response.data[0].topProductsByRevenue.map(data => { return data.totalRevenue })
-            setProductLabelForDoughnut(getlabels);
-            setProductValueForDoughnut(getValue)
+    //         if (response?.error) {
+    //             console.log(response)
+    //             customError(response.message || "Failed to fetch data.");
+    //             return;
+    //         }
+    //         console.log("topSellingProductOverallHandler", response?.data);
+    //         setProductList(response.data)
+    //         let periods = response.data.map((data) => { return data.period });
+    //         console.log("periods", periods)
+    //         setProductListDoughtnutPeriod(periods)
+    //         let getlabels = response.data[0].topProductsByRevenue.map(data => { return data.productName })
+    //         let getValue = response.data[0].topProductsByRevenue.map(data => { return data.totalRevenue })
+    //         setProductLabelForDoughnut(getlabels);
+    //         setProductValueForDoughnut(getValue)
 
 
-        } catch (err) {
-            console.error("Error fetching user details:", err);
+    //     } catch (err) {
+    //         console.error("Error fetching user details:", err);
 
-        }
-    }
+    //     }
+    // }
 
     const totalSaleLineOverallHandler = async () => {
         try {
@@ -225,9 +248,66 @@ const Product = ({ catalogList, setAppliedFilter, appliedFilter }) => {
         }
     }
 
+    const h3ClustingHandler = async (resolution) => {
+        try {
+            const authService = new AuthServices();
+            const response = await authService.postApiCallHandler(API_ENDPOINTS.H3Clusting, { ...appliedFilter, "h3Resolution": resolution });
+
+            if (response?.error) {
+                console.log(response)
+                customError(response.message || "Failed to fetch data.");
+                return;
+            }
+            console.log("h3ClustingHandler", response?.data);
+            setH3Data(response.data)
+
+        } catch (err) {
+            console.error("Error fetching user details:", err);
+
+        }
+    }
+
+    const heatMapHandler = async (bin) => {
+        try {
+            const authService = new AuthServices();
+            const response = await authService.postApiCallHandler(API_ENDPOINTS.SalesDensity, { ...appliedFilter, "binSize": bin });
+
+            if (response?.error) {
+                console.log(response)
+                customError(response.message || "Failed to fetch data.");
+                return;
+            }
+            console.log("heatMapHandler", response?.data);
+            setHeatMapData(response.data)
+
+        } catch (err) {
+            console.error("Error fetching user details:", err);
+
+        }
+    }
+
+    const PerformClusteringHandler = async (bin) => {
+        try {
+            const authService = new AuthServices();
+            const response = await authService.postApiCallHandler(API_ENDPOINTS.PerformClustering, { ...appliedFilter, "eps": 0.01, "min_samples": 2 });
+
+            if (response?.error) {
+                console.log(response)
+                customError(response.message || "Failed to fetch data.");
+                return;
+            }
+            console.log("PerformClusteringHandler", response?.data);
+            setClusterData(response.data)
+
+        } catch (err) {
+            console.error("Error fetching user details:", err);
+
+        }
+    }
+
     return (
         <div className='pb-4xl hide-scrollbar'>
-            <div className="text-neutral-1000 pb-xl "><MapContainer catalogList={catalogList} setAppliedFilter={setAppliedFilter} /></div>
+            {/* <div className="text-neutral-1000 pb-xl "><MapContainer catalogList={catalogList} setAppliedFilter={setAppliedFilter} /></div> */}
             <div className=' gap-l grid  grid-cols-4 '>
                 <div className='relative col-span-1 rounded-md    bg-white text-black border-b-2 border-neutral-200 shadow-md text-center'>
                     <div className='text-f-5xl px-xl text-start font-semibold  text-neutral-1200 pt-l'>Total Sales</div>
@@ -261,7 +341,6 @@ const Product = ({ catalogList, setAppliedFilter, appliedFilter }) => {
                         Top Products By Quantity
                     </div>
                     <div className='p-xl pt-s h-[450px] '>
-                        {/* <HeatmapChart data={data} /> */}
                         {sankeyData.length > 0 && <SankeyChart data={sankeyData} />}
                     </div>
 
@@ -324,13 +403,13 @@ const Product = ({ catalogList, setAppliedFilter, appliedFilter }) => {
                 <div className="col-span-2 h-full bg-white rounded-lg flex flex-col border-2 border-neutral-200 shadow-md">
 
 
-                    {productLabelForDoughnut.length > 0 && productValueForDoughnut.length > 0 && <DoughnutChart labels={productLabelForDoughnut} values={productValueForDoughnut} labelName="Top Selling Products Over Time" period={setProductPeriod} productListDoughtnutPeriod={productListDoughtnutPeriod} setSelectedPeriod={setSelectedPeriod} />}
+                    <DoughnutContainer endpoint={API_ENDPOINTS.TopSellingProductsOverTime} appliedFilter={appliedFilter} label="Top Selling Products Over Time" From="SaleProduct" />
 
                 </div>
 
                 <div className="col-span-2 h-full bg-white rounded-lg flex flex-col border-2 border-neutral-200 shadow-md">
 
-                    {histogramData.length > 0 && <HistogramChart data={histogramData} bins={histogramRanges} setBins={setHistogramRanges} />}
+                    <HistogramChart data={histogramData} bins={histogramRanges} setBins={setHistogramRanges} />
 
 
                 </div>
@@ -338,7 +417,42 @@ const Product = ({ catalogList, setAppliedFilter, appliedFilter }) => {
             </div>
             <div className=' gap-l grid  grid-cols-4 mt-xl h-[500px]'>
                 <div className="col-span-2 h-full bg-white rounded-lg flex flex-col border-2 border-neutral-200 shadow-md">
-                    <Heatmap />
+                    {/* <div className='px-xl pb-s pt-l text-f-l font-semibold text-neutral-1200 '>
+                        Heat Map Representation
+                    </div>
+                    <div className='p-xl pt-s  h-full'> */}
+
+                    {heatMapData.length > 0 && <Heatmap data={heatMapData} setBinSize={setBinSize} />}
+                    {/* </div> */}
+                </div>
+                <div className="col-span-2 h-full bg-white rounded-lg flex flex-col border-2 border-neutral-200 shadow-md">
+                    <div className='px-xl pb-s pt-l text-f-l font-semibold text-neutral-1200 '>
+                        Clusting Representation
+                    </div>
+                    <div className='p-xl pt-s  h-full'>
+
+                        <ClusterMap data={clusterData} />
+                    </div>
+                </div>
+            </div>
+            <div className=' gap-l grid  grid-cols-4 mt-xl h-[500px]'>
+                <div className="col-span-2 h-full bg-white rounded-lg flex flex-col border-2 border-neutral-200 shadow-md">
+                    {/* <div className='px-xl pb-s pt-l text-f-l font-semibold text-neutral-1200 '>
+                        Heat Map Representation
+                    </div>
+                    <div className='p-xl pt-s  h-full'> */}
+
+                    {h3Data && <H3ClustingMap h3Data={h3Data} setH3Resolution={setH3Resolution} />}
+                    {/* </div> */}
+                </div>
+                <div className="col-span-2 h-full bg-white rounded-lg flex flex-col border-2 border-neutral-200 shadow-md">
+                    <div className='px-xl pb-s pt-l text-f-l font-semibold text-neutral-1200 '>
+                        Clusting Representation
+                    </div>
+                    <div className='p-xl pt-s  h-full'>
+
+                        {/* <ClusterMap /> */}
+                    </div>
                 </div>
             </div>
 

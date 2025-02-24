@@ -24,12 +24,13 @@ const HistogramChart = ({ data, bins, setBins }) => {
     const [ranges, setRanges] = useState([]);
     const [showRangeMeter, setShowRangeMeter] = useState(false);
 
+    //      const data = [10, 20, 50, 150, 250, 500, 2000, 5000, 12000, 18000, 19000]; // Sample data
+    //   const bins = [0, 50, 100, 200, 500, 1000, 10000, 20000];
     // Function to count occurrences in each bin ranges
     const binCounts = bins.slice(1).map((upperBound, i) => {
         const lowerBound = bins[i];
         return data.filter((value) => value >= lowerBound && value < upperBound).length;
     });
-
 
 
     const handleChange = (e) => {
@@ -64,6 +65,7 @@ const HistogramChart = ({ data, bins, setBins }) => {
     // Chart Options
     const options = {
         responsive: true,
+        maintainAspectRatio: false,
         plugins: {
             legend: { display: false },
             title: { display: true, text: "Histogram" },
@@ -89,10 +91,10 @@ const HistogramChart = ({ data, bins, setBins }) => {
 
     return <>
         <div className='px-xl pb-s pt-l text-f-l font-semibold text-neutral-1200 flex justify-between items-center'>
-            <div>Top Products By Quantity</div>
+            <h3 className="text-f-l font-semibold text-neutral-1200  ">Top Products By Quantity</h3>
             <div className='text-f-m font-normal relative'>
-                <button className='py-xs px-s border rounded-md' onClick={() => { setShowRangeMeter(prev => !prev) }}>Add Range + </button>
-                {showRangeMeter && <div className='w-[300px]  absolute top-10 right-0 bg-white bg-opacity-70 border rounded-md p-s flex flex-col'>
+                <button className='py-xs px-s border rounded-md border-neutral-1200' onClick={() => { setShowRangeMeter(prev => !prev) }}>Add Range + </button>
+                {showRangeMeter && <div className='w-[300px]  absolute top-10 right-0 bg-white bg-opacity-70 border  rounded-md p-s flex flex-col'>
                     <div className="flex w-full gap-s items-center">
                         <div className="flex-1 bg-white border border-neutral-500 rounded-md py-xs px-s">
                             {startValue}
@@ -145,8 +147,8 @@ const HistogramChart = ({ data, bins, setBins }) => {
                 </div>}
             </div>
 
-        </div>
-        <div className='p-xl pt-s h-[350px] '>
+        </div >
+        <div className='p-xl pt-s h-full '>
             <Bar data={chartData} options={options} />
         </div>
 

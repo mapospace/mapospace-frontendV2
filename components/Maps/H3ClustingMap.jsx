@@ -1,45 +1,42 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { GoogleMap, HeatmapLayer } from "@react-google-maps/api";
+"use client";
+
+import { GoogleMap, Polygon } from "@react-google-maps/api";
+import { useEffect, useState } from "react";
 import Select from "react-select";
 
-;
-
-const mapContainerStyle = {
-    width: "100%",
-    height: "100%"
-};
-
 const dataValues = [
-    { value: 0.01, label: "0.01" },
-    { value: 0.02, label: "0.02" },
-    { value: 0.03, label: "0.03" },
-    { value: 0.04, label: "0.04" },
-    { value: 0.05, label: "0.05" },
-    { value: 0.06, label: "0.06" },
-    { value: 0.07, label: "0.07" },
-    { value: 0.08, label: "0.08" },
-    { value: 0.09, label: "0.09" },
+    { value: 1, label: "1" },
+    { value: 2, label: "2" },
+    { value: 3, label: "3" },
+    { value: 4, label: "4" },
+    { value: 5, label: "5" },
+    { value: 6, label: "6" },
+    { value: 7, label: "7" },
 ];
 
-const center = {
-    lat: 28.65,
-    lng: 77.2
-};
-
-const Heatmap = ({ data, setBinSize }) => {
+const H3ClustingMap = ({ h3Data, setH3Resolution }) => {
+    const [polygons, setPolygons] = useState([]);
     const [selectedOption, setSelectedOption] = useState(dataValues[0]);
-    const heatmapData = useMemo(() =>
-        data.map(point => ({
-            location: new window.google.maps.LatLng(
-                point.location.coordinates[1],
-                point.location.coordinates[0]
-            ),
-            weight: point.totalSales
-        })), [data]);
 
     useEffect(() => {
-        setBinSize(selectedOption.value)
+        console.log("H3ClustingMap", h3Data)
+        const parsedPolygons = h3Data.map((item) => ({
+            path: item.coordinates.map(([lat, lng]) => ({ lat, lng })),
+            color: getColorByValue(item.totalOrderValue),
+        }));
+        setPolygons(parsedPolygons);
+    }, [h3Data]);
+
+    useEffect(() => {
+        setH3Resolution(selectedOption.value)
     }, [selectedOption])
+
+    // Function to color polygons based on totalOrderValue
+    const getColorByValue = (value) => {
+        if (value > 40000) return "#FF0000"; // Red for high value
+        if (value > 20000) return "#FFA500"; // Orange for medium value
+        return "#00FF00"; // Green for low value
+    };
 
     return (
         <div className="col-span-2 h-full bg-white rounded-lg flex flex-col border-2 border-neutral-200 shadow-md">
@@ -91,20 +88,29 @@ const Heatmap = ({ data, setBinSize }) => {
                 </div>
             </div>
             <div className='p-xl pt-s  h-full'>
-                <GoogleMap mapContainerStyle={mapContainerStyle} center={center} zoom={10} options={{
-                    streetViewControl: false,
-                    zoomControl: false,
-                    fullscreenControl: false,
-                    mapTypeControl: false
-                }}>
-                    <HeatmapLayer
-                        data={heatmapData.map(p => p.location)}
-                        options={{
-                            radius: 40,
-                            opacity: 0.7,
-
-                        }}
-                    />
+                <GoogleMap
+                    mapContainerStyle={{ width: "100%", height: "100%" }}
+                    center={{ lat: 28.6139, lng: 77.209 }}
+                    zoom={10}
+                    options={{
+                        streetViewControl: false,
+                        zoomControl: false,
+                        fullscreenControl: false,
+                        mapTypeControl: false
+                    }}
+                >
+                    {polygons.map((poly, index) => (
+                        <Polygon
+                            key={index}
+                            paths={poly.path}
+                            options={{
+                                fillColor: poly.color,
+                                fillOpacity: 0.4,
+                                strokeColor: "#000",
+                                strokeWeight: 1,
+                            }}
+                        />
+                    ))}
                 </GoogleMap>
             </div>
         </div>
@@ -112,4 +118,4 @@ const Heatmap = ({ data, setBinSize }) => {
     );
 };
 
-export default Heatmap;
+export default H3ClustingMap;

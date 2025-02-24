@@ -11,7 +11,7 @@ import InfoToast from '../Common/InfoToast'
 import toCapitalizedCase from '@/utils/capitalized-case'
 
 
-const TotalSales = ({ catalogList, setAppliedFilter, appliedFilter }) => {
+const TotalSales = ({ appliedFilter }) => {
     const [totalSales, setTotalSales] = useState({
         "totalSales": 0,
         "totalItems": 0,
@@ -41,7 +41,7 @@ const TotalSales = ({ catalogList, setAppliedFilter, appliedFilter }) => {
     const [ordersOverTime, setOrderOverTime] = useState([]);
 
     useEffect(() => {
-        console.log("appliedFilter", appliedFilter)
+        console.log("filter Updated", appliedFilter)
         if (appliedFilter != null) {
             totalSaleHandler()
             OrderSaleHandler()
@@ -201,7 +201,7 @@ const TotalSales = ({ catalogList, setAppliedFilter, appliedFilter }) => {
 
     return (
         <div className='pb-4xl hide-scrollbar'>
-            <div className="text-neutral-1000 pb-xl "><MapContainer catalogList={catalogList} setAppliedFilter={setAppliedFilter} /></div>
+            {/* <div className="text-neutral-1000 pb-xl "><MapContainer catalogList={catalogList} setAppliedFilter={setAppliedFilter} appliedFilter={appliedFilter} /></div> */}
             <div className=' gap-l grid  grid-cols-4 '>
                 <div className='relative col-span-1 rounded-md    bg-white text-black border-b-2 border-neutral-200 shadow-md text-center'>
                     <div className='text-f-5xl px-xl text-start font-semibold  text-neutral-1200 pt-l'>Total Sales</div>

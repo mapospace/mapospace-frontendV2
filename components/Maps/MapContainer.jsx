@@ -17,7 +17,7 @@ import Skeleton from 'react-loading-skeleton'
 import DatePicker from 'react-datepicker';
 import { SlCalender } from "react-icons/sl";
 
-const MapContainer = ({ catalogList, setAppliedFilter }) => {
+const MapContainer = ({ catalogList, setAppliedFilter, appliedFilter }) => {
     const [formData, setFormData] = useState({
         name: "",
         description: "",
@@ -50,6 +50,7 @@ const MapContainer = ({ catalogList, setAppliedFilter }) => {
             }, 1000)
         }
     }, [polygonData, selfPolygonData])
+
 
     useEffect(() => {
         if (startDate && endDate) {
@@ -209,29 +210,28 @@ const MapContainer = ({ catalogList, setAppliedFilter }) => {
 
     const applyFilterHandler = (data) => {
 
-        const coordinates = polygonCoordinates.map((coordinate) => {
-            return [coordinate.lng, coordinate.lat]
-        })
-        let newData = {
-            ...data
-        }
-        if (coordinates.length > 0) {
-            newData = {
-                ...newData,
-                "geojson": {
-                    "type": "Polygon",
-                    "coordinates": [coordinates]
-                }
-            }
-        }
-
-        setAppliedFilter(prev => ({ ...prev, ...newData }))
+        console.log("filter Updated by appliedFilter", data)
+        setAppliedFilter(prev => ({ ...prev, ...data }))
     }
 
     const getPolygonCoordinates = (coordinates) => {
         const transformedData = coordinates.map(([lng, lat]) => ({ lat: lat, lng: lng }));
         console.log("transformedData", transformedData)
         setPolygonCoordinates(transformedData);
+        if (transformedData.length > 0) {
+            const coordinates = transformedData.map((coordinate) => {
+                return [coordinate.lng, coordinate.lat]
+            })
+
+            const polyData = {
+                "geojson": {
+                    "type": "Polygon",
+                    "coordinates": [coordinates]
+                }
+            }
+            applyFilterHandler(polyData)
+        }
+
     }
 
     const closeSearchHandler = () => {
@@ -290,13 +290,13 @@ const MapContainer = ({ catalogList, setAppliedFilter }) => {
                     </div>
                 </div>
                 <div className='flex-1 flex items-end justify-end'>
-                    <button className='bg-neutral-200 text-neutral-1200 shadow-s rounded-md flex px-l py-s items-center gap-s' onClick={() => { setShowFilter(prev => !prev) }}>
+                    {startDate && endDate && <button className='bg-neutral-200 text-neutral-1200 shadow-s rounded-md flex px-l py-s items-center gap-s' onClick={() => { setShowFilter(prev => !prev) }}>
                         <LuFilter /> Filter
-                    </button>
+                    </button>}
                 </div>
 
             </div>
-            {showFilter && <Filter close={setShowFilter} catalogList={catalogList} applyFilterHandler={applyFilterHandler} />}
+            {showFilter && <Filter close={setShowFilter} catalogList={catalogList} applyFilterHandler={applyFilterHandler} appliedFilter={appliedFilter} />}
             <div className='h-[100vh] relative rounded-md shadow-md'>
                 {OpenSearchBar && <div className={'absolute z-30 w-full h-full'}>
                     <div className='relative w-full h-full gap-xl bg-black bg-opacity-40 flex justify-center items-center '>
@@ -396,7 +396,7 @@ const MapContainer = ({ catalogList, setAppliedFilter }) => {
 
                 <div className='mt-xl rounded-md shadow-md'>
                     <Maps setSaveFormVisible={setSaveFormVisible} setSearchResultVisible={setSearchResultVisible} setCurrentPolygon={setCurrentPolygon} polygonSaved={polygonSaved} polygonCoordinates={polygonCoordinates}
-                        latlng={latlng} />
+                        latlng={latlng} setAppliedFilter={setAppliedFilter} />
                 </div>
 
 
