@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Bar, Line, Radar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, RadialLinearScale, LineElement, PointElement, Tooltip, Legend } from 'chart.js';
 
@@ -77,6 +77,42 @@ const Dashboard = () => {
             pointHoverBorderColor: '#0136f8'
         }]
     };
+
+    useEffect(() => {
+        const data = generateCustomDateRanges();
+        console.log("generateCustomDateRanges", data)
+    }, [])
+    function generateCustomDateRanges() {
+        const dateRanges = [];
+        const currentDate = new Date();
+
+        // Helper function to format date as YYYY-MM-DD
+        const formatDate = (date) => date.toISOString().split('T')[0];
+
+        // Last Month
+        let startDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
+        let endDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
+        dateRanges.push({ startDate: formatDate(startDate), endDate: formatDate(endDate), title: "Last month" });
+
+        // Last 3 Months
+        startDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 3, 1);
+        endDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
+        dateRanges.push({ startDate: formatDate(startDate), endDate: formatDate(endDate), title: "Last 3 months" });
+
+        // Last 6 Months
+        startDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 6, 1);
+        endDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
+        dateRanges.push({ startDate: formatDate(startDate), endDate: formatDate(endDate), title: "Last 6 months" });
+
+        // Last Year
+        startDate = new Date(currentDate.getFullYear() - 1, 0, 1); // Jan 1st of last year
+        endDate = new Date(currentDate.getFullYear() - 1, 11, 31); // Dec 31st of last year
+        dateRanges.push({ startDate: formatDate(startDate), endDate: formatDate(endDate), title: "Last year" });
+
+        return dateRanges;
+    }
+
+
 
 
     const barOptions = {
