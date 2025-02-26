@@ -28,7 +28,7 @@ const SideNav = ({ routeHandler }) => {
                             <p className=' text-f-xs mt-xs text-gray-600'>Sale</p>
                             {/* <p className='absolute  py-xs px-l hidden group-hover:block bg-secondary-500  text-white rounded-lg left-9 bottom-3  text-f-s'>Sales</p> */}
                         </div>
-                        <div className='relative  flex flex-col items-center justify-center py-m  group' onClick={() => { routeHandler('/dashboard/sales?category=total_sales') }}>
+                        <div className='relative  flex flex-col items-center justify-center py-m  group' onClick={() => { routeHandler('/dashboard/views') }}>
 
                             <MdOutlineViewInAr className={clsx('w-7 h-7 text-gray-400 hover:text-secondary-900 cursor-pointer', (param == '/dashboard/views' && "text-secondary-900"))} />
                             <p className=' text-f-xs mt-xs text-gray-600'>View</p>

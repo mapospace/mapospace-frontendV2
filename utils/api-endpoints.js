@@ -4,7 +4,7 @@ export const API_ENDPOINTS = {
     GetTenant: 'tenant/view-tenant',
     PutTenant: 'tenant/update-tenant',
     ApiKeyGenerator: 'api-key/api-key-generation',
-
+    PasswordReset: 'user/reset-password',
     UserList: 'user-mgmt/users',
     AddUser: 'user-mgmt/add-user',
     UserActiveToggle: 'user-mgmt/toggle-active-status',

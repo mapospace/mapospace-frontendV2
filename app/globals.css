@@ -105,7 +105,7 @@ input[type="checkbox"] {
 
 @layer components {
   .border-effect {
-    @apply focus:outline-none p-s text-black border border-neutral-500 rounded-md focus:ring-1 focus:ring-secondary-900 hover:border hover:border-secondary-800;
+    @apply focus:outline-none p-s text-neutral-1200 border border-neutral-500 rounded-md focus:ring-1 focus:ring-secondary-900 hover:border hover:border-secondary-800;
   }
 
   .default-button {

@@ -19,7 +19,7 @@ const Sidebar = ({ menuItems }) => {
                                     {item.items.map((subItem, subIndex) => (
                                         <div key={subIndex} onClick={(e) => {
                                             router.push(subItem?.url);
-                                        }} className={`cursor-pointer hover:text-secondary-900 ${pathname === subItem.url ? 'text-primary-900' : 'text-gray-400'
+                                        }} className={`cursor-pointer hover:text-secondary-900 ${pathname === subItem.url ? 'text-secondary-900' : 'text-gray-400'
                                             }`}>
                                             {subItem.title}
                                             {subIndex < item.items.length - 1 && <br />}

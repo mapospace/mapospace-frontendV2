@@ -384,12 +384,7 @@ const Product = ({ appliedFilter }) => {
 
             </div>
             <div className=' gap-xl grid  grid-cols-4 mt-xl  min-h-[500px]'>
-                {/* <div className="col-span-2 h-full bg-white rounded-bs flex flex-col ">
 
-
-                    <DoughnutContainer endpoint={API_ENDPOINTS.TopSellingProductsOverTime} appliedFilter={appliedFilter} label="Top Selling Products Over Time" From="SaleProduct" />
-
-                </div> */}
 
                 <div className="col-span-4 h-full bg-white rounded-bs flex flex-col border">
 
@@ -399,22 +394,7 @@ const Product = ({ appliedFilter }) => {
                 </div>
 
             </div>
-            {/* <div className=' gap-xl grid  grid-cols-4 mt-xl h-[500px]'>
-                <div className="col-span-2 h-full bg-white rounded-bs flex flex-col">
 
-
-                    {heatMapData.length > 0 && <Heatmap data={heatMapData} setBinSize={setBinSize} />}
-                </div>
-                <div className="col-span-2 h-full bg-white rounded-lg flex flex-col border">
-                    <div className='px-xl pb-s pt-l text-f-l font-semibold text-neutral-1200 '>
-                        Clusting Representation
-                    </div>
-                    <div className='p-xl pt-s  h-full'>
-
-                        <ClusterMap data={clusterData} />
-                    </div>
-                </div>
-            </div> */}
             <div className='p-xl  border rounded-bs mt-xl flex flex-col gap-xl'>
                 <div className='text-neutral-1200 text-f-xl font-semibold'>
                     Map Visualization
@@ -423,7 +403,7 @@ const Product = ({ appliedFilter }) => {
                     <div className='col-span-4 h-full'>
                         {currentMap == 0 && h3Data && <H3ClustingMap h3Data={h3Data} setH3Resolution={setH3Resolution} />}
                         {currentMap == 1 && heatMapData.length > 0 && <Heatmap data={heatMapData} setBinSize={setBinSize} />}
-                        {currentMap == 2 && heatMapData.length > 0 && <ClusterMap data={clusterData} />}
+                        {currentMap == 2 && <ClusterMap data={clusterData} />}
 
                     </div>
                     <div className='col-span-1 h-full  flex flex-col gap-xl '>
@@ -437,7 +417,7 @@ const Product = ({ appliedFilter }) => {
                             </div>
 
                         </button>
-                        <button className={clsx("w-full h-[150px] bg-white text-neutral-1200 text-f-s py-xs rounded-bs border", currentMap == 1 && 'border-secondary-900')} onClick={() => setCurrentMap(1)}>
+                        <button className={clsx("w-full h-[150px] bg-white text-neutral-1200 text-f-s py-xs rounded-bs border", currentMap == 2 && 'border-secondary-900')} onClick={() => setCurrentMap(2)}>
                             <div>
                                 <div className='pb-xs'>Clusting Visualization</div>
                                 <div className='relative w-full h-full'>
@@ -448,7 +428,7 @@ const Product = ({ appliedFilter }) => {
                             </div>
 
                         </button>
-                        <button className={clsx("w-full h-[150px] bg-white text-neutral-1200 text-f-s py-xs rounded-bs border", currentMap == 2 && 'border-secondary-900')} onClick={() => setCurrentMap(2)}>
+                        <button className={clsx("w-full h-[150px] bg-white text-neutral-1200 text-f-s py-xs rounded-bs border", currentMap == 1 && 'border-secondary-900')} onClick={() => setCurrentMap(1)}>
                             <div>
                                 <div className='pb-xs'>Heatmap Visualization</div>
                                 <div className='relative w-full h-full'>

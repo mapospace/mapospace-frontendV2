@@ -7,7 +7,6 @@ import { FaUser } from "react-icons/fa";
 const Cards = ({ menuItems, title }) => {
     const router = useRouter();
     // const profileData = useSelector((state) => state?.profileDetail?.profileDetails);
-    console.log("CardsCardsCardsCards", menuItems)
     const handleCardClick = (path) => {
         if (path) {
             router.push(path);
@@ -25,8 +24,8 @@ const Cards = ({ menuItems, title }) => {
 
             <div className="grid grid-cols-2 sc-xs:grid-cols-3 sc-md:grid-cols-4 w-full gap-6 ">
                 {menuItems?.map((item, index) => (
-                    <div key={index} className="flex flex-col justify-center  items-center p-[1px] cursor-pointer rounded-md bg-gray-300 hover:bg-gradient-to-t group  hover:from-primary-500 hover:via-primary-400  hover:to-primary-300  shadow-none " onClick={() => handleCardClick(item.url)}>
-                        <div className='group-hover:bg-primary-50  bg-white p-xl rounded-md'>
+                    <div key={index} className="flex flex-col justify-center  items-center p-[1px] cursor-pointer rounded-md bg-gray-300  hover:bg-secondary-900   shadow-none group" onClick={() => handleCardClick(item.url)}>
+                        <div className=' bg-white    p-xl rounded-md'>
                             <div className="flex justify-center items-center p-2.5 rounded-md ">
                                 <span className="text-black p-2.5"> {/* Use valid Tailwind color */}
                                     {item.icon}
