@@ -75,7 +75,7 @@ const DoughnutChart = ({ labels, values, labelName, period, productListDoughtnut
     };
 
     return (
-        <div className="bg-white shadow-md flex-1 flex flex-col h-full border rounded-lg">
+        <div className="flex-1 flex flex-col h-full border rounded-bs bg-white">
             <div className='flex justify-between px-xl pb-s pt-l text-f-l font-semibold text-neutral-1200 '>
                 <h3 className="text-f-l font-semibold text-neutral-1200  ">
                     {labelName}

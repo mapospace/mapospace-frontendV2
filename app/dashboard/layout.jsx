@@ -13,7 +13,7 @@ const layout = ({ children }) => {
         <div>
             <Header />
             <SideNav routeHandler={routeHandler} />
-            <div className='pl-6xl bg-gray-100'>
+            <div className='pl-6xl bg-white'>
                 {children}
             </div>
         </div>

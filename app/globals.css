@@ -19,10 +19,7 @@
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-
+  color: white
 }
 
 .hide-scrollbar {
@@ -32,6 +29,7 @@ body {
   /* Firefox */
 }
 
+
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
   /* Chrome, Safari, and Opera */
@@ -40,6 +38,69 @@ body {
 input[type="checkbox"] {
   accent-color: #6000fd;
   /* Change this to any color */
+}
+
+.custom-datepicker {
+  display: flex;
+  flex-direction: row;
+  /* Arrange date and time picker in a row */
+  align-items: center;
+  /* Align items vertically */
+  justify-content: center;
+  gap: 20px;
+  border: none;
+  background-color: transparent !important;
+  /* Space between elements */
+}
+
+/* Remove outer border */
+.react-datepicker {
+  border: none !important;
+  box-shadow: none !important;
+  background-color: transparent !important;
+  /* Removes gray background */
+}
+
+/* Remove background and border from month container */
+.react-datepicker__month-container {
+  background-color: transparent !important;
+  border: none !important;
+}
+
+/* Remove background and border from time container */
+.react-datepicker__time-container {
+  background-color: transparent !important;
+  border: none !important;
+}
+
+/* Style the time list to match background */
+.react-datepicker__time {
+  border: none !important;
+  background-color: transparent !important;
+}
+
+/* Style the selected date */
+.react-datepicker__day--selected {
+  background-color: #0136f8 !important;
+  /* Change selected date color */
+  color: white !important;
+  border-radius: 50%;
+}
+
+/* Style time list items */
+.react-datepicker__time-list-item {
+  padding: 5px;
+  font-size: 14px;
+  color: #333 !important;
+  /* Ensure text is readable */
+  cursor: pointer;
+  background-color: transparent !important;
+}
+
+/* Hover effect on time selection */
+.react-datepicker__time-list-item:hover {
+  background-color: #0136f8 !important;
+  color: white !important;
 }
 
 @layer components {

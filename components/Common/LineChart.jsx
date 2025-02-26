@@ -28,16 +28,16 @@ const LineChart = ({ labels, values, labelName, period }) => {
             ? values.map(value => ({
                 label: labelName,
                 data: value,
-                borderColor: '#8a8af2',
-                backgroundColor: '#8a8af2',
+                borderColor: '#0136f8',
+                backgroundColor: '#0136f8',
                 tension: 0.4,
                 fill: true,
             }))
             : [{
                 label: labelName,
                 data: values,
-                borderColor: '#8a8af2',
-                backgroundColor: '#8a8af2',
+                borderColor: '#0136f8',
+                backgroundColor: '#0136f8',
                 tension: 0.4,
                 fill: true,
             }];
@@ -69,8 +69,8 @@ const LineChart = ({ labels, values, labelName, period }) => {
     };
 
     return (
-        <div className="bg-white shadow-md flex-1 flex flex-col h-full border rounded-lg">
-            <div className='flex justify-between px-xl py-s'>
+        <div className="bg-white  flex-1 flex flex-col h-full border rounded-bs">
+            <div className='flex justify-between px-xl pb-s pt-l text-f-l font-semibold text-neutral-1200 '>
                 <h3 className="text-f-l font-semibold text-neutral-1200  ">
                     {labelName}
                 </h3>

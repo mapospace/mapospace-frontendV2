@@ -28,11 +28,7 @@ const DoughnutContainer = ({ endpoint, appliedFilter, label, From }) => {
             From == "SaleProduct" && getProductLabelAndValues(getData[0].topProductsByRevenue)
             From == "SaleCategory" && getCategoryLabelAndValues(getData[0].topCategoriesByRevenue)
             From === "SaleSubCategory" && getSubCategoryLabelAndValues(getData[0].topSubCategoriesByRevenue)
-            // console.log("vsfuyahvfsoyiaspyiughwhshdhdbsahhhjdnsblhdjsdhs", getData[0].period)
-            // let getlabels = getData[0].topProductsByRevenue.map(data => { return data.productName })
-            // let getValue = getData[0].topProductsByRevenue.map(data => { return data.totalRevenue })
-            // setProductLabelForDoughnut(getlabels);
-            // setProductValueForDoughnut(getValue);
+
         }
     }, [selectedPeriod])
 

@@ -42,9 +42,9 @@ const Heatmap = ({ data, setBinSize }) => {
     }, [selectedOption])
 
     return (
-        <div className="col-span-2 h-full bg-white rounded-lg flex flex-col border-2 border-neutral-200 shadow-md">
+        <div className="col-span-2 h-full bg-white rounded-bs flex flex-col border">
 
-            <div className='flex justify-between px-xl pb-s pt-l text-f-l font-semibold text-neutral-1200 '>
+            {/* <div className='flex justify-between px-xl pb-s pt-l text-f-l font-semibold text-neutral-1200 '>
                 <h3 className="text-f-l font-semibold text-neutral-1200  ">
                     Heat Map Representation
                 </h3>
@@ -89,8 +89,8 @@ const Heatmap = ({ data, setBinSize }) => {
                     />
 
                 </div>
-            </div>
-            <div className='p-xl pt-s  h-full'>
+            </div> */}
+            <div className='h-full relative'>
                 <GoogleMap mapContainerStyle={mapContainerStyle} center={center} zoom={10} options={{
                     streetViewControl: false,
                     zoomControl: false,
@@ -106,6 +106,46 @@ const Heatmap = ({ data, setBinSize }) => {
                         }}
                     />
                 </GoogleMap>
+                <div className="absolute right-2 top-2 bg-white rounded-bs">
+                    <Select
+                        options={dataValues}
+                        value={selectedOption}
+                        onChange={(selected) => setSelectedOption(selected)}
+                        isSearchable={false}
+                        className="!m-0 !p-0 !h-auto !w-auto !border-none !shadow-none text-black text-f-s"
+                        styles={{
+                            control: (provided) => ({
+                                ...provided,
+                                minHeight: 'unset',  // Remove default min-height
+                                height: 'auto',
+                                padding: "2px",
+                                margin: 0,
+                                border: '1px solid #4d4d4d',
+                                boxShadow: 'none',
+                                backgroundColor: 'transparent',
+                            }),
+                            valueContainer: (provided) => ({
+                                ...provided,
+                                padding: '2px', // Ensure no extra padding
+                                margin: 0,
+                            }),
+                            indicatorsContainer: (provided) => ({
+                                ...provided,
+                                padding: '2px',
+                            }),
+                            dropdownIndicator: (provided) => ({
+                                ...provided,
+                                padding: '0px', // Removes space around the dropdown arrow
+                                margin: 0,
+                            }),
+                            singleValue: (provided) => ({
+                                ...provided,
+                                padding: 0,
+                                margin: 0,
+                            }),
+                        }}
+                    />
+                </div>
             </div>
         </div>
 

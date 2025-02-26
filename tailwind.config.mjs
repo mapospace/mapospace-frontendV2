@@ -120,12 +120,12 @@ export default {
       },
       borderRadius: {
         none: '0',
-        xs: '4px',
-        s: '8px',
-        m: '12px',
-        l: '16px',
-        pill: '999px',
-        full: '50%',
+        bxs: '4px',
+        bs: '8px',
+        bm: '12px',
+        bl: '16px',
+        bpill: '999px',
+        bfull: '50%',
       },
       fontSize: {
         'f-xs': '10px',

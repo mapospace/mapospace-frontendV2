@@ -1,8 +1,9 @@
 "use client";
 
-import { GoogleMap, Polygon } from "@react-google-maps/api";
+// import { GoogleMap, Polygon } from "@react-google-maps/api";
 import { useEffect, useState } from "react";
 import Select from "react-select";
+import H3Map from "./H3Map";
 
 const dataValues = [
     { value: 1, label: "1" },
@@ -15,37 +16,42 @@ const dataValues = [
 ];
 
 const H3ClustingMap = ({ h3Data, setH3Resolution }) => {
-    const [polygons, setPolygons] = useState([]);
+    // const [polygons, setPolygons] = useState([]);
     const [selectedOption, setSelectedOption] = useState(dataValues[0]);
 
-    useEffect(() => {
-        console.log("H3ClustingMap", h3Data)
-        const parsedPolygons = h3Data.map((item) => ({
-            path: item.coordinates.map(([lat, lng]) => ({ lat, lng })),
-            color: getColorByValue(item.totalOrderValue),
-        }));
-        setPolygons(parsedPolygons);
-    }, [h3Data]);
+    // useEffect(() => {
+    //     console.log("H3ClustingMap", h3Data)
+    //     const parsedPolygons = h3Data.map((item) => ({
+    //         path: item.coordinates.map(([lat, lng]) => ({ lat, lng })),
+    //         color: getColorByValue(item.totalOrderValue),
+    //     }));
+    //     setPolygons(parsedPolygons);
+    // }, [h3Data]);
 
     useEffect(() => {
         setH3Resolution(selectedOption.value)
     }, [selectedOption])
 
     // Function to color polygons based on totalOrderValue
-    const getColorByValue = (value) => {
-        if (value > 40000) return "#FF0000"; // Red for high value
-        if (value > 20000) return "#FFA500"; // Orange for medium value
-        return "#00FF00"; // Green for low value
-    };
+    // const getColorByValue = (value) => {
+    //     if (value > 40000) return "#FF0000"; // Red for high value
+    //     if (value > 20000) return "#FFA500"; // Orange for medium value
+    //     return "#00FF00"; // Green for low value
+    // };
 
     return (
-        <div className="col-span-2 h-full bg-white rounded-lg flex flex-col border-2 border-neutral-200 shadow-md">
+        <div className="col-span-2 h-full bg-white rounded-bs flex flex-col border">
 
-            <div className='flex justify-between px-xl pb-s pt-l text-f-l font-semibold text-neutral-1200 '>
+            {/* <div className='flex justify-between px-xl pb-s pt-l text-f-l font-semibold text-neutral-1200 '>
                 <h3 className="text-f-l font-semibold text-neutral-1200  ">
                     Heat Map Representation
                 </h3>
-                <div className='flex gap-s'>
+
+            </div> */}
+
+            <div className=' h-full relative'>
+                <H3Map h3Data={h3Data} />
+                <div className=' gap-s absolute  right-2 top-2 bg-white rounded-bs'>
                     <Select
                         options={dataValues}
                         value={selectedOption}
@@ -86,32 +92,6 @@ const H3ClustingMap = ({ h3Data, setH3Resolution }) => {
                     />
 
                 </div>
-            </div>
-            <div className='p-xl pt-s  h-full'>
-                <GoogleMap
-                    mapContainerStyle={{ width: "100%", height: "100%" }}
-                    center={{ lat: 28.6139, lng: 77.209 }}
-                    zoom={10}
-                    options={{
-                        streetViewControl: false,
-                        zoomControl: false,
-                        fullscreenControl: false,
-                        mapTypeControl: false
-                    }}
-                >
-                    {polygons.map((poly, index) => (
-                        <Polygon
-                            key={index}
-                            paths={poly.path}
-                            options={{
-                                fillColor: poly.color,
-                                fillOpacity: 0.4,
-                                strokeColor: "#000",
-                                strokeWeight: 1,
-                            }}
-                        />
-                    ))}
-                </GoogleMap>
             </div>
         </div>
 

@@ -10,7 +10,7 @@ import Stories from "@/components/LandingPage/Stories";
 
 export default function Home() {
   return (
-    <div className="overflow-hidden" >
+    <div className="overflow-hidden bg-white" >
       < Header />
       <MainComponent />
       <How />

@@ -31,7 +31,7 @@ const BarChart = ({ labels, values, height, labelName, period }) => {
             {
                 label: index === 0 ? labelName : `Dataset ${index + 1}`,
                 data: value,
-                backgroundColor: index % 2 == 0 ? '#8a8af2' : '#8a8af2',
+                backgroundColor: index % 2 == 0 ? '#0136f8' : '#0136f8',
             }
         ));
 
@@ -65,8 +65,8 @@ const BarChart = ({ labels, values, height, labelName, period }) => {
     };
 
     return (
-        <div className="bg-white shadow-md flex-1 flex flex-col h-full border rounded-lg">
-            <div className='flex justify-between px-xl py-s'>
+        <div className="bg-white  flex-1 flex flex-col h-full border rounded-bs">
+            <div className='flex justify-between px-xl pb-s pt-l text-f-l font-semibold text-neutral-1200 '>
                 <h3 className="text-f-l font-semibold text-neutral-1200  ">
                     {labelName}
                 </h3>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Maps from './Maps'
 import { IoCloseSharp } from "react-icons/io5";
 import AuthServices from '@/utils/axios-api';
@@ -16,6 +16,8 @@ import { RiCloseFill } from "react-icons/ri";
 import Skeleton from 'react-loading-skeleton'
 import DatePicker from 'react-datepicker';
 import { SlCalender } from "react-icons/sl";
+import generateCustomDateRanges from '@/utils/generate-custom-date-ranges';
+import { FiMap } from "react-icons/fi";
 
 const MapContainer = ({ catalogList, setAppliedFilter, appliedFilter }) => {
     const [formData, setFormData] = useState({
@@ -42,6 +44,47 @@ const MapContainer = ({ catalogList, setAppliedFilter, appliedFilter }) => {
     const [OpenSearchBar, setOpenSearchBar] = useState(false);
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
+    const [ranges, SetRanges] = useState([])
+    const [currentRange, setCurrentRange] = useState(null);
+    const [showCustom, setShowCustom] = useState(false);
+    const [showMap, setShowMap] = useState(false);
+    const datePickerRef = useRef(null);
+
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (datePickerRef.current && !datePickerRef.current.contains(event.target)) {
+                setShowCustom(false);
+            }
+        }
+
+        if (showCustom) {
+            document.addEventListener("mousedown", handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [showCustom]);
+
+
+    useEffect(() => {
+        const Ranges = generateCustomDateRanges();
+        console.log("Ranges", Ranges)
+        SetRanges(Ranges);
+        setCurrentRange(Ranges[0])
+    }, [])
+
+    useEffect(() => {
+        if (currentRange != null && currentRange.id != 10) {
+            console.log("currentRange", currentRange)
+            let newData = { "startDate": currentRange.startDate, "endDate": currentRange.endDate };
+            setAppliedFilter(prev => ({
+                ...(prev ?? {}),
+                ...newData
+            }));
+        }
+
+    }, [currentRange])
 
     useEffect(() => {
         if (polygonData.length > 0 || selfPolygonData.length > 0) {
@@ -69,6 +112,20 @@ const MapContainer = ({ catalogList, setAppliedFilter, appliedFilter }) => {
         const isoDate = date.toISOString();
         return isoDate;
     }
+
+    const selectedRangeHandler = (data) => {
+        if (data.id == 10) {
+            setShowCustom(true)
+        }
+        else {
+            setShowCustom(false)
+            setStartDate(null);
+            setEndDate(null);
+        }
+        setCurrentRange(data)
+
+    }
+
 
     const ChangeHandler = (e) => {
         const { id, value } = e.target;
@@ -244,60 +301,69 @@ const MapContainer = ({ catalogList, setAppliedFilter, appliedFilter }) => {
             {/* <div cl */}
             <div className='flex flex-1 items-end '>
                 <div className=' flex  flex-1 flex-col  gap-s'>
-                    <div className='flex justify-between items-center text-f-m'>
-                        <div>Date Range</div>
-                        <button className='text-secondary-900' onClick={() => {
-                            setStartDate(null)
-                            setEndDate(null)
-                        }}>
-                            Reset
-                        </button>
-                    </div>
                     <div className='flex gap-s '>
+                        <div className='flex'>
+                            <div className='flex bg-neutral-200 rounded-bs p-xs text-f-m font-normal gap-xs relative '>
+                                <div className={`px-s py-xs cursor-pointer hover:bg-neutral-300 rounded-bs text-black ${currentRange && 10 == currentRange.id && 'bg-white hover:bg-white'} `} onClick={() => { selectedRangeHandler({ id: 10 }) }} >Custom</div>
+                                {ranges.length > 0 && ranges.map((range) => (
+                                    <div className={`px-s py-xs cursor-pointer hover:bg-neutral-300 rounded-bs text-black  ${range.id == currentRange.id && 'bg-white hover:bg-white'}`} key={range.id} onClick={() => { selectedRangeHandler(range) }}>{range.title}</div>
+                                ))}
+                                {showCustom && <div ref={datePickerRef} className='absolute bg-white border z-40 left-0 top-12 rounded-bs flex flex-col items-start p-s gap-s'>
+                                    <div className='flex justify-between items-center w-full'>
+                                        <div className='text-neutral-1200 font-semibold'> {startDate == null ? 'Start Date' : 'End Date'}</div>
 
-                        <div className="flex flex-1 flex-col gap-xs relative">
-                            {/* <label className="block text-sm font-medium text-gray-700">From</label> */}
-                            <DatePicker
-                                selected={startDate}
-                                onChange={(date) => setStartDate(date)}
-                                showTimeSelect
-                                dateFormat="Pp"
-                                className="border  text-f-m  rounded-md p-2 w-full border-effect focus:border"
-                                placeholderText="Start date and time"
-                                popperPlacement="bottom-start"
-                            />
-                            <div className='absolute top-2 right-2'><SlCalender className='w-6 h-6' /></div>
+                                        <div className='text-secondary-900 cursor-pointer' onClick={() => {
+                                            setStartDate(null);
+                                            setEndDate(null);
+                                        }}>
+                                            Reset</div>
+                                    </div>
+
+                                    {startDate == null ? <div className=" custom-datepicker">
+                                        <DatePicker
+                                            selected={startDate}
+                                            onChange={(date) => setStartDate(date)}
+                                            showTimeSelect
+                                            dateFormat="Pp"
+                                            className="border  text-f-m  rounded-md p-2 w-full border-effect bg-white focus:border"
+                                            placeholderText="Start date and time"
+                                            popperPlacement="bottom-start"
+                                            inline
+                                        />
+                                    </div> : <div className="custom-datepicker">
+                                        <DatePicker
+                                            selected={endDate}
+                                            onChange={(date) => setEndDate(date)}
+                                            showTimeSelect
+                                            dateFormat="Pp"
+                                            className="border text-f-m rounded-md p-2 w-full border-effect"
+                                            placeholderText="End date and time"
+                                            popperPlacement="bottom-end"
+                                            inline
+                                        />
+                                    </div>
+
+                                    }
+
+
+                                </div>}
+                            </div>
                         </div>
-
-                        {/* End Date Picker */}
-                        <div className="flex flex-1 flex-col gap-xs relative">
-                            {/* <label className="block text-sm font-medium text-gray-700">To</label> */}
-                            <DatePicker
-                                selected={endDate}
-                                onChange={(date) => setEndDate(date)}
-                                showTimeSelect
-                                dateFormat="Pp"
-                                className="border text-f-m rounded-md p-2 w-full border-effect "
-                                placeholderText="End date and time"
-                                popperPlacement="bottom-end"  // Change this for desired positioning
-
-                            />
-                            <div className='absolute top-2 right-2'><SlCalender className='w-6 h-6' /></div>
-
-                        </div>
-
 
                     </div>
                 </div>
-                <div className='flex-1 flex items-end justify-end'>
-                    {startDate && endDate && <button className='bg-neutral-200 text-neutral-1200 shadow-s rounded-md flex px-l py-s items-center gap-s' onClick={() => { setShowFilter(prev => !prev) }}>
-                        <LuFilter /> Filter
-                    </button>}
+                <div className=' flex items-end justify-end gap-s'>
+                    <button className='bg-neutral-200 text-f-m text-neutral-1200 rounded-md flex px-l py-s items-center ' onClick={() => { setShowFilter(prev => !prev) }}>
+                        <LuFilter /> <span className='ml-s'>Filter</span>
+                    </button>
+                    <button className='bg-neutral-200 text-f-m text-neutral-1200 rounded-md flex px-l py-s items-center ' onClick={() => { setShowMap(prev => !prev) }}>
+                        <FiMap /> <span className='ml-s'>Map</span>
+                    </button>
                 </div>
 
             </div>
             {showFilter && <Filter close={setShowFilter} catalogList={catalogList} applyFilterHandler={applyFilterHandler} appliedFilter={appliedFilter} />}
-            <div className='h-[100vh] relative rounded-md shadow-md'>
+            <div className={`h-[100vh] relative rounded-md shadow-md ${showMap ? "block" : "hidden"}`}>
                 {OpenSearchBar && <div className={'absolute z-30 w-full h-full'}>
                     <div className='relative w-full h-full gap-xl bg-black bg-opacity-40 flex justify-center items-center '>
                         <div className={clsx('absolute  w-[50%] flex flex-col focus:top-[10%] focus:bottom-0 rounded-lg transition-all duration-200 ease-linear', (!onSearch && polygonData.length == 0 && selfPolygonData == 0) ? "top-[40%]" : "top-[10%]")} onClick={() => { setOnSearch(true) }}>
@@ -394,7 +460,7 @@ const MapContainer = ({ catalogList, setAppliedFilter, appliedFilter }) => {
                     </div>
                 </div>}
 
-                <div className='mt-xl rounded-md shadow-md'>
+                <div className='mt-xl '>
                     <Maps setSaveFormVisible={setSaveFormVisible} setSearchResultVisible={setSearchResultVisible} setCurrentPolygon={setCurrentPolygon} polygonSaved={polygonSaved} polygonCoordinates={polygonCoordinates}
                         latlng={latlng} setAppliedFilter={setAppliedFilter} />
                 </div>
