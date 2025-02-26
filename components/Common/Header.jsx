@@ -64,7 +64,7 @@ const Header = () => {
                         <PiSignOutThin className='w-l h-l ' />
                         <div className='text-nowrap'>Sign Out</div>
                     </div>
-                    <div className='p-xs px-m hover:bg-neutral-200 rounded-bs text-right flex gap-m items-center justify-between cursor-pointer'>
+                    <div className='p-xs px-m hover:bg-neutral-200 rounded-bs text-right flex gap-m items-center justify-between cursor-pointer' onClick={() => { router.push('/profile') }}>
                         <CiSettings className='w-l h-l ' />
                         <div className='text-nowrap'>Setting</div>
                     </div>
