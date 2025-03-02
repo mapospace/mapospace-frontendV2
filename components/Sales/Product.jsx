@@ -8,14 +8,14 @@ import SankeyChart from '../Common/SankeyChart'
 import HistogramChart from '../Common/HistogramChart'
 import Heatmap from '../Maps/Heatmap'
 import ClusterMap from '../Maps/ClusterMap'
-import H3ClustingMap from '../Maps/H3ClustingMap'
+import HexaPolygonMap from '../Maps/HexaPolygonMap'
 import DoughnutContainer from '../Common/Doughnut/DoughnutContainer'
 import Select from "react-select";
 import Category from './Category'
 import SubCategory from './SubCategory'
-import h3 from '../../public/dashboard/h3.png'
-import heatmap from '../../public/dashboard/heatmap.png'
-import clusting from '../../public/dashboard/clusting.png'
+
+import { BsCartCheckFill } from "react-icons/bs";
+import { MdPointOfSale } from "react-icons/md";
 // const data = [
 //     {
 //         name: 'Metric1',
@@ -401,9 +401,9 @@ const Product = ({ appliedFilter }) => {
                 </div>
                 <div className=' gap-xl grid  grid-cols-5  h-[100vh]'>
                     <div className='col-span-4 h-full'>
-                        {currentMap == 0 && h3Data && <H3ClustingMap h3Data={h3Data} setH3Resolution={setH3Resolution} />}
-                        {currentMap == 1 && heatMapData.length > 0 && <Heatmap data={heatMapData} setBinSize={setBinSize} />}
-                        {currentMap == 2 && <ClusterMap data={clusterData} />}
+                        {currentMap == 0 && h3Data && <HexaPolygonMap h3Data={h3Data} setH3Resolution={setH3Resolution} label="Order Value" Icon={BsCartCheckFill} />}
+                        {currentMap == 1 && heatMapData.length > 0 && <Heatmap data={heatMapData} setBinSize={setBinSize} label="Sales Value" Icon={MdPointOfSale} />}
+                        {currentMap == 2 && <ClusterMap data={clusterData} label="Order Value" Icon={BsCartCheckFill} />}
 
                     </div>
                     <div className='col-span-1 h-full  flex flex-col gap-xl '>

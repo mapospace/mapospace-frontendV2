@@ -15,42 +15,22 @@ const dataValues = [
     { value: 7, label: "7" },
 ];
 
-const H3ClustingMap = ({ h3Data, setH3Resolution }) => {
-    // const [polygons, setPolygons] = useState([]);
+const HexaPolygonMap = ({ h3Data, setH3Resolution, label, Icon }) => {
     const [selectedOption, setSelectedOption] = useState(dataValues[0]);
-
-    // useEffect(() => {
-    //     console.log("H3ClustingMap", h3Data)
-    //     const parsedPolygons = h3Data.map((item) => ({
-    //         path: item.coordinates.map(([lat, lng]) => ({ lat, lng })),
-    //         color: getColorByValue(item.totalOrderValue),
-    //     }));
-    //     setPolygons(parsedPolygons);
-    // }, [h3Data]);
 
     useEffect(() => {
         setH3Resolution(selectedOption.value)
     }, [selectedOption])
 
-    // Function to color polygons based on totalOrderValue
-    // const getColorByValue = (value) => {
-    //     if (value > 40000) return "#FF0000"; // Red for high value
-    //     if (value > 20000) return "#FFA500"; // Orange for medium value
-    //     return "#00FF00"; // Green for low value
-    // };
+
 
     return (
         <div className="col-span-2 h-full bg-white rounded-bs flex flex-col border">
 
-            {/* <div className='flex justify-between px-xl pb-s pt-l text-f-l font-semibold text-neutral-1200 '>
-                <h3 className="text-f-l font-semibold text-neutral-1200  ">
-                    Heat Map Representation
-                </h3>
 
-            </div> */}
 
             <div className=' h-full relative'>
-                <H3Map h3Data={h3Data} />
+                <H3Map h3Data={h3Data} label={label} Icon={Icon} />
                 <div className=' gap-s absolute  right-2 top-2 bg-white rounded-bs'>
                     <Select
                         options={dataValues}
@@ -98,4 +78,4 @@ const H3ClustingMap = ({ h3Data, setH3Resolution }) => {
     );
 };
 
-export default H3ClustingMap;
+export default HexaPolygonMap;
