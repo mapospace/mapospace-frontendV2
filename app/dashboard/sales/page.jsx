@@ -7,8 +7,6 @@ import TotalSales from "@/components/Sales/TotalSales";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Product from "@/components/Sales/Product";
 import MapContainer from "@/components/Maps/MapContainer";
-import Category from "@/components/Sales/Category";
-import SubCategory from "@/components/Sales/SubCategory";
 import clsx from "clsx";
 
 
@@ -50,7 +48,7 @@ const Dashboard = () => {
     return (
         <div className="p-8 bg-white min-h-screen pt-9xl" >
             <div className=' flex justify-between  items-end'>
-                <div className='text-neutral-1300 font-semibold text-2xl'>{currentCategory == "products" ? "Product" : "Sale"} Analytics dashboard</div>
+                <div className='text-neutral-1300 font-semibold text-2xl'>{currentCategory == "products" ? "Product" : "Sale"} Analytics</div>
                 <div className="flex text-black">
                     <div
                         className={clsx("border-b border-neutral-600  px-s py-xs text-f-m   cursor-pointer", currentCategory == "total_sale" && 'bg-neutral-200 border-b-2 rounded-t-bxs')}
@@ -73,9 +71,6 @@ const Dashboard = () => {
             </div>
             {currentCategory == "total_sale" && <TotalSales appliedFilter={appliedFilter} />}
             {currentCategory == "products" && <Product appliedFilter={appliedFilter} />}
-            {/* {currentCategory == "categories" && <Category appliedFilter={appliedFilter} />}
-            {currentCategory == "sub_categorie" && <SubCategory appliedFilter={appliedFilter} />} */}
-
 
         </div >
     );

@@ -50,8 +50,8 @@ const Product = ({ appliedFilter }) => {
     const [histogramRanges, setHistogramRanges] = useState([0, 50, 100, 200, 500, 1000, 10000, 20000])
     const [histogramData, setHistogramData] = useState([])
     const [h3Data, setH3Data] = useState([])
-    const [heatMapData, setHeatMapData] = useState([])
     const [h3Resolution, setH3Resolution] = useState(1)
+    const [heatMapData, setHeatMapData] = useState([])
     const [binSize, setBinSize] = useState(0.01)
     const [clusterData, setClusterData] = useState([])
     const [currentMap, setCurrentMap] = useState(0)
@@ -199,9 +199,7 @@ const Product = ({ appliedFilter }) => {
             console.log("orderValueDistributionHandler", response?.data);
             const data = response.data.map((data) => { return data.count })
             setHistogramData(data)
-            // setProductList(response?.data)
-            // setTopProductsByQuantity(response?.data.topProductsByQuantity)
-            // setTopProductsByRevenue(response?.data.topProductsByRevenue)
+
 
         } catch (err) {
             console.error("Error fetching user details:", err);
@@ -388,7 +386,7 @@ const Product = ({ appliedFilter }) => {
 
                 <div className="col-span-4 h-full bg-white rounded-bs flex flex-col border">
 
-                    <HistogramChart data={histogramData} bins={histogramRanges} setBins={setHistogramRanges} />
+                    <HistogramChart data={histogramData} bins={histogramRanges} setBins={setHistogramRanges} label="Top Products By Quantity" />
 
 
                 </div>
@@ -401,7 +399,7 @@ const Product = ({ appliedFilter }) => {
                 </div>
                 <div className=' gap-xl grid  grid-cols-5  h-[100vh]'>
                     <div className='col-span-4 h-full'>
-                        {currentMap == 0 && h3Data && <HexaPolygonMap h3Data={h3Data} setH3Resolution={setH3Resolution} label="Order Value" Icon={BsCartCheckFill} />}
+                        {currentMap == 0 && h3Data && <HexaPolygonMap h3Data={h3Data} setH3Resolution={setH3Resolution} label="Order Value" Icon={BsCartCheckFill} type="product" />}
                         {currentMap == 1 && heatMapData.length > 0 && <Heatmap data={heatMapData} setBinSize={setBinSize} label="Sales Value" Icon={MdPointOfSale} />}
                         {currentMap == 2 && <ClusterMap data={clusterData} label="Order Value" Icon={BsCartCheckFill} />}
 

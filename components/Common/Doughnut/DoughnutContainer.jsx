@@ -17,6 +17,8 @@ const DoughnutContainer = ({ endpoint, appliedFilter, label, From }) => {
             From == "SaleProduct" && topSellingProductOverallHandler(productPeriod);
             From == "SaleCategory" && topSellingCategoryOverallHandler(productPeriod);
             From === "SaleSubCategory" && topSellingSubCategoryOverallHandler(productPeriod);
+            From === "ViewCategory" && ViewCategoryOverallHandler(productPeriod)
+            From === "ViewSubCategory" && ViewSubCategoryOverallHandler(productPeriod)
         }
     }, [appliedFilter, productPeriod])
 
@@ -28,6 +30,8 @@ const DoughnutContainer = ({ endpoint, appliedFilter, label, From }) => {
             From == "SaleProduct" && getProductLabelAndValues(getData[0].topProductsByRevenue)
             From == "SaleCategory" && getCategoryLabelAndValues(getData[0].topCategoriesByRevenue)
             From === "SaleSubCategory" && getSubCategoryLabelAndValues(getData[0].topSubCategoriesByRevenue)
+            From === "ViewCategory" && getViewCategoryLabelAndValues(getData[0].topCategoriesByViews)
+            From === "ViewSubCategory" && getViewSubCategoryLabelAndValues(getData[0].topSubcategoriesByViews)
 
         }
     }, [selectedPeriod])
@@ -86,12 +90,66 @@ const DoughnutContainer = ({ endpoint, appliedFilter, label, From }) => {
         }
     }
 
+    const ViewCategoryOverallHandler = async (period) => {
+        try {
+            const authService = new AuthServices();
+            const response = await authService.postApiCallHandler(endpoint, { ...appliedFilter, "period": period });
+
+            if (response?.error) {
+                console.log(response)
+                customError(response.message || "Failed to fetch data.");
+                return;
+            }
+            console.log("ViewCategoryOverallHandler", response?.data);
+            setProductList(response.data)
+            let periods = response.data.map((data) => { return data.period });
+            console.log("periods", periods)
+            setProductListDoughtnutPeriod(periods)
+            getViewCategoryLabelAndValues(response.data[0].topCategoriesByViews)
+
+        } catch (err) {
+            console.error("Error fetching user details:", err);
+
+        }
+    }
+
+    const ViewSubCategoryOverallHandler = async (period) => {
+        try {
+            const authService = new AuthServices();
+            const response = await authService.postApiCallHandler(endpoint, { ...appliedFilter, "period": period });
+
+            if (response?.error) {
+                console.log(response)
+                customError(response.message || "Failed to fetch data.");
+                return;
+            }
+            console.log("ViewCategoryOverallHandler", response?.data);
+            setProductList(response.data)
+            let periods = response.data.map((data) => { return data.period });
+            console.log("periods", periods)
+            setProductListDoughtnutPeriod(periods)
+            getViewSubCategoryLabelAndValues(response.data[0].topSubcategoriesByViews)
+
+        } catch (err) {
+            console.error("Error fetching user details:", err);
+
+        }
+    }
+
     const getCategoryLabelAndValues = (values) => {
         let getlabels = values.map(data => { return data.category })
         let getValue = values.map(data => { return data.totalRevenue })
         setProductLabelForDoughnut(getlabels);
         setProductValueForDoughnut(getValue)
     }
+
+    const getViewCategoryLabelAndValues = (values) => {
+        let getlabels = values.map(data => { return data.category })
+        let getValue = values.map(data => { return data.totalViews })
+        setProductLabelForDoughnut(getlabels);
+        setProductValueForDoughnut(getValue)
+    }
+
 
     const topSellingSubCategoryOverallHandler = async (period) => {
         try {
@@ -119,6 +177,13 @@ const DoughnutContainer = ({ endpoint, appliedFilter, label, From }) => {
     const getSubCategoryLabelAndValues = (values) => {
         let getlabels = values.map(data => { return data.subcategory })
         let getValue = values.map(data => { return data.totalRevenue })
+        setProductLabelForDoughnut(getlabels);
+        setProductValueForDoughnut(getValue)
+    }
+
+    const getViewSubCategoryLabelAndValues = (values) => {
+        let getlabels = values.map(data => { return data.subcategory })
+        let getValue = values.map(data => { return data.totalViews })
         setProductLabelForDoughnut(getlabels);
         setProductValueForDoughnut(getValue)
     }

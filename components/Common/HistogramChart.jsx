@@ -18,7 +18,7 @@ import { FaL } from "react-icons/fa6";
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 
-const HistogramChart = ({ data, bins, setBins }) => {
+const HistogramChart = ({ data, bins, setBins, label }) => {
     const [endValue, setEndValue] = useState("");
     const [startValue, setStartValue] = useState("0");
     const [ranges, setRanges] = useState([]);
@@ -91,7 +91,7 @@ const HistogramChart = ({ data, bins, setBins }) => {
 
     return <>
         <div className='px-xl pb-s pt-l text-f-l font-semibold text-neutral-1200 flex justify-between items-center'>
-            <h3 className="text-f-l font-semibold text-neutral-1200  ">Top Products By Quantity</h3>
+            <h3 className="text-f-l font-semibold text-neutral-1200  ">{label}</h3>
             <div className='text-f-m font-normal relative'>
                 <button className='py-xs px-s border rounded-md border-neutral-1200' onClick={() => { setShowRangeMeter(prev => !prev) }}>Add Range + </button>
                 {showRangeMeter && <div className='w-[300px]  absolute top-10 right-0 bg-white bg-opacity-70 border  rounded-md p-s flex flex-col'>

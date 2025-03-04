@@ -12,12 +12,12 @@ const dataValues = [
     { value: "month", label: "Month" }
 ];
 
-const BarChart = ({ labels, values, height, labelName, period }) => {
+const BarChart = ({ labels, values, height, labelName, period, showPeriod = true }) => {
     const [data, setData] = useState({ labels: [], datasets: [] });
     const [selectedOption, setSelectedOption] = useState(dataValues[0]);
 
     useEffect(() => {
-        period(selectedOption.value)
+        showPeriod && period(selectedOption.value)
     }, [selectedOption])
 
 
@@ -70,7 +70,7 @@ const BarChart = ({ labels, values, height, labelName, period }) => {
                 <h3 className="text-f-l font-semibold text-neutral-1200  ">
                     {labelName}
                 </h3>
-                <div >
+                {showPeriod && <div >
                     <Select
                         options={dataValues}
                         value={selectedOption}
@@ -111,7 +111,7 @@ const BarChart = ({ labels, values, height, labelName, period }) => {
                     />
 
 
-                </div>
+                </div>}
             </div>
             <div className="w-full flex-1 flex items-center justify-center p-xl ">
                 <div className="w-full h-full">

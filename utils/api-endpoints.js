@@ -52,4 +52,30 @@ export const API_ENDPOINTS = {
     SalesBySubCategory: 'analytics/sales-by-subcategory',
     TopSellingSubCategoryOverTime: 'analytics/sales-by-subcategory-over-time',
 
+
+
+
+    TotalViews: "analytics-v2/total-views",
+    TotalViewsOverTime: "analytics-v2/total-views-over-time",
+    ViewsSankey: 'analytics-v2/views-sankey',
+    ViewsSankeySwitch: "analytics-v2/views-sankey-switch",
+    TopViewsRangeDistribution: "analytics-v2/top-views-range-distribution",
+    ViewCategoryOverTime: 'analytics-v2/views-by-category-over-time',
+    ViewCategory: 'analytics-v2/views-by-category',
+    ViewSubCategory: 'analytics-v2/views-by-subcategory',
+    ViewSubCategoryOverTime: 'analytics-v2/views-by-subcategory-over-time',
+
+    CSAT: {
+        ScoreOverTime: 'analytics-v1/csat-score-over-time',//done
+        SupportTicketDistributionByLocation: 'analytics-v1/support-ticket-distribution-by-location',//done
+        SupportTicketDistributionByLocationH3: 'analytics-v1/support-ticket-distribution-by-location-h3',
+        ScoreAnalysis: 'analytics-v1/csat-score-analysis',//done
+        SupportTicketVolumeOverTime: 'analytics-v1/support-ticket-volume-over-time',//done
+        PeakHoursAnalysis: 'analytics-v1/peak-hours-analysis',//done
+        RaisedByUsers: 'analytics-v1/csat-raised-by-users',//done
+        ResolutionTimeAnalysis: 'analytics-v1/resolution-time-analysis',//done
+        ResolutionTimeOverTime: 'analytics-v1/resolution-time-over-time',//done
+        ScoreDistributionByDayOfWeek: 'analytics-v1/csat-score-distribution-by-day-of-week' //done
+    }
+
 }

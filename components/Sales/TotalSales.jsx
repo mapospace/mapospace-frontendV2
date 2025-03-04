@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import Graphs from './Graphs'
 import MapContainer from '../Maps/MapContainer'
 import AuthServices from '@/utils/axios-api'
 import { API_ENDPOINTS } from '@/utils/api-endpoints'
@@ -90,6 +89,7 @@ const TotalSales = ({ appliedFilter }) => {
 
         }
     }
+
     const OrderSaleHandler = async () => {
         try {
             const authService = new AuthServices();
@@ -255,7 +255,7 @@ const TotalSales = ({ appliedFilter }) => {
             </div>
             <div className="grid  md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-xl mt-xl h-[400px] ">
                 <div className='col-span-2'>
-                    {labels.length > 0 && totalOrders.length > 0 && <LineChart labels={linelabels} values={totalOrders} labelName="Total Orders" period={setLinePeriod} />}
+                    {linelabels.length > 0 && totalOrders.length > 0 && <LineChart labels={linelabels} values={totalOrders} labelName="Total Orders" period={setLinePeriod} />}
                 </div>
 
                 <div className="col-span-2  bg-white rounded-bs flex flex-col border border-neutral-200 ">

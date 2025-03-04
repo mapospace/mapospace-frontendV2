@@ -4,6 +4,7 @@ import { BsFillBarChartLineFill } from "react-icons/bs";
 import { MdOutlineViewInAr } from "react-icons/md";
 import { IoSettings } from "react-icons/io5";
 import { usePathname, useRouter } from 'next/navigation';
+import { MdPreview } from "react-icons/md";
 import clsx from 'clsx';
 
 
@@ -28,13 +29,19 @@ const SideNav = ({ routeHandler }) => {
                             <p className=' text-f-xs mt-xs text-gray-600'>Sale</p>
                             {/* <p className='absolute  py-xs px-l hidden group-hover:block bg-secondary-500  text-white rounded-lg left-9 bottom-3  text-f-s'>Sales</p> */}
                         </div>
-                        <div className='relative  flex flex-col items-center justify-center py-m  group' onClick={() => { routeHandler('/dashboard/views') }}>
+                        <div className='relative  flex flex-col items-center justify-center py-m  group' onClick={() => { routeHandler('/dashboard/views?type=total_view') }}>
 
-                            <MdOutlineViewInAr className={clsx('w-7 h-7 text-gray-400 hover:text-secondary-900 cursor-pointer', (param == '/dashboard/views' && "text-secondary-900"))} />
+                            <MdPreview className={clsx('w-7 h-7 text-gray-400 hover:text-secondary-900 cursor-pointer', (param == '/dashboard/views' && "text-secondary-900"))} />
                             <p className=' text-f-xs mt-xs text-gray-600'>View</p>
                             {/* <p className='absolute text-white py-xs px-l hidden group-hover:block bg-secondary-500  rounded-lg left-9 bottom-3  text-f-s'>Views</p> */}
                         </div>
 
+                        <div className='relative  flex flex-col items-center justify-center py-m  group' onClick={() => { routeHandler('/dashboard/scat') }}>
+
+                            <MdOutlineViewInAr className={clsx('w-7 h-7 text-gray-400 hover:text-secondary-900 cursor-pointer', (param == '/dashboard/scat' && "text-secondary-900"))} />
+                            <p className=' text-f-xs mt-xs text-gray-600'>CSAT</p>
+                            {/* <p className='absolute text-white py-xs px-l hidden group-hover:block bg-secondary-500  rounded-lg left-9 bottom-3  text-f-s'>Views</p> */}
+                        </div>
                     </div>
                 </div>
                 <div className='relative  flex flex-col items-center justify-center py-m border-t border-gray-400 group ' onClick={() => { routeHandler('/profile') }}>

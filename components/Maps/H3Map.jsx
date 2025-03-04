@@ -3,7 +3,7 @@
 import { GoogleMap, Polygon, useLoadScript } from "@react-google-maps/api";
 import { useEffect, useState, useRef, useMemo } from "react";
 
-const H3Map = ({ h3Data, center = { lat: 28.6139, lng: 77.209 }, zoom = 12, Icon, label }) => {
+const H3Map = ({ h3Data, center = { lat: 28.6139, lng: 77.209 }, zoom = 12, label, type }) => {
     const [hoveredPolygon, setHoveredPolygon] = useState(null);
     const [tooltipPosition, setTooltipPosition] = useState(null);
     const [mapCenter, setMapCenter] = useState(center);
@@ -21,19 +21,40 @@ const H3Map = ({ h3Data, center = { lat: 28.6139, lng: 77.209 }, zoom = 12, Icon
         return "#ccd7fe";
     };
 
-    const polygons = useMemo(() =>
-        h3Data.map((item, index) => ({
-            id: index,
-            path: item.coordinates.map(([lat, lng]) => ({ lat, lng })),
-            color: getColorByValue(item.totalOrderValue),
-            value: item.totalOrderValue,
-            center: item.coordinates.reduce(
-                (acc, [lat, lng]) => ({ lat: acc.lat + lat / item.coordinates.length, lng: acc.lng + lng / item.coordinates.length }),
-                { lat: 0, lng: 0 }
-            )
-        })),
-        [h3Data]
-    );
+    const polygons = useMemo(() => {
+        if (type === "product") {
+            return h3Data.map((item, index) => ({
+                id: index,
+                path: item.coordinates.map(([lat, lng]) => ({ lat, lng })),
+                color: getColorByValue(item.totalOrderValue),
+                value: item.totalOrderValue,
+                center: item.coordinates.reduce(
+                    (acc, [lat, lng]) => ({
+                        lat: acc.lat + lat / item.coordinates.length,
+                        lng: acc.lng + lng / item.coordinates.length
+                    }),
+                    { lat: 0, lng: 0 }
+                )
+            }));
+        }
+        else if (type === "csat") {
+            return h3Data.map((item, index) => ({
+                id: index,
+                path: item.coordinates.map(([lat, lng]) => ({ lat, lng })),
+                color: getColorByValue(item.totalTickets),
+                value: item.totalTickets,
+                center: item.coordinates.reduce(
+                    (acc, [lat, lng]) => ({
+                        lat: acc.lat + lat / item.coordinates.length,
+                        lng: acc.lng + lng / item.coordinates.length
+                    }),
+                    { lat: 0, lng: 0 }
+                )
+            }));
+        }
+        return []; // Ensure a fallback return in case type !== "product"
+    }, [h3Data, type]); // Added `type` to dependencies in case it changes
+
 
     const handleMouseOver = (poly) => {
         setHoveredPolygon(poly);
@@ -97,7 +118,6 @@ const H3Map = ({ h3Data, center = { lat: 28.6139, lng: 77.209 }, zoom = 12, Icon
                     }}
                     className="flex flex-col items-center justify-center border border-secondary-900"
                 >
-                    <Icon className="text-black w-10 h-10" />
                     <div className="text-black text-f-2xl font-normal">
                         {label}
                     </div>

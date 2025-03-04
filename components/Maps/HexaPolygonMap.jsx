@@ -15,7 +15,7 @@ const dataValues = [
     { value: 7, label: "7" },
 ];
 
-const HexaPolygonMap = ({ h3Data, setH3Resolution, label, Icon }) => {
+const HexaPolygonMap = ({ h3Data, setH3Resolution, label, type }) => {
     const [selectedOption, setSelectedOption] = useState(dataValues[0]);
 
     useEffect(() => {
@@ -30,7 +30,7 @@ const HexaPolygonMap = ({ h3Data, setH3Resolution, label, Icon }) => {
 
 
             <div className=' h-full relative'>
-                <H3Map h3Data={h3Data} label={label} Icon={Icon} />
+                <H3Map h3Data={h3Data} label={label} type={type} />
                 <div className=' gap-s absolute  right-2 top-2 bg-white rounded-bs'>
                     <Select
                         options={dataValues}
