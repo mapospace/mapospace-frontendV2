@@ -76,6 +76,11 @@ export const API_ENDPOINTS = {
         ResolutionTimeAnalysis: 'analytics-v1/resolution-time-analysis',//done
         ResolutionTimeOverTime: 'analytics-v1/resolution-time-over-time',//done
         ScoreDistributionByDayOfWeek: 'analytics-v1/csat-score-distribution-by-day-of-week' //done
+    },
+
+    CustomEvent: {
+        CreateCustomEvents: 'custom-events/create',
+        CustomEvents: 'custom-events'
     }
 
 }

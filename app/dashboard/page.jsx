@@ -6,8 +6,12 @@ import React, { useEffect, useState } from 'react'
 import { LiaChartLineSolid } from "react-icons/lia";
 import { HiOutlineUserGroup } from "react-icons/hi2";
 import { MdWifiTethering } from "react-icons/md";
+import Image from 'next/image'
+import CardBg1 from '@/public/card/Card1.png'
+import { useRouter } from 'next/navigation'
 
 const page = () => {
+    const router = useRouter()
     const [ranges, SetRanges] = useState([])
     const [currentRange, setCurrentRange] = useState(null);
     const [h3Data, setH3Data] = useState([])
@@ -82,7 +86,7 @@ const page = () => {
     }
 
     return (
-        <div className='text-black py-10xl px-xl bg-white'>
+        <div className='text-black py-9xl px-xl bg-white'>
             <div className='flex'>
                 <div className='flex bg-neutral-200 rounded-bs p-xs text-f-m font-normal gap-xs'>
                     {ranges.length > 0 && ranges.map((range) => (
@@ -90,8 +94,8 @@ const page = () => {
                     ))}
                 </div>
             </div>
-            <div className='flex gap-xl mt-xl'>
-                <div className='flex-1 bg-white bg-opacity-80 rounded-bs border text-black py-s px-xl flex  flex-col leading-[45px]'>
+            <div className=' gap-l grid  grid-cols-3 mt-xl h-[220px]'>
+                <div className='col-span-1 bg-white bg-opacity-80 rounded-bs border text-black py-s px-xl flex  flex-col leading-[45px]'>
                     <div className='text-f-2xl flex justify-between items-center'>
                         <div className='text-f-l'>Total Sales</div>
                         <LiaChartLineSolid />
@@ -99,7 +103,7 @@ const page = () => {
                     <div className='text-f-6xl font-semibold '>542631</div>
                     <div className='text-neutral-600 font-f-l'>+20.1% from previous period</div>
                 </div>
-                <div className='flex-1 bg-white bg-opacity-80 rounded-bs border text-black py-s px-xl flex  flex-col leading-[45px]'>
+                <div className='col-span-1 bg-white bg-opacity-80 rounded-bs border text-black py-s px-xl flex  flex-col leading-[45px]'>
                     <div className='text-f-2xl flex justify-between items-center'>
                         <div className='text-f-l'>Total Sales</div>
                         <MdWifiTethering />
@@ -107,20 +111,31 @@ const page = () => {
                     <div className='text-f-6xl font-semibold '>542631</div>
                     <div className='text-neutral-600 font-f-l'>+20.1% from previous period</div>
                 </div>
-                <div className='flex-1 bg-white bg-opacity-80 rounded-bs border text-black py-s px-xl flex  flex-col leading-[45px]'>
-                    <div className='text-f-2xl flex justify-between items-center'>
-                        <div className='text-f-l'>Active Regions</div>
-                        <HiOutlineUserGroup />
+                <div className='col-span-1 bg-white bg-opacity-80 rounded-bs border flex flex-1 items-end text-black relative'>
+                    <Image src={CardBg1}
+                        alt="Picture of the author" className=' object-contain  rounded-bs ' />
+                    <div className='absolute  w-full h-full'>
+                        <div className='text-f-3xl font-semibold p-xl text-neutral-1200 '>
+                            I'm new to product analytics
+                        </div>
+                        <div className='text-f-xl font-semibold text-right px-xl  '>
+
+                            <button className='bg-[#FDC741] px-m py-s rounded-bs hover:bg-[#FFCD50]' onClick={() => {
+                                router.push('/create-event')
+                            }}>
+                                Personalize Setup
+                            </button>
+
+                        </div>
                     </div>
-                    <div className='text-f-6xl font-semibold '>542631</div>
-                    <div className='text-neutral-600 font-f-l'>+20.1% from previous period</div>
+
                 </div>
 
 
             </div>
             <div className='rounded-bs border p-xl  mt-xl'>
                 <div className='w-full h-[100vh] relative '>
-                    <H3Map h3Data={h3Data} />
+                    <H3Map h3Data={h3Data} type="product" />
                 </div>
                 <div className='flex gap-xl mt-xl '>
 
