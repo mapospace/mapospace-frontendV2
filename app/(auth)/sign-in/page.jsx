@@ -10,6 +10,7 @@ import { getAuthCredentials, setAuthCredentials } from '@/utils/auth-utils';
 import axios from 'axios';
 import { Routes } from '@/config/routes';
 import { customSuccess } from '@/components/Common/Toast';
+import Image from 'next/image';
 
 // Define Validation Schema with Yup
 const schema = yup.object().shape({
@@ -19,6 +20,7 @@ const schema = yup.object().shape({
 
 const LoginPage = () => {
     const [passwordVisible, setPasswordVisible] = useState(false);
+    const [loading, setLoading] = useState(false);
     const router = useRouter();
     const { token } = getAuthCredentials();
 
@@ -28,8 +30,10 @@ const LoginPage = () => {
     });
 
     const onSubmit = async (data) => {
+        if (loading) return;
+        setLoading(true);
         console.log("Login Successful:", data);
-
+        // return;
         try {
             const response = await axios.post(
                 `${process.env.NEXT_PUBLIC_REST_API_ENDPOINT}/user/login`,
@@ -62,6 +66,7 @@ const LoginPage = () => {
                     // customToast.success("Logged in successfully.");
                     router.push(Routes.Dashboard);
                 }
+                setLoading(false);
             }
         } catch (error) {
             if (error.response) {
@@ -145,9 +150,21 @@ const LoginPage = () => {
                             </div>
 
                             {/* Sign-in Button */}
-                            <button type="submit" className="w-full default-button transition">
-                                Sign in
-                            </button>
+                            {!loading ? <button type="submit" className="w-full default-button transition relative flex justify-center items-center">
+
+                                <div>Sign in</div>
+                            </button> :
+                                <div className='relative h-4xl bg-secondary-900 w-full rounded-bs flex justify-center items-center'>
+                                    <Image
+                                        src='/loading.gif'
+                                        alt="loading.."
+                                        width={20}
+                                        height={20}
+                                        className="absolute h-10xl w-10xl rounded-bs  "
+                                    />
+                                </div>
+                            }
+
                         </form>
 
                         {/* Google Sign-In */}

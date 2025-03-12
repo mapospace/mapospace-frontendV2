@@ -7,7 +7,7 @@ import { MdOutlineDataSaverOn } from "react-icons/md";
 
 const containerStyle = {
     width: "100%",
-    height: "100vh",
+    height: "100%",
     borderRadius: "8px"
 };
 

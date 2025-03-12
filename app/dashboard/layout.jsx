@@ -5,7 +5,8 @@ import { useRouter } from 'next/navigation'
 import React from 'react'
 
 const layout = ({ children }) => {
-    const router = useRouter()
+    const router = useRouter();
+
     const routeHandler = (path) => {
         router.push(path)
     }

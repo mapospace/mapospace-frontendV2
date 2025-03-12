@@ -5,6 +5,7 @@ import { MdOutlineViewInAr } from "react-icons/md";
 import { IoSettings } from "react-icons/io5";
 import { usePathname, useRouter } from 'next/navigation';
 import { MdPreview } from "react-icons/md";
+import { MdDashboardCustomize } from "react-icons/md";
 import clsx from 'clsx';
 
 
@@ -40,6 +41,12 @@ const SideNav = ({ routeHandler }) => {
 
                             <MdOutlineViewInAr className={clsx('w-7 h-7 text-gray-400 hover:text-secondary-900 cursor-pointer', (param == '/dashboard/scat' && "text-secondary-900"))} />
                             <p className=' text-f-xs mt-xs text-gray-600'>CSAT</p>
+                            {/* <p className='absolute text-white py-xs px-l hidden group-hover:block bg-secondary-500  rounded-lg left-9 bottom-3  text-f-s'>Views</p> */}
+                        </div>
+                        <div className='relative  flex flex-col items-center justify-center py-m  group' onClick={() => { routeHandler('/dashboard/create-event?event=dashboard') }}>
+
+                            <MdDashboardCustomize className={clsx('w-7 h-7 text-gray-400 hover:text-secondary-900 cursor-pointer', (param == '/dashboard/create-event' && "text-secondary-900"))} />
+                            <p className=' text-f-xs mt-xs text-gray-600'>Event</p>
                             {/* <p className='absolute text-white py-xs px-l hidden group-hover:block bg-secondary-500  rounded-lg left-9 bottom-3  text-f-s'>Views</p> */}
                         </div>
                     </div>

@@ -111,24 +111,13 @@ const page = () => {
                     <div className='text-f-6xl font-semibold '>542631</div>
                     <div className='text-neutral-600 font-f-l'>+20.1% from previous period</div>
                 </div>
-                <div className='col-span-1 bg-white bg-opacity-80 rounded-bs border flex flex-1 items-end text-black relative'>
-                    <Image src={CardBg1}
-                        alt="Picture of the author" className=' object-contain  rounded-bs ' />
-                    <div className='absolute  w-full h-full'>
-                        <div className='text-f-3xl font-semibold p-xl text-neutral-1200 '>
-                            I'm new to product analytics
-                        </div>
-                        <div className='text-f-xl font-semibold text-right px-xl  '>
-
-                            <button className='bg-[#FDC741] px-m py-s rounded-bs hover:bg-[#FFCD50]' onClick={() => {
-                                router.push('/create-event')
-                            }}>
-                                Personalize Setup
-                            </button>
-
-                        </div>
+                <div className='col-span-1 bg-white bg-opacity-80 rounded-bs border text-black py-s px-xl flex  flex-col leading-[45px]'>
+                    <div className='text-f-2xl flex justify-between items-center'>
+                        <div className='text-f-l'>Total Sales</div>
+                        <MdWifiTethering />
                     </div>
-
+                    <div className='text-f-6xl font-semibold '>542631</div>
+                    <div className='text-neutral-600 font-f-l'>+20.1% from previous period</div>
                 </div>
 
 

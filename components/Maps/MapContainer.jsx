@@ -18,6 +18,7 @@ import DatePicker from 'react-datepicker';
 import { SlCalender } from "react-icons/sl";
 import generateCustomDateRanges from '@/utils/generate-custom-date-ranges';
 import { FiMap } from "react-icons/fi";
+import { usePathname } from 'next/navigation';
 
 const MapContainer = ({ catalogList, setAppliedFilter, appliedFilter }) => {
     const [formData, setFormData] = useState({
@@ -460,7 +461,7 @@ const MapContainer = ({ catalogList, setAppliedFilter, appliedFilter }) => {
                     </div>
                 </div>}
 
-                <div className='mt-xl '>
+                <div className='mt-xl h-[100vh]'>
                     <Maps setSaveFormVisible={setSaveFormVisible} setSearchResultVisible={setSearchResultVisible} setCurrentPolygon={setCurrentPolygon} polygonSaved={polygonSaved} polygonCoordinates={polygonCoordinates}
                         latlng={latlng} setAppliedFilter={setAppliedFilter} />
                 </div>
@@ -470,9 +471,7 @@ const MapContainer = ({ catalogList, setAppliedFilter, appliedFilter }) => {
 
                     <TbLocationSearch className='w-6 h-6 font-semibold ' />
                 </div>}
-                {/* <button className=' bg-white  absolute top-2 right-16  w-[40px] h-[40px] flex items-center justify-center hover:text-black cursor-pointer' onClick={() => { setShowFilter(prev => !prev) }}>
-                    <LuFilter className='w-6 h-6 font-semibold ' />
-                </button> */}
+
 
                 {saveFormVisible && <div className='absolute w-[350px] h-full -right-0 top-0 bg-white bg-opacity-70 flex justify-between flex-col transition-transform rounded-l-md'>
                     <div className=''>
