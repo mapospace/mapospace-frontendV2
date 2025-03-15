@@ -91,13 +91,34 @@ const style = {
     }),
 }
 
-const MongoQueryBuilder = ({ propertyNameList, propertyList, setQuery }) => {
+const MongoQueryBuilder = ({ propertyNameList, propertyList, setQuery, name, getData, data }) => {
     const [conditions, setConditions] = useState([{ id: Date.now(), field: "", dataType: "string", operator: "eq", value: "" }]);
     const [operators, setOperators] = useState(stringValue);
 
     useEffect(() => {
-        setQuery(generateQuery());
+        console.log("MongoQueryBuilder setQuery conditions", conditions)
+        if (name) {
+            setQuery((prev => { return { ...prev, [name]: JSON.parse(generateQuery()) } }));
+            getData(prev => ({
+                ...prev,
+                filter_status: {
+                    ...prev.filter_status, // Preserve existing properties
+                    [name]: conditions // Update specific key
+                }
+            }));
+        }
     }, [conditions, setQuery]);
+
+
+
+    useEffect(() => {
+        if (data && data.filter_status && data.filter_status[name]) {
+            console.log("MongoQueryBuilder revert", data.filter_status[name])
+            setConditions(data.filter_status[name]);
+        } else {
+            setConditions([{ id: Date.now(), field: "", dataType: "string", operator: "eq", value: "" }])
+        }
+    }, [name])
 
     const addProperty = () => {
         setConditions([
@@ -117,8 +138,9 @@ const MongoQueryBuilder = ({ propertyNameList, propertyList, setQuery }) => {
     };
 
     const generateQuery = () => {
-        console.log("generateQuery === generateQuery === generateQuery")
+        // console.log("generateQuery === generateQuery === generateQuery")
         let query = {};
+
         conditions.forEach(({ field, dataType, operator, value, valueMax }) => {
             if (!field || (!value && dataType != "boolean")) return;
 
@@ -135,7 +157,6 @@ const MongoQueryBuilder = ({ propertyNameList, propertyList, setQuery }) => {
                         ? { $gte: new Date(value), $lte: new Date(valueMax) }
                         : { [`$${operator}`]: new Date(value) };
             } else if (dataType === "boolean") {
-                console.log('generateQuery value', value)
                 query[`payload.${field}`] = operator === "true";
             }
         });
@@ -144,12 +165,44 @@ const MongoQueryBuilder = ({ propertyNameList, propertyList, setQuery }) => {
     };
 
 
+    const parseDefaultQuery = (query) => {
+        let conditions = [];
+        for (const field in query) {
+            const fieldParts = field.split(".");
+            const fieldName = fieldParts[fieldParts.length - 1];
+            const operators = Object.keys(query[field]);
+
+            operators.forEach((op) => {
+                const value = query[field][op];
+
+                let dataType = "string";
+                if (typeof value === "number") {
+                    dataType = "number";
+                } else if (typeof value === "boolean") {
+                    dataType = "boolean";
+                } else if (value instanceof Date || (typeof value === "string" && !isNaN(Date.parse(value)))) {
+                    dataType = "date";
+                }
+
+                const operatorKey = op.replace("$", "");
+                conditions.push({
+                    id: Date.now() + Math.random(),
+                    field: fieldName,
+                    dataType,
+                    operator: operatorKey,
+                    value
+                });
+            });
+        }
+        return conditions.length ? conditions : [{ id: Date.now(), field: "", dataType: "string", operator: "eq", value: "" }];
+    };
+
 
     return (
         <div className="max-w-2xl mx-auto p-6  bg-white  rounded-lg  h-[calc(100%-50px)] overflow-y-scroll hide-scrollbar">
             <div className="flex justify-between items-center mb-s">
                 <div className="text-neutral-1200 text-f-xl">
-                    Properties
+                    {name} Properties
                 </div>
                 {conditions.length < propertyNameList.length && <button
                     onClick={addProperty}
@@ -168,7 +221,7 @@ const MongoQueryBuilder = ({ propertyNameList, propertyList, setQuery }) => {
                         Remove
                     </button> */}
                     <div className="flex items-center justify-between text-neutral-1200">
-                        <div>Property</div>
+                        <div> Property</div>
                         <MdDelete onClick={() => removeProperty(id)} />
                     </div>
                     <div className="mt-s">

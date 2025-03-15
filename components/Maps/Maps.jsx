@@ -86,6 +86,23 @@ const Maps = ({ setSaveFormVisible, setSearchResultVisible, setCurrentPolygon, p
             lng: coord.lng()
         }));
         setPolygonPaths(path);
+        console.log("filter Updated by appliedFilter", path)
+        if (path.length > 0) {
+            const coordinates = path.map((coordinate) => {
+                return [coordinate.lng, coordinate.lat]
+            })
+
+            console.log("onPolygonComplete coordinates ", [...coordinates, coordinates[0]])
+            const polyData = {
+                "geojson": {
+                    "type": "Polygon",
+                    "coordinates": [[...coordinates, coordinates[0]]]
+                }
+            }
+            console.log("filter Updated by polyData", polyData)
+            setAppliedFilter(prev => ({ ...prev, ...polyData }))
+        }
+
         setCentroid(calculateCentroid(path)); // Update centroid
         setShowButtons(true); // Show Save & Cancel buttons
         polygonRef.current = polygon; // Store the polygon instance
@@ -216,7 +233,7 @@ const Maps = ({ setSaveFormVisible, setSearchResultVisible, setCurrentPolygon, p
                             <IoIosCloseCircle className="w-9 h-9" />
                             <p className='absolute text-white py-xs px-l hidden group-hover:block bg-neutral-700  rounded-lg  -top-7  text-f-s'>Close</p>
                         </button>
-                        {!polygonSaved && <button
+                        {!polygonSaved && setSaveFormVisible != null && <button
                             onClick={saveHandler}
                             className="bg-neutral-800 relative group  text-white rounded-full"
                         >

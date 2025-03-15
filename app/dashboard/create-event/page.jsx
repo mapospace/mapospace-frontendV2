@@ -8,11 +8,12 @@ import MapContainer from "@/components/Maps/MapContainer";
 import clsx from "clsx";
 import toCapitalizedCase from "@/utils/capitalized-case";
 import EventManager from "@/components/CreateEvent/EventManager";
+import Dashboard from "@/components/CreateEvent/Dashboard";
 import QueryBuilderSideNav from "@/components/CreateEvent/QueryBuilderSideNav";
 
 
 
-const Dashboard = () => {
+const page = () => {
     const [catalogList, setCatalogList] = useState([]);
 
 
@@ -49,7 +50,7 @@ const Dashboard = () => {
 
     return (
         <div className=" bg-white max-h-screen pt-6xl flex overflow-hidden" >
-            <QueryBuilderSideNav />
+            {currentEventType != "dashboard" && currentEventType != "event-manager" && <QueryBuilderSideNav />}
             <div className="flex-1 pt-xl px-l overflow-y-scroll ">
                 <div className=' flex justify-between  items-end '>
                     {/* <div className='text-neutral-1300 font-semibold text-2xl'>{toCapitalizedCase(currentEventType?.replace("-", " "))}</div> */}
@@ -93,6 +94,8 @@ const Dashboard = () => {
 
                     </div>
                 </div>
+
+                {currentEventType == "dashboard" && <Dashboard />}
                 {currentEventType == "event-manager" && <EventManager />}
             </div>
 
@@ -100,4 +103,4 @@ const Dashboard = () => {
     );
 };
 
-export default Dashboard;
+export default page;

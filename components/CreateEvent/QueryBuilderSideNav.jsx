@@ -19,6 +19,7 @@ import { IoCloseSharp } from "react-icons/io5";
 const QueryBuilderSideNav = () => {
     const [openQuery, setOpenQuery] = useState(false);
     const [showFilter, setShowFilter] = useState(false);
+    const [showStageFilter, setShowStageFilter] = useState(false);
     const [showGeo, setShowGeo] = useState(false);
     const [saveFormVisible, setSaveFormVisible] = useState(false);
     const [searchResultVisible, setSearchResultVisible] = useState(false);
@@ -43,8 +44,10 @@ const QueryBuilderSideNav = () => {
     const [propertyNameList, setPropertyNameList] = useState([])
     const [propertyList, setPropertyList] = useState([])
     const searchResultRef = useRef(null);
-    const [queryFilterData, setQueryFilterData] = useState({})
+    const [queryFilterData, setQueryFilterData] = useState(null)
     const [query, setQuery] = useState(null);
+    const [funnelQuery, setfunnelQuery] = useState(null);
+    const [selectedStageEvent, setSelectedStageEvent] = useState(null)
 
     useEffect(() => {
         function handleClickOutside(event) {
@@ -233,20 +236,65 @@ const QueryBuilderSideNav = () => {
 
     }
 
+    const closeFiltersHandler = () => {
+        setShowFilter(false)
+        setShowStageFilter(false)
+        setShowGeo(false)
+    }
+
     const openFilterHandler = () => {
         setShowFilter(true)
+        setShowStageFilter(false)
+        setShowGeo(false)
+    }
+
+    const filterStatus = () => {
+        return showFilter || showStageFilter || showGeo;
+    }
+    const openStageFilterHandler = (selectedEvent) => {
+        const properties = queryFilterData.stages.filter((stage) => stage.selectedValue == selectedEvent);
+        setPropertyList(properties[0].properties);
+        const propertyName = properties[0].properties.map((property) => { return { value: property.key, label: property.key } })
+        console.log('openStageFilterHandler', properties, selectedEvent, propertyName)
+        setSelectedStageEvent(selectedEvent)
+        setPropertyNameList(propertyName)
+        setShowFilter(false)
+        setShowStageFilter(true)
         setShowGeo(false)
     }
 
     const openGeoHandler = () => {
         setShowFilter(false)
+        setShowStageFilter(false)
         setShowGeo(true)
     }
 
-    const runQueryHandler = () => {
+    const runQueryHandler = async () => {
         console.log("runQueryHandler", queryFilterData)
-        console.log("runQueryHandler query", query)
+        console.log("runQueryHandler geo", geo)
+        const newData = {
+            ...queryFilterData,
+            filters: query,
+            stages: funnelQuery,
+            geojson: geo ? geo.geojson : null
+        }
+        console.log(newData)
+        return;
+        try {
+            const authService = new AuthServices();
+            const response = await authService.postApiCallHandler(API_ENDPOINTS.QueryBuilder.CustomEvents, newData);
+
+            if (response?.error) {
+                console.log(response.message || "Failed to fetch data.");
+                return;
+            }
+            console.log("resolutionTimeOverTimeHandler", response.data)
+
+        } catch (err) {
+            console.error("Error fetching user details:", err);
+        }
     }
+
 
 
     return (
@@ -257,15 +305,16 @@ const QueryBuilderSideNav = () => {
                 </div>
             </div>
             <div className={clsx('text-neutral-1200 py-l w-full transition-all  flex flex-col justify-between', openQuery ? "duration-700 pointer-events-auto opacity-100" : "duration-300 opacity-0 pointer-events-none ")}>
-                <div className=' h-full'>
+                <div className=' h-full  overflow-y-scroll'>
                     <div className='flex items-center gap-xs border-b px-l pb-s '>
                         <LuFilter className='w-5 h-5' />
                         <div className='text-f-l font-semibold'>Query Builder</div>
                     </div>
-                    <QueryFilter setShowFilter={openFilterHandler} setShowGeo={openGeoHandler} setPropertyNameList={setPropertyNameList} setPropertyList={setPropertyList} getData={setQueryFilterData} />
+
+                    <QueryFilter setShowFilter={openFilterHandler} filterStatus={filterStatus} close={closeFiltersHandler} setShowStageFilter={openStageFilterHandler} setShowGeo={openGeoHandler} setPropertyNameList={setPropertyNameList} setPropertyList={setPropertyList} getData={setQueryFilterData} propertyNameList={propertyNameList} />
                 </div>
-                <div className='mt-l flex justify-end px-l '>
-                    <div className=' default-button' onClick={runQueryHandler} >
+                <div className='pt-l flex justify-end px-l border-t'>
+                    <div className=' default-button py-s text-f-s' onClick={runQueryHandler} >
                         Run Query
                     </div>
                 </div>
@@ -275,19 +324,32 @@ const QueryBuilderSideNav = () => {
 
             {/* FILTER SIDENAV */}
             <div className={clsx(' py-l absolute bg-white  top-0  h-full  z-10 transition-all duration-500 ease-in-out', showFilter ? "w-[500px] -right-[500px] border-x" : 'w-0 right-0 border-0')}>
-                <div className={clsx('w-full h-full transition-all duration-300 ease-in-out', showFilter ? 'opacity-100' : 'opacity-0')}>
+                <div className={clsx('w-full h-full transition-all duration-300 ease-in-out', showFilter ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none')}>
                     <div className=' pb-s px-s font-normal text-f-2xl border-b text-black flex justify-between items-center'>
                         <div className='px-l text-f-l font-semibold'>Filters</div>
                         <RiCloseLine className='w-xl h-xl cursor-pointer' onClick={() => { setShowFilter(false) }} />
                     </div>
-                    <MongoQueryBuilder propertyNameList={propertyNameList} propertyList={propertyList} setQuery={setQuery} />
+                    <MongoQueryBuilder propertyNameList={propertyNameList} propertyList={propertyList} setQuery={setQuery} name={queryFilterData ? queryFilterData.customEventTypeName : undefined} getData={setQueryFilterData} data={queryFilterData} />
                 </div>
 
             </div>
 
+            {/* STAGES SIDENAV */}
+            <div className={clsx(' py-l absolute bg-white  top-0  h-full  z-10 transition-all duration-500 ease-in-out', showStageFilter ? "w-[500px] -right-[500px] border-x" : 'w-0 right-0 border-0')}>
+                <div className={clsx('w-full h-full transition-all duration-300 ease-in-out', showStageFilter ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none')}>
+                    <div className=' pb-s px-s font-normal text-f-2xl border-b text-black flex justify-between items-center'>
+                        <div className='px-l text-f-l font-semibold'>Filters</div>
+                        <RiCloseLine className='w-xl h-xl cursor-pointer' onClick={() => { setShowStageFilter(false) }} />
+                    </div>
+                    <MongoQueryBuilder propertyNameList={propertyNameList} propertyList={propertyList} setQuery={setfunnelQuery} name={selectedStageEvent} getData={setQueryFilterData} data={queryFilterData} />
+                </div>
+
+            </div>
+
+
             {/* GEO SIDENAV */}
             <div className={clsx(' py-l absolute bg-white  top-0  h-full  z-10 transition-all duration-500 ease-in-out', showGeo ? "w-[800px] -right-[800px] border-x" : 'w-0 right-0 border-0')}>
-                <div className={clsx('w-full h-full transition-all duration-300 ease-in-out', showGeo ? 'opacity-100' : 'opacity-0')}>
+                <div className={clsx('w-full h-full transition-all duration-300 ease-in-out ', showGeo ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none')}>
                     <div className=' pb-s px-s font-normal text-f-2xl border-b text-black flex justify-between items-center'>
                         <div className='px-l text-f-l font-semibold'>Geographic Filter</div>
                         <RiCloseLine className='w-xl h-xl cursor-pointer' onClick={() => {
@@ -295,7 +357,7 @@ const QueryBuilderSideNav = () => {
                         }} />
                     </div>
 
-                    <div className='w-full h-full bg-white p-xl pb-2xl overflow-y-scroll'>
+                    <div className='w-full h-full bg-white p-xl pb-2xl overflow-y-scroll '>
                         <div className={clsx('  w-full flex flex-col   rounded-lg relative')}>
                             <div className='flex flex-1  bg-white  rounded-lg border'>
                                 <input

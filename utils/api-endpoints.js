@@ -1,5 +1,3 @@
-import ApiKeyGenerator from "@/app/profile/api-key/page";
-
 export const API_ENDPOINTS = {
     GetTenant: 'tenant/view-tenant',
     PutTenant: 'tenant/update-tenant',
@@ -81,6 +79,10 @@ export const API_ENDPOINTS = {
     CustomEvent: {
         CreateCustomEvents: 'custom-events/create',
         CustomEvents: 'custom-events'
+    },
+
+    QueryBuilder: {
+        CustomEvents: 'analytics-v3/custom-events'
     }
 
 }
