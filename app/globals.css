@@ -110,7 +110,7 @@ input[type="checkbox"] {
 .lumo-ai-text {
 
   background: #6000FD;
-  background: linear-gradient(to right, #6000FD 0%, #09D6FF 39%, #0136F8 24%, #F23CFF 100%);
+  background: linear-gradient(to right, #0136f8 0%, #4d72fa 39%, #0136f8 24%, #0136f8 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 

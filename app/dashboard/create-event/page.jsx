@@ -11,6 +11,7 @@ import EventManager from "@/components/CreateEvent/EventManager";
 import Dashboard from "@/components/CreateEvent/Dashboard";
 import QueryBuilderSideNav from "@/components/CreateEvent/QueryBuilderSideNav";
 import QueryEvents from "@/components/CreateEvent/QueryEvents";
+import FunnelAnalysis from "@/components/CreateEvent/FunnelAnalysis";
 
 
 
@@ -99,6 +100,7 @@ const page = () => {
                 {currentEventType == "dashboard" && <Dashboard />}
                 {currentEventType == "events" && <QueryEvents queryData={queryData} />}
                 {currentEventType == "event-manager" && <EventManager />}
+                {currentEventType == "funnels" && <FunnelAnalysis />}
             </div>
 
         </div >

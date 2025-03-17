@@ -35,9 +35,9 @@ const Header = () => {
                 <a href='#' className='font-medium hover:text-primary-900'>Blogs</a>
             </div>
             <div className='flex-1 justify-end hidden lg:flex'>
-                <button className='flex border-2 px-3 p-1 rounded-md items-center gap-2 hover:border-gray-400'>
+                <button className='flex border-2 px-3 p-1 rounded-md items-center gap-2 hover:border-gray-400' onClick={() => { router.push('/sign-in') }}>
                     <PiSignInBold />
-                    <div className=' font-display font-medium' onClick={() => { router.push('/sign-in') }}>Sign In</div>
+                    <div className=' font-display font-medium' >Sign In</div>
                     <FaArrowRightLong />
                 </button>
             </div>

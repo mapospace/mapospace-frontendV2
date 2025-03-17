@@ -11,6 +11,7 @@ import Skeleton from 'react-loading-skeleton'
 import { TypeAnimation } from 'react-type-animation'
 import InsightsDetails from './InsightsDetails'
 import CategoricalAnalysis from './CategoricalAnalysis'
+import { FaArrowRightLong } from "react-icons/fa6";
 
 const QueryEvents = ({ queryData }) => {
     const [uniqueKeys, setUniqueKeys] = useState([]);
@@ -92,18 +93,19 @@ const QueryEvents = ({ queryData }) => {
                 <div></div>
                 <div>
                     <button
-                        className={clsx('flex rounded-bs items-center gap-s px-m py-xs  border border-primary-500 shadow-lg shadow-primary-100  hover:border-primary-600 hover:scale-105 transition-all ease-in-out duration-300', enableInsights ? 'bg-purple-200' : 'bg-purple-50')}
+                        className={clsx('flex rounded-bs items-center gap-s px-l py-xs  shadow-lg shadow-secondary-400 group  bg-secondary-900 hover:bg-secondary-1000')}
                         onClick={lumoInsightsHandler}
                     >
 
                         <Image
-                            src='/lumo_loading.gif'
+                            src='/aistar.png'
                             alt="loading.."
                             width={20}
                             height={20}
-                            className=" h-xl w-xl rounded-bs "
+                            className=" h-2xl w-2xl rounded-bs group-hover:scale-110 transition-all ease-in-out duration-300"
                         />
-                        <div className='text-f-xl font-bold lumo-ai-text '>Generate Lumo Insights</div>
+                        <div className='text-f-l font-normal text-white '>Generate Insights</div>
+                        <FaArrowRightLong className='h-l w-l text-white pl-xs group-hover:translate-x-1 transition-all ease-in-out duration-300' />
                     </button>
 
                 </div>
@@ -125,72 +127,71 @@ const QueryEvents = ({ queryData }) => {
                     <TypeAnimation
                         sequence={[
                             "Analyzing your data patterns...",
-                            1000,
+                            300,
                             '',
-                            1000,
+                            300,
                             'Discovering insights from your query...',
-                            1000,
+                            300,
                             '',
-                            1000,
+                            300,
                             'Processing natural language request...',
-                            1000,
+                            300,
                             '',
-                            1000,
+                            300,
                             'Generating visualization based on your data...',
-                            1000,
+                            300,
                             '',
-                            1000,
+                            300,
                             'Calculating metrics and aggregations...',
-                            1000,
+                            300,
                             '',
-                            1000,
+                            300,
                         ]}
                         speed={50}
                         className="lumo-ai-text"
-                        style={{ fontSize: '24px' }}
+                        style={{ fontSize: '48px' }}
                         repeat={Infinity}
                     />
                 </div>
-                <div className='text-f-2xl mt-l mb-l pb-s border-b'>
+                {/* <div className='text-f-2xl mt-l mb-l pb-s border-b'>
                     <Skeleton height={30} borderRadius={8} baseColor='#dfccff' highlightColor="#efe6ff" duration={5} />
+                </div> */}
+
+                <div className="grid grid-cols-2  gap-m  text-gray-700 relative mt-xl">
+
+                    <div className='  p-l px-2xl  border rounded-bs'>
+                        <div className='text-neutral-600 text-f-xl mb-xl'>Loading insights, please wait...</div>
+                        <Skeleton height={30} borderRadius={8} width='60%' />
+                        <Skeleton height={70} borderRadius={8} width='80%' />
+                        <Skeleton height={100} borderRadius={8} width='100%' />
+                        <Skeleton height={50} borderRadius={8} width='100%' />
+                        {/* <Skeleton height={200} borderRadius={8} /> */}
+                    </div>
+                    <div className=' p-l px-2xl  border rounded-bs'>
+                        <div className='text-neutral-600 text-f-xl mb-xl'>Loading insights, please wait...</div>
+
+                        <div className='flex  gap-l items-end '>
+                            <Skeleton height={270} width={100} borderRadius={8} />
+                            <Skeleton height={130} width={200} borderRadius={8} />
+                            <Skeleton height={60} width={100} borderRadius={8} />
+                            <Skeleton height={160} width={150} borderRadius={8} />
+                        </div>
+
+
+                    </div>
+
+
                 </div>
-                <div className='flex items-center justify-center text-black flex-col mb-l'>
+                <div className='flex items-center justify-center text-black flex-col my-l'>
 
                     <Image
-                        src='/ai.gif'
+                        src='/loadai.gif'
                         alt="loading.."
                         width={20}
                         height={20}
-                        className=" h-10xl w-10xl rounded-bs "
+                        className=" w-10xl rounded-bs "
                     />
                     <div>  Analyzing your data...</div>
-
-                </div>
-                <div className="grid grid-cols-2  gap-m  text-gray-700 relative ">
-                    <div className='p-l border rounded-bs'>
-                        <Skeleton height={150} borderRadius={8} baseColor='#dfccff' duration={5} highlightColor="#efe6ff" />
-                    </div>
-                    <div className='p-l  border rounded-bs'>
-                        <Skeleton height={150} borderRadius={8} baseColor='#dfccff' duration={5} highlightColor="#efe6ff" />
-                    </div>
-
-                    <div className='  p-l px-2xl  border rounded-bs'>
-                        <Skeleton height={30} borderRadius={8} width='60%' baseColor='#dfccff' duration={5} highlightColor="#efe6ff" />
-                        <Skeleton height={30} borderRadius={8} width='80%' baseColor='#dfccff' duration={5} highlightColor="#efe6ff" />
-                        <Skeleton height={300} borderRadius={8} baseColor='#dfccff' duration={5} highlightColor="#efe6ff" />
-                    </div>
-                    <div className='flex gap-l  items-end p-l px-2xl  border rounded-bs'>
-                        <Skeleton height={300} width={50} borderRadius={8} baseColor='#dfccff' duration={5} highlightColor="#efe6ff" />
-                        <Skeleton height={30} width={50} borderRadius={8} baseColor='#dfccff' duration={5} highlightColor="#efe6ff" />
-                        <Skeleton height={60} width={50} borderRadius={8} baseColor='#dfccff' duration={5} highlightColor="#efe6ff" />
-                        <Skeleton height={160} width={50} borderRadius={8} baseColor='#dfccff' duration={5} highlightColor="#efe6ff" />
-                        <Skeleton height={200} width={50} borderRadius={8} baseColor='#dfccff' duration={5} highlightColor="#efe6ff" />
-                        <Skeleton height={180} width={50} borderRadius={8} baseColor='#dfccff' duration={5} highlightColor="#efe6ff" />
-                        <Skeleton height={230} width={50} borderRadius={8} baseColor='#dfccff' duration={5} highlightColor="#efe6ff" />
-                        <Skeleton height={160} width={50} borderRadius={8} baseColor='#dfccff' duration={5} highlightColor="#efe6ff" />
-                        <Skeleton height={220} width={50} borderRadius={8} baseColor='#dfccff' duration={5} highlightColor="#efe6ff" />
-                    </div>
-
 
                 </div>
 
