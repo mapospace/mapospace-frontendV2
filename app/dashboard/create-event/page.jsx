@@ -10,16 +10,17 @@ import toCapitalizedCase from "@/utils/capitalized-case";
 import EventManager from "@/components/CreateEvent/EventManager";
 import Dashboard from "@/components/CreateEvent/Dashboard";
 import QueryBuilderSideNav from "@/components/CreateEvent/QueryBuilderSideNav";
+import QueryEvents from "@/components/CreateEvent/QueryEvents";
 
 
 
 const page = () => {
     const [catalogList, setCatalogList] = useState([]);
 
-
     const searchParams = useSearchParams();
     const currentEventType = searchParams.get("event");
-    const router = useRouter()
+    const router = useRouter();
+    const [queryData, setQueryData] = useState(null)
 
     const fetchCatalogsList = async () => {
         try {
@@ -50,7 +51,7 @@ const page = () => {
 
     return (
         <div className=" bg-white max-h-screen pt-6xl flex overflow-hidden" >
-            {currentEventType != "dashboard" && currentEventType != "event-manager" && <QueryBuilderSideNav />}
+            {currentEventType != "dashboard" && currentEventType != "event-manager" && <QueryBuilderSideNav setQueryData={setQueryData} />}
             <div className="flex-1 pt-xl px-l overflow-y-scroll ">
                 <div className=' flex justify-between  items-end '>
                     {/* <div className='text-neutral-1300 font-semibold text-2xl'>{toCapitalizedCase(currentEventType?.replace("-", " "))}</div> */}
@@ -96,6 +97,7 @@ const page = () => {
                 </div>
 
                 {currentEventType == "dashboard" && <Dashboard />}
+                {currentEventType == "events" && <QueryEvents queryData={queryData} />}
                 {currentEventType == "event-manager" && <EventManager />}
             </div>
 

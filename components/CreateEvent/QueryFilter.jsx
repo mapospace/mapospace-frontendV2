@@ -128,7 +128,7 @@ const QueryFilter = ({ setShowFilter, setShowStageFilter, setShowGeo, setPropert
     const [showEndDate, setShowEndDate] = useState(false);
     const [endDateValue, setEndDateValue] = useState(null);
     // const [selectedInterval, setSelectedInterval] = useState("monthly");
-    const [enabled, setEnabled] = useState(false);
+    // const [enabled, setEnabled] = useState(false);
     const searchParams = useSearchParams();
     const currentEventType = searchParams.get("event");
     const [customEvents, setCustomEvents] = useState(null);
@@ -188,11 +188,11 @@ const QueryFilter = ({ setShowFilter, setShowStageFilter, setShowGeo, setPropert
             })
             setEventList(response.data.customEventTypes)
             setEventNameList(data)
+            getData((prev) => ({ ...prev, 'customEventTypeName': data[0].value }))
             const properties = response.data.customEventTypes.filter((event) => event.name == data[0].value);
             setSelectedValueOption(data[0].value)
             setCustomEvents([{ id: 1, selectedValue: data[0].value, properties: properties[0].properties }])
             propertyListHandler(data[0].value, response.data.customEventTypes)
-            getData((prev) => ({ ...prev, 'customEventTypeName': data[0].value, 'generateInsights': false }))
             // setCustomEventTypes(response.data.customEventTypes)
         } catch (err) {
             console.error("Error fetching user details:", err);
@@ -223,7 +223,7 @@ const QueryFilter = ({ setShowFilter, setShowStageFilter, setShowGeo, setPropert
     return (
         <div className='filter h-[calc(100%-50px)] overflow-scroll hide-scrollbar '>
             {/* INSIGHTS TYPE */}
-            <div className='px-xs  mt-m mx-s'>
+            {/* <div className='px-xs  mt-m mx-s'>
                 <div className='flex justify-between items-center cursor-pointer' >
                     <div className='flex items-center gap-xs py-xs'>
                         <div className='text-f-l font-semibold'>Insights</div>
@@ -242,7 +242,7 @@ const QueryFilter = ({ setShowFilter, setShowStageFilter, setShowGeo, setPropert
                         />
                     </button>
                 </div>
-            </div>
+            </div> */}
             {/*FUNNEL EVENT */}
             {currentEventType == "funnels" && <div className='p-xs border mt-m mx-s rounded-bs'>
                 <div className='flex justify-between items-center cursor-pointer' onClick={() => { setOpenFunnelsEvent(prev => !prev) }}>

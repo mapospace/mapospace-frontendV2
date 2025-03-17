@@ -123,7 +123,7 @@ export default {
         bxs: '4px',
         bs: '8px',
         bm: '12px',
-        bl: '16px',
+        blg: '16px',
         bpill: '999px',
         bfull: '50%',
       },

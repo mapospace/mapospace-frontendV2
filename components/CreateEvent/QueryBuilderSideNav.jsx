@@ -16,7 +16,8 @@ import Skeleton from 'react-loading-skeleton'
 import { PiPolygonFill } from "react-icons/pi";
 import { GrLocationPin } from "react-icons/gr";
 import { IoCloseSharp } from "react-icons/io5";
-const QueryBuilderSideNav = () => {
+import { useSearchParams } from 'next/navigation';
+const QueryBuilderSideNav = ({ setQueryData }) => {
     const [openQuery, setOpenQuery] = useState(false);
     const [showFilter, setShowFilter] = useState(false);
     const [showStageFilter, setShowStageFilter] = useState(false);
@@ -47,7 +48,9 @@ const QueryBuilderSideNav = () => {
     const [queryFilterData, setQueryFilterData] = useState(null)
     const [query, setQuery] = useState(null);
     const [funnelQuery, setfunnelQuery] = useState(null);
-    const [selectedStageEvent, setSelectedStageEvent] = useState(null)
+    const [selectedStageEvent, setSelectedStageEvent] = useState(null);
+    const searchParams = useSearchParams();
+    const currentEventType = searchParams.get("event");
 
     useEffect(() => {
         function handleClickOutside(event) {
@@ -269,9 +272,11 @@ const QueryBuilderSideNav = () => {
         setShowGeo(true)
     }
 
-    const runQueryHandler = async () => {
-        console.log("runQueryHandler", queryFilterData)
-        console.log("runQueryHandler geo", geo)
+    const runQueryHandler = () => {
+        if (!queryFilterData) {
+            return;
+        }
+
         const newData = {
             ...queryFilterData,
             filters: query,
@@ -279,23 +284,32 @@ const QueryBuilderSideNav = () => {
             geojson: geo ? geo.geojson : null
         }
         console.log(newData)
-        return;
-        try {
-            const authService = new AuthServices();
-            const response = await authService.postApiCallHandler(API_ENDPOINTS.QueryBuilder.CustomEvents, newData);
 
-            if (response?.error) {
-                console.log(response.message || "Failed to fetch data.");
-                return;
+        if (currentEventType == "events") {
+            let data = { generateInsights: queryFilterData.generateInsights };
+            if (queryFilterData.customEventTypeName) {
+                data = { ...data, customEventTypeName: queryFilterData.customEventTypeName }
+                if (query && query[queryFilterData.customEventTypeName]) {
+                    data = { ...data, filters: query[queryFilterData.customEventTypeName] }
+                }
+
             }
-            console.log("resolutionTimeOverTimeHandler", response.data)
+            if (queryFilterData.startDate) {
+                data = { ...data, startDate: queryFilterData.startDate }
+            }
+            if (queryFilterData.endDate) {
+                data = { ...data, endDate: queryFilterData.endDate }
+            }
+            if (geo) {
+                data = { ...data, geojson: geo.geojson }
+            }
 
-        } catch (err) {
-            console.error("Error fetching user details:", err);
+            console.log("runQueryHandler data", data)
+            setQueryData(data)
+            setOpenQuery(false)
         }
+
     }
-
-
 
     return (
         <div className={clsx(" h-[calc(100vh-64px)]  relative transition-all duration-500 flex ease-in-out border-r", openQuery ? "w-[300px]" : "w-[15px]")}>
