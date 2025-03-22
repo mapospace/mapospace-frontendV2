@@ -82,7 +82,10 @@ export const API_ENDPOINTS = {
     },
 
     QueryBuilder: {
-        CustomEvents: 'analytics-v3/custom-events'
+        CustomEvents: 'analytics-v3/custom-events',
+        CustomFunnelEvents: 'analytics-v3/funnel-analysis',
+        CustomSegmentationEvents: 'analytics-v3/user-segmentation',
+        CustomRetentionEvents: 'analytics-v3/retention-analysis'
     }
 
 }

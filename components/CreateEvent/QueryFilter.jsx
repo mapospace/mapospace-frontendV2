@@ -158,7 +158,14 @@ const QueryFilter = ({ setShowFilter, setShowStageFilter, setShowGeo, setPropert
     };
 
     useEffect(() => {
-        getData(prev => ({ ...prev, stages: customEvents }));
+        if (customEvents != null) {
+            console.log("runQueryHandler", customEvents)
+            getData(prev => ({
+                ...prev,
+                stages: customEvents
+            }));
+        }
+
     }, [customEvents])
 
     useEffect(() => {
@@ -222,27 +229,6 @@ const QueryFilter = ({ setShowFilter, setShowStageFilter, setShowGeo, setPropert
 
     return (
         <div className='filter h-[calc(100%-50px)] overflow-scroll hide-scrollbar '>
-            {/* INSIGHTS TYPE */}
-            {/* <div className='px-xs  mt-m mx-s'>
-                <div className='flex justify-between items-center cursor-pointer' >
-                    <div className='flex items-center gap-xs py-xs'>
-                        <div className='text-f-l font-semibold'>Insights</div>
-                    </div>
-                    <button
-                        onClick={() => {
-                            getData((prev) => ({ ...prev, 'generateInsights': !enabled }))
-                            setEnabled(!enabled)
-                        }}
-                        className={`w-12 h-6 flex items-center rounded-full p-1 transition ${enabled ? "bg-blue-600" : "bg-gray-300"
-                            }`}
-                    >
-                        <div
-                            className={`w-5 h-5 bg-white rounded-full shadow-md transform transition ${enabled ? "translate-x-5" : "translate-x-0"
-                                }`}
-                        />
-                    </button>
-                </div>
-            </div> */}
             {/*FUNNEL EVENT */}
             {currentEventType == "funnels" && <div className='p-xs border mt-m mx-s rounded-bs'>
                 <div className='flex justify-between items-center cursor-pointer' onClick={() => { setOpenFunnelsEvent(prev => !prev) }}>
@@ -596,7 +582,7 @@ const QueryFilter = ({ setShowFilter, setShowStageFilter, setShowGeo, setPropert
                                     const values = selected.map((value) => value.value)
                                     console.log("setSelectedSegmentsValueOption", selected, values)
                                     setSelectedSegmentsValueOption(values)
-                                    // getData((prev) => ({ ...prev, 'customEventTypeName': selected.value }))
+                                    getData((prev) => ({ ...prev, 'segments': values }))
                                 }}
                                 isMulti
                                 menuPortalTarget={document.body} // Moves dropdown outside of parent to prevent clipping

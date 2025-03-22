@@ -11,46 +11,73 @@ import Skeleton from 'react-loading-skeleton'
 import { IoCloseSharp } from "react-icons/io5";
 import toCapitalizedCase from '@/utils/capitalized-case';
 import { TiStarFullOutline } from "react-icons/ti";
+import { motion, AnimatePresence } from 'framer-motion';
 
 
 const Dashboard = () => {
     const [addNewView, setAddNewView] = useState(false);
+
+    const cardVariants = {
+        hidden: { opacity: 0, y: 20 },
+        visible: (i) => ({
+            opacity: 1,
+            y: 0,
+            transition: {
+                delay: i * 0.15,
+                duration: 0.5,
+                type: 'spring',
+            }
+        }),
+    };
+
     return (
         <div className='text-black py-l relative'>
             <div className='flex justify-between items-center ' >
                 <div>
-                    <div className='text-f-2xl font-semibold'>
-                        Views
-                    </div>
-                    <div className='text-f-m'>
-                        Create and manage view for tracking
-                    </div>
+                    <div className='text-f-2xl font-semibold'>Views</div>
+                    <div className='text-f-m'>Create and manage view for tracking</div>
                 </div>
-                <button className='default-button py-s text-center' onClick={() => { setAddNewView(true) }}>
-                    <span className='pr-l text-f-xl '>+</span>View
+                <button className='default-button py-s text-center' onClick={() => setAddNewView(true)}>
+                    <span className='pr-l text-f-xl'>+</span>View
                 </button>
             </div>
-            {addNewView && <AddView setAddNewView={setAddNewView} />}
-            <div className='pb-s border-b text-f-2xl mt-s'>
-                Highlight
+
+            {addNewView && (
+                <div>
+                    <AddView setAddNewView={setAddNewView} />
+                </div>
+            )}
+
+            <div className='pb-s border-b text-f-2xl mt-s'>Highlight</div>
+
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-m py-m text-gray-700 mt-l">
+                {[0, 1, 2, 3].map((i) => (
+                    <motion.div
+                        key={i}
+                        custom={i}
+                        initial="hidden"
+                        animate="visible"
+                        variants={cardVariants}
+                    >
+                        <ViewCard />
+                    </motion.div>
+                ))}
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-m  py-m text-gray-700 mt-l">
-                {/* <div className="h-full flex w-max gap-x-4"> */}
-                <ViewCard />
-                <ViewCard />
-                <ViewCard />
-                <ViewCard />
-                {/* </div> */}
-            </div>
-            <div className='pb-s border-b text-f-2xl mt-s'>
-                Other Views
-            </div>
-            <div className="w-full  mt-4 overflow-x-auto py-s hide-scrollbar">
+
+            <div className='pb-s border-b text-f-2xl mt-s'>Other Views</div>
+
+            <div className="w-full mt-4 overflow-x-auto py-s hide-scrollbar">
                 <div className="h-full flex w-max gap-m">
-                    <OtherViewCard />
-                    <OtherViewCard />
-                    <OtherViewCard />
-                    <OtherViewCard />
+                    {[0, 1, 2, 3].map((i) => (
+                        <motion.div
+                            key={i}
+                            initial={{ opacity: 0, x: 40 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: i * 0.2, duration: 0.5 }}
+                        >
+                            <OtherViewCard />
+                        </motion.div>
+                    ))}
                 </div>
             </div>
         </div>
@@ -113,67 +140,56 @@ const AddView = ({ setAddNewView }) => {
     const [selfPolygonData, setSelfPolygonData] = useState([]);
     const searchResultRef = useRef(null);
     const [next, setNext] = useState(false);
-    const [error, setError] = useState({ name: '', description: '' })
+    const [error, setError] = useState({ name: '', description: '' });
 
     const handleSearch = (e) => {
         e.preventDefault();
-        if (search.trim() != '') {
+        if (search.trim() !== '') {
             setLoading(true);
-            setShowSearchResult(true)
+            setShowSearchResult(true);
             fetchDataFromNominatim();
-            fetchGeoJSONDetails()
+            fetchGeoJSONDetails();
         }
-
     };
-
 
     useEffect(() => {
         if (polygonData.length > 0 || selfPolygonData.length > 0) {
             setTimeout(() => {
                 setLoading(false);
-            }, 1000)
+            }, 1000);
         }
-    }, [polygonData, selfPolygonData])
+    }, [polygonData, selfPolygonData]);
 
     const getPolygonCoordinates = (coordinates) => {
         const transformedData = coordinates.map(([lng, lat]) => ({ lat: lat, lng: lng }));
-        console.log("transformedData", transformedData)
         setPolygonCoordinates(transformedData);
         if (transformedData.length > 0) {
-            const coordinates = transformedData.map((coordinate) => {
-                return [coordinate.lng, coordinate.lat]
-            })
-
+            const coordinates = transformedData.map((coordinate) => [coordinate.lng, coordinate.lat]);
             const polyData = {
-                "geojson": {
-                    "type": "Polygon",
-                    "coordinates": [coordinates]
-                }
-            }
-            setGeo(polyData)
+                geojson: {
+                    type: "Polygon",
+                    coordinates: [coordinates],
+                },
+            };
+            setGeo(polyData);
         }
-
-    }
+    };
 
     const closeSearchHandler = () => {
         setShowSearchResult(false);
-    }
-
+    };
 
     const fetchDataFromNominatim = async () => {
         try {
             const response = await axios.get(`https://nominatim.openstreetmap.org/search.php?q=${search}&polygon_geojson=1&format=jsonv2`);
-
-            const data = response.data.filter((item) => item.geojson.type === "Polygon")
-            if (response.data.length > 0) {
-                console.log("fetch data", response.data)
-                setPolygonData(response.data);
+            const data = response.data.filter((item) => item.geojson.type === "Polygon");
+            if (data.length > 0) {
+                setPolygonData(data);
                 !searchResultVisible && setSearchResultVisible(true);
             }
-
         } catch (err) {
             console.error('Error fetching data:', err);
-            setPolygonData([])
+            setPolygonData([]);
         }
     };
 
@@ -181,226 +197,208 @@ const AddView = ({ setAddNewView }) => {
         try {
             const authService = new AuthServices();
             const response = await authService.getApiCallHandler(API_ENDPOINTS.GeoJson(search));
+            if (response?.error) return;
 
-            if (response?.error) {
-                console.log(response.message || "Failed to fetch data.");
-                return;
-            }
-            console.log("response?.data", response?.data.geojsonList)
-            const newData = response?.data.geojsonList.map((geo) => {
-                return {
-                    "type": "mapospace",
-                    "name": geo.name,
-                    "display_name": geo.description,
-                    "lat": geo.geojson.geometry.coordinates[0][0][1],
-                    "lon": geo.geojson.geometry.coordinates[0][0][0],
-                    "geojson": geo.geojson.geometry
-                }
-            })
-            console.log(newData)
-            setSelfPolygonData(newData)
+            const newData = response?.data.geojsonList.map((geo) => ({
+                type: "mapospace",
+                name: geo.name,
+                display_name: geo.description,
+                lat: geo.geojson.geometry.coordinates[0][0][1],
+                lon: geo.geojson.geometry.coordinates[0][0][0],
+                geojson: geo.geojson.geometry,
+            }));
+
+            setSelfPolygonData(newData);
             !searchResultVisible && setSearchResultVisible(true);
-
         } catch (err) {
             console.error("Error fetching user details:", err);
-            setSelfPolygonData([])
+            setSelfPolygonData([]);
         }
     };
 
     const nextButtonHandler = () => {
-        if (name.trim() == '' || description.trim() == '') {
-            if (name.trim() == '') {
-                setError((prev) => { return { ...prev, name: 'This field is required.' } })
-            }
-            if (description.trim() == '') {
-                setError((prev) => { return { ...prev, description: 'This field is required.' } })
-            }
-        }
-        else {
+        if (name.trim() === '' || description.trim() === '') {
+            if (name.trim() === '') setError((prev) => ({ ...prev, name: 'This field is required.' }));
+            if (description.trim() === '') setError((prev) => ({ ...prev, description: 'This field is required.' }));
+        } else {
             setNext(true);
         }
-
-
-
-    }
+    };
 
     const saveHandler = () => {
-        console.log("saveHandler", geo)
-    }
+        console.log("saveHandler", geo);
+    };
 
     return (
-        <div className='py-l fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50'>
-            <div className={clsx('border rounded-bs h-[85vh] flex flex-col bg-white', !next ? ' w-[85vh]' : ' w-[85vw]')}>
-                {/* Header with explanation */}
-                <div className='p-l py-m text-f-2xl border-b relative'>
-                    <div className="font-bold flex items-center justify-between">
-                        <div> Create New View</div>
-                        <button onClick={() => { setAddNewView(false) }} >
-                            <IoCloseSharp className='w-xl h-xl' />
-                        </button>
 
+        <div
+            className='py-l fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50'
+
+        >
+            <AnimatePresence>
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                    transition={{ duration: 0.4 }}
+                    className={clsx('border rounded-bs h-[85vh] flex flex-col bg-white', !next ? ' w-[85vh]' : ' w-[85vw]')}
+                >
+                    {/* Header */}
+                    <div className='p-l py-m text-f-2xl border-b relative'>
+                        <div className="font-bold flex items-center justify-between">
+                            <div>Create New View</div>
+                            <button onClick={() => setAddNewView(false)}>
+                                <IoCloseSharp className='w-xl h-xl' />
+                            </button>
+                        </div>
+                        <p className="text-f-m text-neutral-900 mt-1">
+                            Define and save a polygon on the map to segment and analyze specific areas.
+                            Customize with colors and descriptions for streamlined geospatial insights and tracking.
+                        </p>
                     </div>
-                    <p className="text-f-m text-neutral-900 mt-1">
-                        Define and save a polygon on the map to segment and analyze specific areas.
-                        Customize with colors and descriptions for streamlined geospatial insights and tracking.
-                    </p>
 
-                </div>
-
-                {/* Form Section */}
-                <div className='flex-1 py-m px-l '>
-                    {!next ? <div className='w-full h-full bg-white p-4 rounded-md'>
-                        {/* Name Input */}
-                        <div className="mb-4">
-                            <label className="block text-gray-700 text-f-m font-semibold">Name</label>
-                            <input
-                                type="text"
-                                value={name}
-                                onChange={(e) => {
-                                    setName(e.target.value);
-                                    setError((prev) => { return { ...prev, name: '' } })
-                                }}
-                                className="w-full mt-1 p-2 border rounded-md border-effect"
-                                placeholder="Enter view name"
-                            />
-                            {error.name.trim() != '' && <div className='mt-xs text-f-s text-red-500'>{error.name}</div>}
-                        </div>
-
-                        {/* Description Input */}
-                        <div className="mb-4">
-                            <label className="block text-gray-700 text-f-m font-semibold">Description</label>
-                            <textarea
-                                value={description}
-                                onChange={(e) => {
-                                    setDescription(e.target.value);
-                                    setError((prev) => { return { ...prev, description: '' } })
-                                }}
-                                className="w-full mt-1 p-2 border rounded-md resize-none h-[200px] border-effect"
-                                placeholder="Enter description"
-                                maxLength={2000}
-
-                            />
-                            {error.description.trim() != '' && <div className='mt-xs text-f-s text-red-500'>{error.description}</div>}
-                        </div>
-                    </div> :
-                        <div className='w-full h-full flex gap-l'>
-                            <div className='w-[95vh] h-full bg-white rounded-md'>
-                                <Maps setSaveFormVisible={null} setSearchResultVisible={setSearchResultVisible} setCurrentPolygon={setCurrentPolygon} polygonSaved={polygonSaved} polygonCoordinates={polygonCoordinates}
-                                    latlng={latlng} setAppliedFilter={setGeo} />
+                    {/* Form Section */}
+                    <div className='flex-1 py-m px-l '>
+                        {!next ? (
+                            <div className='w-full h-full bg-white p-4 rounded-md'>
+                                <div className="mb-4">
+                                    <label className="block text-gray-700 text-f-m font-semibold">Name</label>
+                                    <input
+                                        type="text"
+                                        value={name}
+                                        onChange={(e) => {
+                                            setName(e.target.value);
+                                            setError((prev) => ({ ...prev, name: '' }));
+                                        }}
+                                        className="w-full mt-1 p-2 border rounded-md border-effect"
+                                        placeholder="Enter view name"
+                                    />
+                                    {error.name && <div className='mt-xs text-f-s text-red-500'>{error.name}</div>}
+                                </div>
+                                <div className="mb-4">
+                                    <label className="block text-gray-700 text-f-m font-semibold">Description</label>
+                                    <textarea
+                                        value={description}
+                                        onChange={(e) => {
+                                            setDescription(e.target.value);
+                                            setError((prev) => ({ ...prev, description: '' }));
+                                        }}
+                                        className="w-full mt-1 p-2 border rounded-md resize-none h-[200px] border-effect"
+                                        placeholder="Enter description"
+                                        maxLength={2000}
+                                    />
+                                    {error.description && <div className='mt-xs text-f-s text-red-500'>{error.description}</div>}
+                                </div>
                             </div>
-                            <div className='flex-1  h-full'>
-                                <div className={clsx('  w-full flex flex-col   rounded-lg relative')}>
-                                    <div className='flex flex-1  bg-white  rounded-lg border'>
-                                        <input
-                                            type="text"
-                                            id="firstName"
-                                            className="focus:outline-none py-s px-s text-f-l rounded-bs flex-1 border-0 text-black"
-                                            placeholder="Search.."
-                                            value={search}
-                                            onChange={(e) => setSearch(e.target.value)}
-                                            autoComplete='off'
-                                        />
-                                        <button className='text-secondary-900 py-xs px-xl flex items-center justify-center gap-s' onClick={handleSearch}>
-                                            <ImSearch />
-                                        </button>
-                                    </div>
-                                    <div className={'flex w-full  flex-col  items-center   px-l    z-20 top-xl transition-all duration-1000 ease-in '}>
-
-                                        <div ref={searchResultRef} className='w-full  '>
-                                            {loading ?
-                                                (
-                                                    <div className={clsx("w-full py-l  bg-white  ")}>
-                                                        {/* Skeleton for Global Searching Results */}
-                                                        <div className='w-full text-neutral-900 border-b-2 pb-m border-neutral-200'>
-                                                            Searching For
-                                                        </div>
-                                                        <div className="w-full   ">
-                                                            <div className="w-full pt-l pb-m text-neutral-1100">
-                                                                <Skeleton width={200} height={20} />
-                                                            </div>
-                                                            {[...Array(2)].map((_, index) => (
-                                                                <Skeleton key={index} height={20} className="mb-2" />
-                                                            ))}
-                                                        </div>
-
-                                                        {/* Skeleton for Saved Polygons Results */}
+                        ) : (
+                            <div className='w-full h-full flex gap-l'>
+                                <div className='w-[95vh] h-full bg-white rounded-md'>
+                                    <Maps
+                                        setSaveFormVisible={null}
+                                        setSearchResultVisible={setSearchResultVisible}
+                                        setCurrentPolygon={setCurrentPolygon}
+                                        polygonSaved={polygonSaved}
+                                        polygonCoordinates={polygonCoordinates}
+                                        latlng={latlng}
+                                        setAppliedFilter={setGeo}
+                                    />
+                                </div>
+                                <div className='flex-1 h-full'>
+                                    <div className='w-full flex flex-col rounded-lg relative'>
+                                        <div className='flex flex-1 bg-white rounded-lg border'>
+                                            <input
+                                                type="text"
+                                                className="focus:outline-none py-s px-s text-f-l rounded-bs flex-1 border-0 text-black"
+                                                placeholder="Search.."
+                                                value={search}
+                                                onChange={(e) => setSearch(e.target.value)}
+                                            />
+                                            <button className='text-secondary-900 py-xs px-xl flex items-center justify-center gap-s' onClick={handleSearch}>
+                                                <ImSearch />
+                                            </button>
+                                        </div>
+                                        <div className={'flex w-full flex-col items-center px-l z-20 top-xl transition-all duration-1000 ease-in'}>
+                                            <div ref={searchResultRef} className='w-full'>
+                                                {loading ? (
+                                                    <div className="w-full py-l bg-white">
+                                                        <div className='w-full text-neutral-900 border-b-2 pb-m border-neutral-200'>Searching For</div>
+                                                        <Skeleton width={200} height={20} />
+                                                        {[...Array(2)].map((_, index) => (
+                                                            <Skeleton key={index} height={20} className="mb-2" />
+                                                        ))}
                                                         <div className="w-full border-t-2 border-neutral-200 mt-m">
-                                                            <div className="w-full pt-l pb-m text-neutral-1100">
-                                                                <Skeleton width={200} height={20} />
-                                                            </div>
+                                                            <Skeleton width={200} height={20} />
                                                             {[...Array(2)].map((_, index) => (
                                                                 <Skeleton key={index} height={20} className="mb-2" />
                                                             ))}
                                                         </div>
                                                     </div>
-                                                ) :
-
-                                                <div className=' w-full py-l '>
-                                                    <div className='w-full text-neutral-900 border-b-2 pb-m border-neutral-200'>
-                                                        Searching For
+                                                ) : (
+                                                    <div className='w-full py-l'>
+                                                        <div className='w-full text-neutral-900 border-b-2 pb-m border-neutral-200'>Searching For</div>
+                                                        {polygonData.length > 0 || selfPolygonData.length > 0 ? (
+                                                            <div className='w-full h-[45vh] overflow-y-scroll hide-scrollbar'>
+                                                                {polygonData.length > 0 && (
+                                                                    <>
+                                                                        <div className="pt-l pb-m text-neutral-1100">Global Searching Results</div>
+                                                                        {polygonData.slice(0, 4).map((area, index) => (
+                                                                            <SearchResultTab
+                                                                                area={area}
+                                                                                key={index}
+                                                                                getPolygonCoordinates={getPolygonCoordinates}
+                                                                                setPolygonCoordinates={setPolygonCoordinates}
+                                                                                setLatLng={setLatLng}
+                                                                                closeSearchHandler={closeSearchHandler}
+                                                                            />
+                                                                        ))}
+                                                                    </>
+                                                                )}
+                                                                {selfPolygonData.length > 0 && (
+                                                                    <>
+                                                                        <div className="border-t-2 border-neutral-200 mt-m pt-l pb-m text-neutral-1100">Saved Polygons Results</div>
+                                                                        {selfPolygonData.slice(0, 4).map((area, index) => (
+                                                                            <SearchResultTab
+                                                                                area={area}
+                                                                                key={index}
+                                                                                getPolygonCoordinates={getPolygonCoordinates}
+                                                                                setPolygonCoordinates={setPolygonCoordinates}
+                                                                                setLatLng={setLatLng}
+                                                                                closeSearchHandler={closeSearchHandler}
+                                                                            />
+                                                                        ))}
+                                                                    </>
+                                                                )}
+                                                            </div>
+                                                        ) : (
+                                                            <div className="text-f-l text-gray-500 mt-m">No data found.</div>
+                                                        )}
                                                     </div>
-                                                    {polygonData.length > 0 || selfPolygonData.length > 0 ? <div className='w-full h-[45vh] overflow-y-scroll hide-scrollbar'>
-                                                        {polygonData.length > 0 && (
-                                                            <div className="w-full  ">
-                                                                <div className="w-full pt-l pb-m text-neutral-1100">
-                                                                    Global Searching Results
-                                                                </div>
-                                                                {polygonData.slice(0, 4).map((area, index) => (
-                                                                    <SearchResultTab
-                                                                        area={area}
-                                                                        key={index}
-                                                                        getPolygonCoordinates={getPolygonCoordinates}
-                                                                        setPolygonCoordinates={setPolygonCoordinates}
-                                                                        setLatLng={setLatLng}
-                                                                        closeSearchHandler={closeSearchHandler}
-                                                                    />
-                                                                ))}
-                                                            </div>
-                                                        )}
-
-                                                        {selfPolygonData.length > 0 && (
-                                                            <div className="w-full border-t-2 border-neutral-200 mt-m">
-                                                                <div className="w-full pt-l pb-m text-neutral-1100">
-                                                                    Saved Polygons Results
-                                                                </div>
-                                                                {selfPolygonData.slice(0, 4).map((area, index) => (
-                                                                    <SearchResultTab
-                                                                        area={area}
-                                                                        key={index}
-                                                                        getPolygonCoordinates={getPolygonCoordinates}
-                                                                        setPolygonCoordinates={setPolygonCoordinates}
-                                                                        setLatLng={setLatLng}
-                                                                        closeSearchHandler={closeSearchHandler}
-                                                                    />
-                                                                ))}
-                                                            </div>
-                                                        )}
-
-                                                    </div> : <div className="text-f-l text-gray-500 mt-m">No data found.</div>}
-
-
-                                                </div>
-
-                                            }
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        )}
+                    </div>
 
-                    }
-                </div>
-
-                {/* Footer Buttons */}
-                <div className='p-l py-m text-f-2xl border-t flex justify-between gap-s'>
-                    {next ? <button className='default-button py-xs text-f-l border bg-white text-black hover:bg-white  hover:border-secondary-900' onClick={() => { setNext(false) }}>Back</button> : <div></div>}
-                    {!next ?
-                        <button className='default-button py-xs text-f-l' onClick={nextButtonHandler}>Next</button> :
-                        <button className='default-button py-xs text-f-l' onClick={saveHandler}>Save</button>
-                    }
-                </div>
-            </div>
+                    {/* Footer Buttons */}
+                    <div className='p-l py-m text-f-2xl border-t flex justify-between gap-s'>
+                        {next ? (
+                            <button className='default-button py-xs text-f-l border bg-white text-black hover:bg-white hover:border-secondary-900' onClick={() => setNext(false)}>Back</button>
+                        ) : (
+                            <div></div>
+                        )}
+                        {!next ? (
+                            <button className='default-button py-xs text-f-l' onClick={nextButtonHandler}>Next</button>
+                        ) : (
+                            <button className='default-button py-xs text-f-l' onClick={saveHandler}>Save</button>
+                        )}
+                    </div>
+                </motion.div>
+            </AnimatePresence>
         </div>
+
     );
 };
 

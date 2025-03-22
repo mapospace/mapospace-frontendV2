@@ -7,6 +7,7 @@ import { RiCloseFill } from "react-icons/ri";
 import { MdDeleteForever } from "react-icons/md";
 import Select from "react-select";
 import { customError, customSuccess } from '../Common/Toast';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const valueRequired = [
     { value: "false", label: "False" },
@@ -177,111 +178,125 @@ const EventManager = () => {
 
             </div>
             <div className="grid  md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-xl mt-xl  ">
-                {customEventTypes.length > 0 && customEventTypes.map((eventData, index) => (<Card key={index} data={eventData} />))}
+                {customEventTypes.length > 0 && customEventTypes.map((eventData, index) => (<Card key={index} data={eventData} index={index} />))}
             </div>
-            {addNewEvent && <div className='fixed top-0 left-0 inset-0 bg-black z-50 bg-opacity-50 flex items-center justify-center'>
-                <div className='w-[80vw] bg-white   rounded-bs'>
-                    <div className='p-l font-normal text-f-2xl border-b  flex justify-between items-center'>
-                        <div>Create New Event
-                        </div>
-                        <RiCloseFill className='w-6 h-6 cursor-pointer' onClick={closeHandler} />
-                    </div>
-                    {!addProperty ? <div className='flex p-l gap-l min-h-[450px]'>
-                        <div className='flex-1 '>
-                            <div className=" space-y-1">
-                                <div className='text-f-m'>Tag</div>
-                                <input
-                                    type="text"
-                                    className="p-2 border border-gray-300 rounded-md w-[60%] border-effect transition"
-                                    placeholder="Enter the tag"
-                                    onChange={(e) => eventTagHandler(e.target.value)}
-                                    value={eventTag}
-                                />
-                                {error.tag && showError && <div className='text-f-s text-red-500'>This field is required.</div>}
-                            </div>
-                            <div className="mt-l space-y-1">
-                                <div className='text-f-m'>Event Name</div>
-                                <input
-                                    type="text"
-                                    className="p-2 border border-gray-300 rounded-md w-[80%] border-effect transition"
-                                    placeholder="Enter event name"
-                                    onChange={(e) => eventNameHandler(e.target.value)}
-                                    value={eventName}
-                                />
-                                {error.name && showError && <div className='text-f-s text-red-500'>This field is required.</div>}
-                            </div>
-                            <div className="mt-l space-y-1">
-                                <div className='text-f-m'>Event Description</div>
-                                <textarea
-                                    className="p-2 border border-gray-300 rounded-md w-full h-[200px] border-effect transition resize-none"
-                                    placeholder="Enter event description"
-                                    onChange={(e) => eventDescriptionHandler(e.target.value)}
-                                    value={eventDescription}
-                                    maxLength={200}
-                                />
-                                {error.description && showError && <div className='text-f-s text-red-500'>This field is required.</div>}
-                            </div>
-                        </div>
-                        <div className=' flex flex-col flex-1 justify-center items-center'>
-                            <Image
-                                src={h3}
-                                alt="Illustration"
-                                className="w-[80%] object-contain max-w-full rounded-bs"
-                            />
-                            <div className="text-center  mt-4 text-gray-600 ">
-                                Unveiling Behavioral Patterns: Harnessing Geospatial Clustering for Smarter Insights and Decision-Making
-                            </div>
-                        </div>
-
-                    </div> : <div className='flex p-l  gap-xl min-h-[450px]'>
-                        <div className='flex flex-1 flex-col'>
-                            <div className=' text-black    flex '>
-                                <div className='bg-secondary-900 text-white px-xl py-s rounded-bs border-2 border-secondary-900'>
-                                    Event Name
+            <AnimatePresence>
+                {addNewEvent &&
+                    <motion.div
+                        className="fixed top-0 left-0 inset-0 bg-black z-50 bg-opacity-50 flex items-center justify-center"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                    >
+                        <motion.div
+                            className="w-[80vw] bg-white rounded-bs"
+                            initial={{ y: 50, opacity: 0, scale: 0.95 }}
+                            animate={{ y: 0, opacity: 1, scale: 1 }}
+                            exit={{ y: 50, opacity: 0, scale: 0.95 }}
+                            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                        >
+                            <div className='p-l font-normal text-f-2xl border-b  flex justify-between items-center'>
+                                <div>Create New Event
                                 </div>
+                                <RiCloseFill className='w-6 h-6 cursor-pointer' onClick={closeHandler} />
                             </div>
-                            <div className='w-full h-xl  flex justify-end '>
-                                <div className=' h-full w-[90%] relative  border-l-2  border-secondary-900'>
-
-                                </div>
-                            </div>
-                            {eventName.trim() !== "" && eventDescription.trim() != '' &&
-                                <div className=" pb-l h-[350px] overflow-scroll hide-scrollbar">
-                                    {keyValuePairs.map((pair, index) => (
-                                        <KeyValueTabs
-                                            key={index}
-                                            index={index}
-                                            pair={pair}
-                                            onChange={handleKeyValueChange}
-                                            onDelete={handleDeleteKeyValue}
+                            {!addProperty ? <div className='flex p-l gap-l min-h-[450px]'>
+                                <div className='flex-1 '>
+                                    <div className=" space-y-1">
+                                        <div className='text-f-m'>Tag</div>
+                                        <input
+                                            type="text"
+                                            className="p-2 border border-gray-300 rounded-md w-[60%] border-effect transition"
+                                            placeholder="Enter the tag"
+                                            onChange={(e) => eventTagHandler(e.target.value)}
+                                            value={eventTag}
                                         />
-                                    ))}
+                                        {error.tag && showError && <div className='text-f-s text-red-500'>This field is required.</div>}
+                                    </div>
+                                    <div className="mt-l space-y-1">
+                                        <div className='text-f-m'>Event Name</div>
+                                        <input
+                                            type="text"
+                                            className="p-2 border border-gray-300 rounded-md w-[80%] border-effect transition"
+                                            placeholder="Enter event name"
+                                            onChange={(e) => eventNameHandler(e.target.value)}
+                                            value={eventName}
+                                        />
+                                        {error.name && showError && <div className='text-f-s text-red-500'>This field is required.</div>}
+                                    </div>
+                                    <div className="mt-l space-y-1">
+                                        <div className='text-f-m'>Event Description</div>
+                                        <textarea
+                                            className="p-2 border border-gray-300 rounded-md w-full h-[200px] border-effect transition resize-none"
+                                            placeholder="Enter event description"
+                                            onChange={(e) => eventDescriptionHandler(e.target.value)}
+                                            value={eventDescription}
+                                            maxLength={200}
+                                        />
+                                        {error.description && showError && <div className='text-f-s text-red-500'>This field is required.</div>}
+                                    </div>
                                 </div>
-                            }
+                                <div className=' flex flex-col flex-1 justify-center items-center'>
+                                    <Image
+                                        src={h3}
+                                        alt="Illustration"
+                                        className="w-[80%] object-contain max-w-full rounded-bs"
+                                    />
+                                    <div className="text-center  mt-4 text-gray-600 ">
+                                        Unveiling Behavioral Patterns: Harnessing Geospatial Clustering for Smarter Insights and Decision-Making
+                                    </div>
+                                </div>
 
-                        </div>
-                        <div className=' flex flex-col flex-1 justify-center items-center '>
-                            <Image
-                                src={h3}
-                                alt="Illustration"
-                                className="w-[80%] object-contain max-w-full rounded-bs"
-                            />
-                            <div className="text-center  mt-4 text-gray-600 ">
-                                Unveiling Behavioral Patterns: Harnessing Geospatial Clustering for Smarter Insights and Decision-Making
-                            </div>
-                        </div>
+                            </div> : <div className='flex p-l  gap-xl min-h-[450px]'>
+                                <div className='flex flex-1 flex-col'>
+                                    <div className=' text-black    flex '>
+                                        <div className='bg-secondary-900 text-white px-xl py-s rounded-bs border-2 border-secondary-900'>
+                                            Event Name
+                                        </div>
+                                    </div>
+                                    <div className='w-full h-xl  flex justify-end '>
+                                        <div className=' h-full w-[90%] relative  border-l-2  border-secondary-900'>
 
-                    </div>}
-                    {!addProperty ? <div className='p-l flex justify-between border-t'>
-                        <button className='default-button' onClick={closeHandler}>Cancel</button>
-                        <button className='default-button px-xl' onClick={nextButtonHandler}>Next</button>
-                    </div> : <div className='p-l flex justify-between border-t'>
-                        <button className='default-button' onClick={backButtonHandler}>Back</button>
-                        <button className='default-button px-xl' onClick={saveNewEventHandler}>Save</button>
-                    </div>}
-                </div>
+                                        </div>
+                                    </div>
+                                    {eventName.trim() !== "" && eventDescription.trim() != '' &&
+                                        <div className=" pb-l h-[350px] overflow-scroll hide-scrollbar">
+                                            {keyValuePairs.map((pair, index) => (
+                                                <KeyValueTabs
+                                                    key={index}
+                                                    index={index}
+                                                    pair={pair}
+                                                    onChange={handleKeyValueChange}
+                                                    onDelete={handleDeleteKeyValue}
+                                                />
+                                            ))}
+                                        </div>
+                                    }
 
-            </div>}
+                                </div>
+                                <div className=' flex flex-col flex-1 justify-center items-center '>
+                                    <Image
+                                        src={h3}
+                                        alt="Illustration"
+                                        className="w-[80%] object-contain max-w-full rounded-bs"
+                                    />
+                                    <div className="text-center  mt-4 text-gray-600 ">
+                                        Unveiling Behavioral Patterns: Harnessing Geospatial Clustering for Smarter Insights and Decision-Making
+                                    </div>
+                                </div>
+
+                            </div>}
+                            {!addProperty ? <div className='p-l flex justify-between border-t'>
+                                <button className='default-button' onClick={closeHandler}>Cancel</button>
+                                <button className='default-button px-xl' onClick={nextButtonHandler}>Next</button>
+                            </div> : <div className='p-l flex justify-between border-t'>
+                                <button className='default-button' onClick={backButtonHandler}>Back</button>
+                                <button className='default-button px-xl' onClick={saveNewEventHandler}>Save</button>
+                            </div>}
+                        </motion.div>
+
+                    </motion.div>}
+            </AnimatePresence>
         </div>
     )
 }
@@ -289,8 +304,14 @@ const EventManager = () => {
 export default EventManager;
 
 
-const Card = ({ data }) => {
-    return <div className='col-span-1 rounded-bs p-l border'>
+const Card = ({ data, index }) => {
+    return <motion.div
+        className='col-span-1 rounded-bs p-l border'
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, delay: index * 0.05 }}
+    >
+
 
         <div className='flex justify-between items-center '>
             <div className='bg-secondary-900 text-white text-f-m px-s py-xs rounded-bs'>Active</div>
@@ -320,7 +341,7 @@ const Card = ({ data }) => {
         <div className='pt-l text-f-m text-neutral-900'>
             Updated : {data.updatedAt.split('T')[0]}
         </div>
-    </div>
+    </motion.div>
 }
 
 

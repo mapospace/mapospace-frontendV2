@@ -17,8 +17,8 @@ import { PiPolygonFill } from "react-icons/pi";
 import { GrLocationPin } from "react-icons/gr";
 import { IoCloseSharp } from "react-icons/io5";
 import { useSearchParams } from 'next/navigation';
-const QueryBuilderSideNav = ({ setQueryData }) => {
-    const [openQuery, setOpenQuery] = useState(false);
+const QueryBuilderSideNav = ({ setQueryData, setQueryFunnelData, setQuerySegmentsData, setQueryRetentionData, openQuery, setOpenQuery, setActiveLoading }) => {
+    // const [openQuery, setOpenQuery] = useState(false);
     const [showFilter, setShowFilter] = useState(false);
     const [showStageFilter, setShowStageFilter] = useState(false);
     const [showGeo, setShowGeo] = useState(false);
@@ -276,18 +276,19 @@ const QueryBuilderSideNav = ({ setQueryData }) => {
         if (!queryFilterData) {
             return;
         }
-
+        setActiveLoading(true);
         const newData = {
             ...queryFilterData,
             filters: query,
-            stages: funnelQuery,
+            funnelQuery: funnelQuery,
             geojson: geo ? geo.geojson : null
         }
-        console.log(newData)
+        console.log("runQueryHandler", newData)
 
         if (currentEventType == "events") {
-            let data = { generateInsights: queryFilterData.generateInsights };
+            let data = {};
             if (queryFilterData.customEventTypeName) {
+
                 data = { ...data, customEventTypeName: queryFilterData.customEventTypeName }
                 if (query && query[queryFilterData.customEventTypeName]) {
                     data = { ...data, filters: query[queryFilterData.customEventTypeName] }
@@ -308,7 +309,76 @@ const QueryBuilderSideNav = ({ setQueryData }) => {
             setQueryData(data)
             setOpenQuery(false)
         }
+        else if (currentEventType == "funnels") {
+            let data = {};
+            if (newData.stages.length > 0) {
+                const eventName = newData.stages.map((stage) => { return stage.selectedValue })
+                const stages = eventName.map((event) => {
+                    return {
+                        name: event,
+                        customEventTypeName: event,
+                        filters: newData.funnelQuery ? newData.funnelQuery[event] ? newData.funnelQuery[event] : {} : {}
+                    }
+                })
+                data = { ...data, stages: stages }
+            }
+            if (queryFilterData.startDate) {
+                data = { ...data, startDate: queryFilterData.startDate }
+            }
+            if (queryFilterData.endDate) {
+                data = { ...data, endDate: queryFilterData.endDate }
+            }
+            if (geo) {
+                data = { ...data, geojson: geo.geojson }
+            }
+            setQueryFunnelData(data)
+            setOpenQuery(false)
+            console.log("runQueryHandler funnels", data)
+        }
+        else if (currentEventType == "segmentation") {
+            let data = {};
+            if (queryFilterData.customEventTypeName) {
+                data = { ...data, customEventTypeName: queryFilterData.customEventTypeName }
+            }
+            if (queryFilterData.startDate) {
+                data = { ...data, startDate: queryFilterData.startDate }
+            }
+            if (queryFilterData.endDate) {
+                data = { ...data, endDate: queryFilterData.endDate }
+            }
+            if (geo) {
+                data = { ...data, geojson: geo.geojson }
+            }
+            if (queryFilterData.segments) {
+                const updatedArr = queryFilterData.segments.map(item => `payload.${item}`);
+                data = { ...data, segmentBy: updatedArr }
+            }
+            setQuerySegmentsData(data)
+            setOpenQuery(false)
+            console.log("runQueryHandler segmentation", data)
+        }
+        else if (currentEventType == "retention") {
+            let data = {};
+            if (queryFilterData.baseEvent) {
+                data = { ...data, baseEvent: queryFilterData.baseEvent }
+            }
+            if (queryFilterData.returnEvent) {
+                data = { ...data, returnEvent: queryFilterData.returnEvent }
+            }
+            if (queryFilterData.startDate) {
+                data = { ...data, startDate: queryFilterData.startDate }
+            }
+            if (queryFilterData.endDate) {
+                data = { ...data, endDate: queryFilterData.endDate }
+            }
+            if (geo) {
+                data = { ...data, geojson: geo.geojson }
+            }
 
+            setQueryRetentionData(data)
+            setOpenQuery(false)
+            console.log("runQueryHandler retention", data)
+        }
     }
 
     return (
