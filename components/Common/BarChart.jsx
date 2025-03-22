@@ -1,125 +1,116 @@
-'use client'
+'use client';
+import React, { useEffect, useState } from 'react';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Tooltip,
+  Legend,
+} from 'chart.js';
 import { Bar } from 'react-chartjs-2';
-import React, { useEffect, useState } from 'react'
-import { Chart as ChartJS, CategoryScale, BarElement, Tooltip, Legend } from 'chart.js';
-import Select from "react-select";
+import Select from 'react-select';
 
-ChartJS.register(CategoryScale, BarElement, Tooltip, Legend);
+ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
 const dataValues = [
-    { value: "day", label: "Day" },
-    { value: "week", label: "Week" },
-    { value: "month", label: "Month" }
+  { value: 'day', label: 'Day' },
+  { value: 'week', label: 'Week' },
+  { value: 'month', label: 'Month' },
 ];
 
+const gradientBarPlugin = {
+  id: 'barGradient',
+  beforeDatasetsDraw(chart) {
+    const { ctx, chartArea } = chart;
+    if (!chartArea) return;
+
+    chart.data.datasets.forEach((dataset, index) => {
+      const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+      gradient.addColorStop(0, '#977fff'); // primary-400
+      gradient.addColorStop(1, '#f7f5ff'); // primary-50
+      dataset.backgroundColor = gradient;
+    });
+  },
+};
+
 const BarChart = ({ labels, values, height, labelName, period, showPeriod = true }) => {
-    const [data, setData] = useState({ labels: [], datasets: [] });
-    const [selectedOption, setSelectedOption] = useState(dataValues[0]);
+  const [selectedOption, setSelectedOption] = useState(dataValues[0]);
+  const [chartData, setChartData] = useState({ labels: [], datasets: [] });
 
-    useEffect(() => {
-        showPeriod && period(selectedOption.value)
-    }, [selectedOption])
+  useEffect(() => {
+    showPeriod && period(selectedOption.value);
+  }, [selectedOption]);
 
+  useEffect(() => {
+    if (!labels || !values || values.length === 0) return;
 
-    useEffect(() => {
-        if (!values || values.length === 0) return;
+    const formattedValues = Array.isArray(values[0]) ? values : [values];
 
-        // Ensure `values` is a nested array (for multiple datasets) or wrap it if it's a single dataset.
-        const formattedValues = Array.isArray(values[0]) ? values : [values];
+    const datasets = formattedValues.map((val, idx) => ({
+      label: idx === 0 ? labelName : `Dataset ${idx + 1}`,
+      data: val,
+      borderRadius: 6,
+      barThickness: 20,
+      backgroundColor: '#977fff', // fallback
+    }));
 
-        const datasets = formattedValues.map((value, index) => (
-            {
-                label: index === 0 ? labelName : `Dataset ${index + 1}`,
-                data: value,
-                backgroundColor: index % 2 == 0 ? '#0136f8' : '#0136f8',
-            }
-        ));
+    setChartData({ labels, datasets });
+  }, [labels, values]);
 
-        setData({ labels, datasets });
-    }, [labels, values]);
-
-    const barOptions = {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-            x: { grid: { display: false } },
-            y: { grid: { display: false } }
+  const barOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      x: { grid: { display: false }, ticks: { color: '#5d5a8f' } },
+      y: { grid: { display: false }, ticks: { color: '#5d5a8f' } },
+    },
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: { color: '#403d73' },
+      },
+      tooltip: {
+        callbacks: {
+          title: (items) => `Date: ${items[0].label}`,
+          label: (item) => `Total Orders: ${item.raw}`,
         },
-        plugins: {
-            legend: {
-                position: "bottom"
-            },
-            tooltip: {
-                callbacks: {
-                    title: function (tooltipItems) {
-                        // Prepend "Date: " before the date value
-                        return `Date: ${tooltipItems[0].label}`;
-                    },
-                    label: function (tooltipItem) {
-                        // Custom label text
-                        return `Total Orders: ${tooltipItem.raw}`;
-                    }
-                }
-            }
-        }
-    };
+      },
+    },
+  };
 
-    return (
-        <div className="bg-white  flex-1 flex flex-col h-full border rounded-bs">
-            <div className='flex justify-between px-xl pb-s pt-l text-f-l font-semibold text-neutral-1200 '>
-                <h3 className="text-f-l font-semibold text-neutral-1200  ">
-                    {labelName}
-                </h3>
-                {showPeriod && <div >
-                    <Select
-                        options={dataValues}
-                        value={selectedOption}
-                        onChange={(selected) => setSelectedOption(selected)}
-                        isSearchable={false}
-                        className="!m-0 !p-0 !h-auto !w-auto !border-none !shadow-none text-black text-f-s"
-                        styles={{
-                            control: (provided) => ({
-                                ...provided,
-                                minHeight: 'unset',  // Remove default min-height
-                                height: 'auto',
-                                padding: "2px",
-                                margin: 0,
-                                border: '1px solid #4d4d4d',
-                                boxShadow: 'none',
-                                backgroundColor: 'transparent',
-                            }),
-                            valueContainer: (provided) => ({
-                                ...provided,
-                                padding: '2px', // Ensure no extra padding
-                                margin: 0,
-                            }),
-                            indicatorsContainer: (provided) => ({
-                                ...provided,
-                                padding: '2px',
-                            }),
-                            dropdownIndicator: (provided) => ({
-                                ...provided,
-                                padding: '0px', // Removes space around the dropdown arrow
-                                margin: 0,
-                            }),
-                            singleValue: (provided) => ({
-                                ...provided,
-                                padding: 0,
-                                margin: 0,
-                            }),
-                        }}
-                    />
-
-
-                </div>}
-            </div>
-            <div className="w-full flex-1 flex items-center justify-center p-xl ">
-                <div className="w-full h-full">
-                    {data?.datasets?.length > 0 && <Bar data={data} options={barOptions} />}
-                </div>
-            </div>
-        </div>
-    );
+  return (
+    <div className="bg-white shadow-md rounded-blg flex flex-col h-full border border-neutral-300">
+      <div className="flex justify-between items-center px-xl pb-s pt-l">
+        <h3 className="text-f-l font-semibold text-neutral-1100">{labelName}</h3>
+        {showPeriod && (
+          <Select
+            options={dataValues}
+            value={selectedOption}
+            onChange={setSelectedOption}
+            isSearchable={false}
+            className="text-f-s"
+            styles={{
+              control: (base) => ({
+                ...base,
+                backgroundColor: '#f7f5ff',
+                border: '1px solid #cbbfff',
+                minHeight: 'unset',
+                height: 'auto',
+                padding: '2px 6px',
+                fontSize: '12px',
+              }),
+            }}
+          />
+        )}
+      </div>
+      <div className="w-full flex-1 px-xl pb-xl">
+        {chartData?.datasets?.length > 0 && (
+          <Bar data={chartData} options={barOptions} plugins={[gradientBarPlugin]} />
+        )}
+      </div>
+    </div>
+  );
 };
 
 export default BarChart;

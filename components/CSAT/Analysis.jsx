@@ -383,7 +383,7 @@ const Analysis = ({ appliedFilter }) => {
 
                 </div>
                 <div className='col-span-2'>
-                    {barlabels.length > 0 && barValues.length > 0 && <BarChart labels={barlabels} values={barValues} labelName="  Score Distribution " showPeriod={false} />}
+                    {barlabels.length > 0 && barValues.length > 0 && <BarChart labels={barlabels} values={barValues}  labelName="  Score Distribution " showPeriod={false} />}
                 </div>
             </div>
             <div className=' gap-xl grid  grid-cols-4 mt-xl  min-h-[500px]'>
