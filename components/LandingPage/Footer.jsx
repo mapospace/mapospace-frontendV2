@@ -6,23 +6,24 @@ import { FaGithub } from "react-icons/fa";
 
 const Footer = () => {
     return (
-        <div className='text-black max-w-7xl mx-auto px-10 mb-12' >
-            <div className=' bg-neutral-100 px-6 py-10 flex justify-between items-center'>
-                <div className='flex items-center gap-2 flex-1'>
+        <div className='text-black max-w-7xl mx-auto px-10 mb-16'>
+            <div className='bg-neutral-100 px-6 py-12 flex justify-between items-center rounded-lg shadow-sm'>
+                <div className='flex items-center gap-4 flex-1'>
                     <Image
                         src={desktop}
-                        alt="Picture of the author"
+                        alt="MapoSpace Logo"
+                        className='w-12 h-12'
                     />
-                    <div className='text-lg font-medium font-display'>Todesktop</div>
+                    <div className='text-xl font-medium font-display'>MapoSpace</div>
                 </div>
-                <div className='flex items-center gap-6'>
-                    <FaTwitter />
-                    <FaGithub />
-                    <div>Documentation</div>
+                <div className='flex items-center gap-8 text-gray-600'>
+                    <a href='#' className='hover:text-gray-900 transition-colors duration-200'><FaTwitter className='w-5 h-5' /></a>
+                    <a href='#' className='hover:text-gray-900 transition-colors duration-200'><FaGithub className='w-5 h-5' /></a>
+                    <a href='#' className='hover:text-gray-900 transition-colors duration-200'>Documentation</a>
                 </div>
             </div>
-            <div className='flex items-center justify-center mt-12'>
-                <p className='text-neutral-400'>© 2024 ToDesktop, Inc. All rights reserved.</p>
+            <div className='flex items-center justify-center mt-12 text-gray-500'>
+                <p> 2024 MapoSpace, Inc. All rights reserved.</p>
             </div>
         </div>
     )
