@@ -55,6 +55,12 @@ const SankeyChart = ({ data }) => {
     const options = {
         responsive: true,
         maintainAspectRatio: false,
+        plugins: {
+
+            datalabels: {
+                display: false,
+            },
+        }
     };
 
     return (

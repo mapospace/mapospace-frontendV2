@@ -392,7 +392,7 @@ const QueryBuilderSideNav = ({ setQueryData, setQueryFunnelData, setQuerySegment
                 <div className=' h-full  overflow-y-scroll'>
                     <div className='flex items-center gap-xs border-b px-l pb-s '>
                         <LuFilter className='w-5 h-5' />
-                        <div className='text-f-l font-semibold'>Query Builder</div>
+                        <div className='text-f-l font-semibold'>Query Filter</div>
                     </div>
 
                     <QueryFilter setShowFilter={openFilterHandler} filterStatus={filterStatus} close={closeFiltersHandler} setShowStageFilter={openStageFilterHandler} setShowGeo={openGeoHandler} setPropertyNameList={setPropertyNameList} setPropertyList={setPropertyList} getData={setQueryFilterData} propertyNameList={propertyNameList} />

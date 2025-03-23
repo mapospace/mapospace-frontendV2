@@ -69,6 +69,9 @@ const HistogramChart = ({ data, bins, setBins, label }) => {
         plugins: {
             legend: { display: false },
             title: { display: true, text: "Histogram" },
+            datalabels: {
+                display: false,
+            },
         },
         scales: {
             x: { title: { display: true, text: "Ranges" } },

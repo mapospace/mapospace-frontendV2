@@ -60,7 +60,10 @@ const BarChart = ({ labels, values, height, labelName, period, showPeriod = true
                         return `Total Orders: ${tooltipItem.raw}`;
                     }
                 }
-            }
+            },
+            datalabels: {
+                display: false,
+            },
         }
     };
 

@@ -71,6 +71,9 @@ const DoughnutChart = ({ labels, values, labelName, period, productListDoughtnut
             legend: {
                 position: "top",
             },
+            datalabels: {
+                display: false,
+            },
         },
     };
 

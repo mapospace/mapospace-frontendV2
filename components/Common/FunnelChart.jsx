@@ -73,6 +73,7 @@ const FunnelChart = ({ funnelData }) => {
                     return `Stage : ${context.chart.data.labels[context.dataIndex]}\nCount : ${value}`;
                 },
             },
+
         },
         scales: {
             y: {

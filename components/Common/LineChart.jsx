@@ -31,7 +31,7 @@ const LineChart = ({ labels, values, labelName, period }) => {
                 borderColor: '#0136f8',
                 backgroundColor: '#0136f8',
                 tension: 0.4,
-                fill: true,
+                fill: false,
             }))
             : [{
                 label: labelName,
@@ -39,7 +39,7 @@ const LineChart = ({ labels, values, labelName, period }) => {
                 borderColor: '#0136f8',
                 backgroundColor: '#0136f8',
                 tension: 0.4,
-                fill: true,
+                fill: false,
             }];
 
         setData({ labels, datasets });
@@ -64,7 +64,10 @@ const LineChart = ({ labels, values, labelName, period }) => {
                         return `Total Orders: ${tooltipItem.raw}`;
                     }
                 }
-            }
+            },
+            datalabels: {
+                display: false,
+            },
         }
     };
 

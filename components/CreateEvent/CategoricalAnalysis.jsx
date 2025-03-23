@@ -182,6 +182,9 @@ const CategoricalAnalysis = ({ list, categoricalData }) => {
             legend: {
                 position: "top",
             },
+            datalabels: {
+                display: false,
+            },
         },
     };
 
@@ -207,7 +210,10 @@ const CategoricalAnalysis = ({ list, categoricalData }) => {
                         return `Total Orders: ${tooltipItem.raw}`;
                     }
                 }
-            }
+            },
+            datalabels: {
+                display: false,
+            },
         },
     };
     return (

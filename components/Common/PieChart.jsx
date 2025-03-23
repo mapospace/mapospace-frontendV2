@@ -42,6 +42,9 @@ const PieChart = () => {
             tooltip: {
                 enabled: true,
             },
+            datalabels: {
+                display: false,
+            },
         },
     };
 

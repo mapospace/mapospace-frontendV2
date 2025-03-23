@@ -86,6 +86,10 @@ export const API_ENDPOINTS = {
         CustomFunnelEvents: 'analytics-v3/funnel-analysis',
         CustomSegmentationEvents: 'analytics-v3/user-segmentation',
         CustomRetentionEvents: 'analytics-v3/retention-analysis'
+    },
+
+    AI: {
+        CustomEvents: 'analytics-v3/custom-events-nlp'
     }
 
 }

@@ -12,17 +12,17 @@ import getColorForValue from '@/utils/get-color-for-value';
 
 // Register the components needed for the chart
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
-const barData = [
-    { make: "Huawei", userCount: 20 },
-    { make: "Apple", userCount: 17 },
-    { make: "Samsung", userCount: 17 },
-    { make: "Google", userCount: 14 },
-    { ipAddress: "2", make: "OnePlus", userCount: 2 },
-    { ipAddress: "192.168.1.1", make: "OnePlus", userCount: 1 },
-    { ipAddress: "1", make: "OnePlus", userCount: 1 },
-    { ipAddress: "3", make: "OnePlus", userCount: 1 },
-    { ipAddress: "4", make: "OnePlus", userCount: 1 },
-];
+// const barData = [
+//     { make: "Huawei", userCount: 20 },
+//     { make: "Apple", userCount: 17 },
+//     { make: "Samsung", userCount: 17 },
+//     { make: "Google", userCount: 14 },
+//     { ipAddress: "2", make: "OnePlus", userCount: 2 },
+//     { ipAddress: "192.168.1.1", make: "OnePlus", userCount: 1 },
+//     { ipAddress: "1", make: "OnePlus", userCount: 1 },
+//     { ipAddress: "3", make: "OnePlus", userCount: 1 },
+//     { ipAddress: "4", make: "OnePlus", userCount: 1 },
+// ];
 
 const Segmentation = ({ querySegmentsData, setOpenQuery, setLoading }) => {
     const [segmentData, setSegmentData] = useState(null);
@@ -154,7 +154,7 @@ const UserSegmentChart = ({ barData, uniqueKeys }) => {
                 },
             },
             datalabels: {
-                display: false, // 👈 disables labels inside bars
+                display: false,
             },
         },
 
