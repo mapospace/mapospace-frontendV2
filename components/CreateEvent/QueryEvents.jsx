@@ -14,6 +14,7 @@ import CategoricalAnalysis from './CategoricalAnalysis'
 import { FaArrowRightLong } from "react-icons/fa6";
 import { FaMapMarkerAlt, FaClock, FaFilter, FaList } from "react-icons/fa";
 import { motion } from "framer-motion";
+import ChatBot from './ChatBot';
 
 const QueryEvents = ({ queryData, setOpenQuery, setLoading }) => {
     const [uniqueKeys, setUniqueKeys] = useState([]);
@@ -24,6 +25,7 @@ const QueryEvents = ({ queryData, setOpenQuery, setLoading }) => {
     const [categorical, setCategorical] = useState(null);
     const [categoricalUniqueKeys, setCategoricalUniqueKeys] = useState([])
     const [page, setPage] = useState(1);
+    const [conversationId, setConversationId] = useState([]);
 
     useEffect(() => {
         if (queryData != null) {
@@ -44,7 +46,11 @@ const QueryEvents = ({ queryData, setOpenQuery, setLoading }) => {
     const queryHandler = async (data) => {
         try {
             const authService = new AuthServices();
-            const response = await authService.postApiCallHandler(API_ENDPOINTS.QueryBuilder.CustomEvents, { ...data, "limit": 10, "page": 1, 'generateInsights': enableInsights });
+            const endpoint = data.filterPrompt ? API_ENDPOINTS.AI.CustomEventsWithChat : API_ENDPOINTS.QueryBuilder.CustomEvents;
+            const payload = data.filterPrompt ? {
+                ...data,
+            }:{...data, "limit": 10, "page": 1, 'generateInsights': enableInsights }
+            const response = await authService.postApiCallHandler(endpoint, payload);
 
             if (response?.error) {
                 console.log(response.message || "Failed to fetch data.");
@@ -60,7 +66,7 @@ const QueryEvents = ({ queryData, setOpenQuery, setLoading }) => {
             setTimeout(() => {
                 setLoading(false)
             }, 1000)
-
+            conversationAnalysisHandler({...payload,filters :response.data.filters})
             if (enableInsights) {
                 setInsightsData(response.data.insights.insights)
                 setCategorical(response.data.insights.computedMetrics.categorical)
@@ -70,6 +76,32 @@ const QueryEvents = ({ queryData, setOpenQuery, setLoading }) => {
                 setTimeout(() => { setLoadingInsights(false) }, 1000)
             }
 
+        } catch (err) {
+            console.error("Error fetching user details:", err);
+        }
+    }
+
+    const conversationAnalysisHandler = async (data) => {
+        try {
+            const authService = new AuthServices();
+            const endpoint = API_ENDPOINTS.AI.ConversationAnalysis;
+            const payload = {
+                customEventTypeName: data.customEventTypeName,
+                startDate: data.startDate,
+                endDate: data.endDate,
+                limit: 10,
+                page: 1,
+                filters: data.filters
+
+            };
+            const response = await authService.postApiCallHandler(endpoint, payload);
+
+            if (response?.error) {
+                console.log(response.message || "Failed to fetch data.");
+                return;
+            }
+            setConversationId(response.data.conversationId)
+            console.log("conversationAnalysisHandler", response.data)
         } catch (err) {
             console.error("Error fetching user details:", err);
         }
@@ -179,31 +211,31 @@ const QueryEvents = ({ queryData, setOpenQuery, setLoading }) => {
 
             </div>}
 
-            {uniqueKeys.length > 0 && <>
+            {uniqueKeys.length > 0 ? <>
                 <div className='flex justify-between '>
                     <div></div>
                     <div>
-                        <button
-                            className={clsx('flex rounded-bs items-center gap-s px-l py-xs  shadow-lg shadow-secondary-400 group  bg-secondary-900 hover:bg-secondary-1000')}
-                            onClick={lumoInsightsHandler}
-                        >
+                        {!(queryData.filterPrompt) && (
+                            <button
+                                className={clsx('flex rounded-bs items-center gap-s px-l py-xs  shadow-lg shadow-secondary-400 group  bg-secondary-900 hover:bg-secondary-1000')}
+                                onClick={lumoInsightsHandler}
+                            >
 
-                            <Image
-                                src='/aistar.png'
-                                alt="loading.."
-                                width={20}
-                                height={20}
-                                className=" h-2xl w-2xl rounded-bs group-hover:scale-110 transition-all ease-in-out duration-300"
-                            />
-                            <div className='text-f-l font-normal text-white '>Generate Insights</div>
-                            <FaArrowRightLong className='h-l w-l text-white pl-xs group-hover:translate-x-1 transition-all ease-in-out duration-300' />
-                        </button>
-
+                                <Image
+                                    src='/aistar.png'
+                                    alt="loading.."
+                                    width={20}
+                                    height={20}
+                                    className=" h-2xl w-2xl rounded-bs group-hover:scale-110 transition-all ease-in-out duration-300"
+                                />
+                                <div className='text-f-l font-normal text-white '>Generate Insights</div>
+                            </button>
+                        )}
                     </div>
                 </div>
                 {!loadingInsights && insightsData != null && enableInsights && <div><InsightsDetails insightsData={insightsData} /></div>}
                 {categorical != null && enableInsights && categoricalUniqueKeys.length > 0 && <CategoricalAnalysis list={categoricalUniqueKeys} categoricalData={categorical} />}
-                <div>
+                <div className='mb-2xl'>
                     <div className='pb-s border-b  mt-l  mb-xl'>
                         <div className='text-f-2xl '>Record</div>
                         <div className='text-f-l text-neutral-900'>
@@ -211,7 +243,7 @@ const QueryEvents = ({ queryData, setOpenQuery, setLoading }) => {
                         </div>
                     </div>
 
-                    <div className='border rounded-bs'>
+                    <div className='border rounded-bs '>
 
                         <div className="w-full   overflow-x-auto  hide-scrollbar ">
                             <div className='flex  rounded-bs'>
@@ -244,7 +276,7 @@ const QueryEvents = ({ queryData, setOpenQuery, setLoading }) => {
                             </div>
                         </div>
                     </div>
-                    <div className='py-s flex px-s justify-end gap-s'>
+                    {/* <div className='py-s flex px-s justify-end gap-s'>
                         <button className='text-neutral-1200 hover:text-secondary-900'>
                             <FaArrowLeft />
                         </button>
@@ -255,9 +287,16 @@ const QueryEvents = ({ queryData, setOpenQuery, setLoading }) => {
                         <button className='text-neutral-1200 hover:text-secondary-900'>
                             <FaArrowRight />
                         </button>
-                    </div>
+                    </div> */}
                 </div>
-            </>}
+            </>:<div className='mb-2xl'>
+                    <div className='pb-s  mt-l  mb-xl'>
+                        <div className='text-f-4xl text-neutral-600 '>No data available</div>
+                       
+                    </div>
+                    </div>
+                }
+     {uniqueKeys.length > 0 && <ChatBot conversationId={conversationId} />}
         </div >
     )
 }

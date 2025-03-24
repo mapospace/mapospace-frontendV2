@@ -1,318 +1,304 @@
 "use client"
 
-import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
+import React, { useState, useEffect } from "react"
+import { Line as ChartJSLine, Bar as ChartJSBar, Doughnut as ChartJSDoughnut } from 'react-chartjs-2'
 import {
-    BarChart,
-    Bar,
-    PieChart,
-    Pie,
-    LineChart,
-    Line,
-    XAxis,
-    YAxis,
-    CartesianGrid,
-    Tooltip,
-    Legend,
-    ResponsiveContainer,
-    Cell
-} from 'recharts';
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    LineElement,
+    PointElement,
+    BarElement,
+    ArcElement,
+    Tooltip as ChartTooltip,
+    Legend as ChartLegend
+} from 'chart.js'
+import { FaChartBar, FaChartLine, FaChartPie, FaInfoCircle } from "react-icons/fa"
+import getColorForValue from "@/utils/get-color-for-value"
 
-// Consistent color palette
-const COLORS = [
-    "#8884d8",
-    "#83a6ed",
-    "#8dd1e1",
-    "#82ca9d",
-    "#a4de6c",
-    "#d0ed57",
-    "#ffc658",
-    "#ff8042",
-    "#ff6361",
-    "#bc5090",
-    "#58508d",
-    "#003f5c",
-];
+ChartJS.register(CategoryScale, LinearScale, LineElement, PointElement, BarElement, ArcElement, ChartTooltip, ChartLegend)
 
-const tooltipStyle = {
-    backgroundColor: "rgba(255, 255, 255, 0.9)",
-    borderRadius: "8px",
-    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
-    border: "none",
-};
+const colors = [
+    "#d1c5fa", "#E9A5F1", "#FED2E2", "#a48bf6", "#9577f4",
+    "#8664f3", "#7751f1", "#c2b1f9", "#8F87F1", "#b39ef7",
+    "#C7D9DD", "#ADB2D4", "#FFFECE", "#80CBC4", "#D99D81",
+    "#A6F1E0", "#B4EBE6", "#73C7C7", "#C7DB9C", "#EFDCAB"
+]
 
-const AIChartRenderer = ({ results, isLoading }) => {
-    const [mounted, setMounted] = useState(false);
-    const [animationComplete, setAnimationComplete] = useState(false);
+function AIChartRenderer({ results }) {
+    const [mounted, setMounted] = useState(false)
+    const [selectedChart, setSelectedChart] = useState('bar')
+    const [animationComplete, setAnimationComplete] = useState(false)
 
     useEffect(() => {
-        setMounted(true);
-        const timer = setTimeout(() => setAnimationComplete(true), 1000);
-        return () => clearTimeout(timer);
-    }, []);
+        setMounted(true)
+        const timer = setTimeout(() => setAnimationComplete(true), 1000)
+        return () => clearTimeout(timer)
+    }, [])
 
-    if (!mounted) return null;
+    if (!mounted) return null
 
-    if (isLoading) {
+    // Safety check for empty data
+    if (!results || !Array.isArray(results) || results.length === 0) {
         return (
-            <div className="flex items-center justify-center h-64">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+            <div className="flex items-center justify-center h-64 text-base">
+                <p className="text-gray-500">No data available to display</p>
             </div>
-        );
+        )
     }
 
-    if (!results?.length) {
+    const chart = results[0] // We'll work with the first chart for now
+    const formattedData = chart.data.map(item => ({
+        name: item.label || 'Unknown',
+        value: typeof item.value === 'number' ? item.value : parseFloat(item.value) || 0,
+        percentage: item.percentage,
+        message: item.message
+    }))
+
+    // Calculate summary data
+    const totalValue = formattedData.reduce((sum, item) => sum + item.value, 0)
+    const averageValue = totalValue / formattedData.length
+    const highest = formattedData.reduce((max, item) => Math.max(max, item.value), 0)
+    const lowest = formattedData.reduce((min, item) => Math.min(min, item.value), Infinity)
+    const highestItem = formattedData.find(item => item.value === highest)
+    const lowestItem = formattedData.find(item => item.value === lowest)
+
+    const renderChart = () => {
+        if (selectedChart === 'pie') {
+            return renderPieChart(formattedData)
+        }
+
+        if (selectedChart === 'bar') {
+            const values = formattedData.map(item => item.value)
+            const maxValue = Math.max(...values);
+            const chartData = {
+                labels: formattedData.map(item => item.name),
+                datasets: [{
+                    label: 'Value',
+                    data: formattedData.map(item => item.value),
+                    backgroundColor: formattedData.map(item => getColorForValue(item.value, maxValue, colors))
+                }]
+            }
+
+            const options = {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { grid: { display: false } },
+                    y: { grid: { display: false } }
+                },
+                plugins: {
+                    legend: {
+                        position: "bottom"
+                    },
+                    tooltip: {
+                        callbacks: {
+                            title: function (tooltipItems) {
+                                return `${tooltipItems[0].label}`
+                            },
+                            label: function (tooltipItem) {
+                                return `Amount: ${tooltipItem.raw.toLocaleString()}`
+                            }
+                        }
+                    },
+                    datalabels: {
+                        display: false,
+                    },
+                }
+            }
+
+            return (
+                <div style={{ height: '320px' }}>
+                    <ChartJSBar data={chartData} options={options} />
+                </div>
+            )
+        }
+
+        if (selectedChart === 'line') {
+            const values = formattedData.map(item => item.value)
+            const maxValue = Math.max(...values);
+            const chartData = {
+                labels: formattedData.map(item => item.name),
+                datasets: [{
+                    label: 'Value',
+                    data: formattedData.map(item => item.value),
+                    borderColor: '#683ef0',
+                    backgroundColor: formattedData.map(item => getColorForValue(item.value, maxValue, colors)),
+                    tension: 0.4,
+                    fill: false,
+                }]
+            }
+
+            const options = {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { grid: { display: false }, ticks: { display: true } },
+                    y: { grid: { display: false }, ticks: { display: true } }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            title: function (tooltipItems) {
+                                return `${tooltipItems[0].label}`
+                            },
+                            label: function (tooltipItem) {
+                                return `Amount: ${tooltipItem.raw.toLocaleString()}`
+                            }
+                        }
+                    },
+                    datalabels: {
+                        display: false,
+                    },
+                }
+            }
+
+            return (
+                <div style={{ height: '320px' }}>
+                    <ChartJSLine data={chartData} options={options} />
+                </div>
+            )
+        }
+    }
+
+    const renderPieChart = (data) => {
+        const chartData = {
+            labels: data.map(item => item.name),
+            datasets: [{
+                data: data.map(item => item.value),
+                backgroundColor: colors,
+                borderColor: '#fff',
+                borderWidth: 2
+            }]
+        }
+
+        const options = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: "top",
+                },
+                datalabels: {
+                    display: false,
+                },
+            },
+        }
+
         return (
-            <div className="flex items-center justify-center h-64 text-gray-500">
-                No data available to display
+            <div className="w-full h-[400px] flex flex-col">
+                <ChartJSDoughnut data={chartData} options={options} />
             </div>
-        );
+        )
     }
 
     return (
-        <div className="space-y-10">
-            {results.map((chart, index) => {
-                // Format data for recharts
-                const formattedData = chart.data.map(item => ({
-                    name: item.label || 'Unknown',
-                    value: typeof item.value === 'number' ? item.value : parseFloat(item.value) || 0,
-                    percentage: item.percentage,
-                    message: item.message,
-                    date: item.timestamp ? new Date(item.timestamp) : null
-                }));
+        <div className={`bg-white rounded-xl shadow-sm border  space-y-6 transition-all duration-300 ${animationComplete ? 'opacity-100' : 'opacity-0'}`}>
+            {/* Chart Type Selector */}
+            <div className="flex border-b border-gray-200  pt-s">
+                <button
+                    onClick={() => setSelectedChart('bar')}
+                    className={`flex items-center gap-2 px-6 py-3 text-f-l font-medium border-b-2 transition-all duration-200 relative -mb-[2px] ${selectedChart === 'bar'
+                        ? 'text-secondary-900 border-secondary-900'
+                        : 'text-gray-500 border-transparent hover:text-secondary-900 hover:border-secondary-300'
+                        }`}
+                >
+                    <FaChartBar className={`${selectedChart === 'bar' ? 'text-secondary-900' : 'text-gray-400'} transition-colors duration-200`} />
+                    Bar
+                </button>
+                <button
+                    onClick={() => setSelectedChart('line')}
+                    className={`flex items-center gap-2 px-6 py-3 text-f-l  font-medium border-b-2 transition-all duration-200 relative -mb-[2px] ${selectedChart === 'line'
+                        ? 'text-secondary-900 border-secondary-900'
+                        : 'text-gray-500 border-transparent hover:text-secondary-900 hover:border-secondary-300'
+                        }`}
+                >
+                    <FaChartLine className={`${selectedChart === 'line' ? 'text-secondary-900' : 'text-gray-400'} transition-colors duration-200`} />
+                    Line
+                </button>
+                <button
+                    onClick={() => setSelectedChart('pie')}
+                    className={`flex items-center gap-2 px-6 py-3 text-f-l  font-medium border-b-2 transition-all duration-200 relative -mb-[2px] ${selectedChart === 'pie'
+                        ? 'text-secondary-900 border-secondary-900'
+                        : 'text-gray-500 border-transparent hover:text-secondary-900 hover:border-secondary-300'
+                        }`}
+                >
+                    <FaChartPie className={`${selectedChart === 'pie' ? 'text-secondary-900' : 'text-gray-400'} transition-colors duration-200`} />
+                    Pie
+                </button>
+            </div>
 
-                const isTimeSeries = formattedData.some(item => item.date);
+            {/* Chart */}
+            <div className=" p-xl">
+                {renderChart()}
+            </div>
 
-                if (chart.type === 'bar') {
-                    return (
-                        <div key={index} className="bg-white shadow rounded-lg overflow-hidden">
-                            <h2 className="text-xl font-bold p-4 border-b">
-                                Bar Chart
-                            </h2>
-                            <div className="h-[500px] p-4">
-                                <ResponsiveContainer width="100%" height="100%">
-                                    <BarChart 
-                                        data={formattedData}
-                                        margin={{ top: 20, right: 30, left: 20, bottom: 60 }}
-                                    >
-                                        <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
-                                        <XAxis
-                                            dataKey="name"
-                                            tick={{ fill: "#888", fontSize: 11 }}
-                                            tickLine={{ stroke: "#888" }}
-                                            angle={-45}
-                                            textAnchor="end"
-                                            height={100}
-                                            interval={0}
-                                        />
-                                        <YAxis 
-                                            tick={{ fill: "#888", fontSize: 12 }}
-                                            tickLine={{ stroke: "#888" }}
-                                        />
-                                        <Tooltip
-                                            contentStyle={tooltipStyle}
-                                            formatter={(value, name, props) => {
-                                                const item = formattedData[props?.payload?.index];
-                                                return [
-                                                    <React.Fragment key={`${name}-${value}`}>
-                                                        <div>
-                                                            <strong>Value:</strong> {value.toLocaleString()}
-                                                        </div>
-                                                        {item?.percentage != null && (
-                                                            <div>
-                                                                <strong>Percentage:</strong> {item.percentage.toFixed(2)}%
-                                                            </div>
-                                                        )}
-                                                        {item?.message && (
-                                                            <div className="text-xs mt-1 text-gray-600">{item.message}</div>
-                                                        )}
-                                                    </React.Fragment>,
-                                                    "Amount"
-                                                ];
-                                            }}
-                                        />
-                                        <Legend />
-                                        <Bar
-                                            dataKey="value"
-                                            radius={[4, 4, 0, 0]}
-                                            animationDuration={1000}
-                                            animationBegin={0}
-                                            animationEasing="ease-out"
-                                            isAnimationActive={!animationComplete}
-                                        >
-                                            {formattedData.map((entry, index) => (
-                                                <Cell 
-                                                    key={`cell-${index}`} 
-                                                    fill={`hsl(${240 + index * 20}, 70%, 60%)`}
-                                                />
-                                            ))}
-                                        </Bar>
-                                    </BarChart>
-                                </ResponsiveContainer>
-                            </div>
+            {/* Data Summary */}
+            <div className="mt-8 space-y-6 text-neutral-1200 p-xl">
+                <div className="flex items-center gap-2 text-gray-700 border-b pb-3">
+                    <FaInfoCircle className="text-blue-500" />
+                    <h3 className="text-lg font-semibold">Data Summary</h3>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="space-y-2">
+                        <div className="text-sm text-gray-500">Total Value</div>
+                        <div className="text-2xl font-semibold text-gray-900">{totalValue.toLocaleString()}</div>
+                    </div>
+                    <div className="space-y-2">
+                        <div className="text-sm text-gray-500">Average Value</div>
+                        <div className="text-2xl font-semibold text-gray-900">{averageValue.toLocaleString()}</div>
+                    </div>
+                    <div className="space-y-2">
+                        <div className="text-sm text-gray-500">Data Points</div>
+                        <div className="text-2xl font-semibold text-gray-900">{formattedData.length}</div>
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+                    <div className="space-y-2">
+                        <div className="text-sm text-gray-500">Highest</div>
+                        <div className="text-xl font-semibold text-gray-900">
+                            {highestItem?.name}: {highest.toLocaleString()}
                         </div>
-                    );
-                }
-
-                if (chart.type === 'line') {
-                    return (
-                        <div key={index} className="bg-white shadow rounded-lg overflow-hidden">
-                            <h2 className="text-xl font-bold p-4 border-b">
-                                Line Chart
-                            </h2>
-                            <div className="h-[500px] p-4">
-                                <ResponsiveContainer width="100%" height="100%">
-                                    <LineChart
-                                        data={formattedData}
-                                        margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-                                    >
-                                        <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
-                                        <XAxis
-                                            dataKey={isTimeSeries ? "date" : "name"}
-                                            type={isTimeSeries ? "date" : "category"}
-                                            scale={isTimeSeries ? "time" : "auto"}
-                                            tick={{ fill: "#888", fontSize: 12 }}
-                                            tickLine={{ stroke: "#888" }}
-                                            tickFormatter={(value) => {
-                                                if (value instanceof Date) {
-                                                    return value.toLocaleDateString("en-US", { 
-                                                        month: "short", 
-                                                        day: "numeric" 
-                                                    });
-                                                }
-                                                return value;
-                                            }}
-                                            interval="preserveStartEnd"
-                                            minTickGap={10}
-                                        />
-                                        <YAxis
-                                            tick={{ fill: "#888", fontSize: 12 }}
-                                            tickLine={{ stroke: "#888" }}
-                                        />
-                                        <Tooltip
-                                            contentStyle={tooltipStyle}
-                                            labelFormatter={(label) => {
-                                                if (label instanceof Date) {
-                                                    return label.toLocaleDateString("en-US", {
-                                                        weekday: "short",
-                                                        year: "numeric",
-                                                        month: "short",
-                                                        day: "numeric"
-                                                    });
-                                                }
-                                                return label;
-                                            }}
-                                        />
-                                        <Legend />
-                                        <Line
-                                            type="monotone"
-                                            dataKey="value"
-                                            stroke="#8884d8"
-                                            strokeWidth={3}
-                                            dot={{ r: 4, strokeWidth: 2 }}
-                                            activeDot={{ r: 6, strokeWidth: 0, fill: "#8884d8" }}
-                                            animationDuration={1500}
-                                            animationBegin={0}
-                                            animationEasing="ease-out"
-                                            isAnimationActive={!animationComplete}
-                                        />
-                                    </LineChart>
-                                </ResponsiveContainer>
-                            </div>
+                    </div>
+                    <div className="space-y-2">
+                        <div className="text-sm text-gray-500">Lowest</div>
+                        <div className="text-xl font-semibold text-gray-900">
+                            {lowestItem?.name}: {lowest.toLocaleString()}
                         </div>
-                    );
-                }
+                    </div>
+                </div>
 
-                if (chart.type === 'pie') {
-                    return (
-                        <div key={index} className="bg-white shadow rounded-lg overflow-hidden">
-                            <h2 className="text-xl font-bold p-4 border-b">
-                                Pie Chart
-                            </h2>
-                            <div className="h-[500px] p-4">
-                                <ResponsiveContainer width="100%" height="100%">
-                                    <PieChart>
-                                        <Pie
-                                            data={formattedData}
-                                            cx="50%"
-                                            cy="50%"
-                                            labelLine={false}
-                                            outerRadius={120}
-                                            innerRadius={60}
-                                            fill="#8884d8"
-                                            dataKey="value"
-                                            animationDuration={1000}
-                                            animationBegin={0}
-                                            animationEasing="ease-out"
-                                            label={({ name, percent }) => {
-                                                const item = formattedData.find(item => item.name === name);
-                                                const percentage = item?.percentage != null 
-                                                    ? item.percentage 
-                                                    : percent * 100;
-                                                return `${name}: ${percentage.toFixed(1)}%`;
-                                            }}
-                                        >
-                                            {formattedData.map((entry, index) => (
-                                                <Cell 
-                                                    key={`cell-${index}`} 
-                                                    fill={COLORS[index % COLORS.length]} 
-                                                />
-                                            ))}
-                                        </Pie>
-                                        <Tooltip
-                                            contentStyle={tooltipStyle}
-                                            formatter={(value, name, props) => {
-                                                const item = formattedData[props?.payload?.index];
-                                                return [
-                                                    <React.Fragment key={`${name}-${value}`}>
-                                                        <div>
-                                                            <strong>Value:</strong> {value.toLocaleString()}
-                                                        </div>
-                                                        {item?.percentage != null && (
-                                                            <div>
-                                                                <strong>Percentage:</strong> {item.percentage.toFixed(2)}%
-                                                            </div>
-                                                        )}
-                                                        {item?.message && (
-                                                            <div className="text-xs mt-1 text-gray-600">{item.message}</div>
-                                                        )}
-                                                    </React.Fragment>,
-                                                    "Amount"
-                                                ];
-                                            }}
-                                        />
-                                        <Legend />
-                                    </PieChart>
-                                </ResponsiveContainer>
+                {/* User Totals */}
+                <div className="space-y-4 pt-2">
+                    <div className="text-sm font-medium text-gray-700 border-b pb-3">User Totals</div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        {formattedData.map((item, index) => (
+                            <div key={index} className="space-y-1">
+                                <div className="text-sm text-gray-500">{item.name}</div>
+                                <div className="text-lg font-semibold text-gray-900">{item.value.toLocaleString()}</div>
                             </div>
-                        </div>
-                    );
-                }
+                        ))}
+                    </div>
+                </div>
 
-                return null;
-            })}
+                {/* Data Insights */}
+                <div className="space-y-4 pt-2">
+                    <div className="text-sm font-medium text-gray-700 border-b pb-3">Data Insights</div>
+                    <ul className="space-y-3 text-sm text-gray-600">
+                        {formattedData.map((item, index) => (
+                            <li key={index} className="flex items-start gap-2">
+                                <span className="text-blue-500 mt-1">•</span>
+                                <span>{item.message}</span>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            </div>
         </div>
-    );
-};
+    )
+}
 
-AIChartRenderer.propTypes = {
-    results: PropTypes.arrayOf(PropTypes.shape({
-        type: PropTypes.oneOf(['bar', 'pie', 'line']).isRequired,
-        message: PropTypes.string.isRequired,
-        data: PropTypes.arrayOf(PropTypes.shape({
-            label: PropTypes.string,
-            value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-            percentage: PropTypes.number,
-            message: PropTypes.string,
-            timestamp: PropTypes.string,
-        })).isRequired,
-    })),
-    isLoading: PropTypes.bool,
-};
-
-AIChartRenderer.defaultProps = {
-    results: [],
-    isLoading: false,
-};
-
-export default React.memo(AIChartRenderer);
+export default AIChartRenderer

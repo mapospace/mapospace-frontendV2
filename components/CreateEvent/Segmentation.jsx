@@ -191,8 +191,6 @@ const UserSegment = ({ data, uniqueKeys }) => {
                             <div key={index} className="min-w-[200px] bg-neutral-200  text-center flex-1 py-s text-f-l font-medium text-black border-x border-neutral-600">{toCapitalizedCase(value)}</div>
                         ))}
 
-
-
                     </div>
                     <div className='flex flex-col max-h-[400px] overflow-y-scroll overflow-x-hidden hide-scrollbar '>
                         {data.map((item, index) => (

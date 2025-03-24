@@ -55,8 +55,8 @@ const HistogramChart = ({ data, bins, setBins, label }) => {
             {
                 label: "Frequency",
                 data: binCounts,
-                backgroundColor: "rgba(75, 192, 192, 0.6)",
-                borderColor: "rgba(75, 192, 192, 1)",
+                backgroundColor: "rgba(104, 62, 240, 0.6)",
+                borderColor: "rgba(104, 62, 240, 1)",
                 borderWidth: 1,
             },
         ],

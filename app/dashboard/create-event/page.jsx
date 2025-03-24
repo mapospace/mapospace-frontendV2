@@ -60,12 +60,12 @@ const page = () => {
     }
 
     return (
-        <div className={clsx("  max-h-screen pt-6xl flex overflow-hidden", currentEventType == "lumo" ? 'bg-gradient-to-r from-white via-primary-100 to-secondary-700' : 'bg-white')} >
+        <div className={clsx("  max-h-screen pt-6xl flex overflow-hidden bg-white")} >
             {currentEventType != "dashboard" && currentEventType != "event-manager" && currentEventType != "lumo" && <QueryBuilderSideNav setQueryData={setQueryData} setQueryFunnelData={setQueryFunnelData} setQuerySegmentsData={setQuerySegmentsData} setQueryRetentionData={setQueryRetentionData} openQuery={openQuery} setOpenQuery={setOpenQuery} setActiveLoading={setLoading} />}
             <div className="flex-1 pt-xl px-l overflow-y-scroll ">
                 <div className=' flex justify-start  items-end '>
                     {/* <div className='text-neutral-1300 font-semibold text-2xl'>{toCapitalizedCase(currentEventType?.replace("-", " "))}</div> */}
-                    <div className={clsx('flex  rounded-l-bs p-xs text-f-m font-normal gap-xs relative h-[38px]', currentEventType == "lumo" ? 'bg-secondary-900 text-white' : 'bg-neutral-200 text-black')}>
+                    <div className={clsx('flex  rounded-l-bs p-xs text-f-m font-normal gap-xs relative h-[38px] bg-neutral-300 text-black')}>
                         <div
                             className={clsx("px-s py-xs cursor-pointer hover:bg-white rounded-bs hover:text-black", currentEventType == "dashboard" && 'bg-white hover:bg-white')}
                             onClick={() => {
@@ -123,9 +123,9 @@ const page = () => {
 
 
                     </div>
-                    <div className={clsx('flex rounded-r-bs p-xs text-f-m font-normal gap-xs relative h-[38px] bg-secondary-900 hover:bg-gradient-to-b hover:from-primary-700 hover:to-secondary-900', currentEventType == "lumo" && 'bg-gradient-to-b from-primary-700 to-secondary-900')} >
+                    <div className={clsx('flex rounded-r-bs p-xs text-f-m font-normal gap-xs relative h-[38px] bg-neutral-300 ')} >
 
-                        <button className={clsx("ai_button", currentEventType == "lumo" && 'before:bg-gradient-to-b before:from-primary-700 before:to-secondary-900')} onClick={() => {
+                        <button className={clsx("ai_button", currentEventType == "lumo" && 'before:bg-gradient-to-b before:from-secondary-700 before:to-secondary-900')} onClick={() => {
                             chnageRouteHandler('/dashboard/create-event?event=lumo')
                             setLoading(false);
                         }} >
@@ -161,7 +161,7 @@ const page = () => {
                                     d="M6.5 4L6.303 4.5915C6.24777 4.75718 6.15472 4.90774 6.03123 5.03123C5.90774 5.15472 5.75718 5.24777 5.5915 5.303L5 5.5L5.5915 5.697C5.75718 5.75223 5.90774 5.84528 6.03123 5.96877C6.15472 6.09226 6.24777 6.24282 6.303 6.4085L6.5 7L6.697 6.4085C6.75223 6.24282 6.84528 6.09226 6.96877 5.96877C7.09226 5.84528 7.24282 5.75223 7.4085 5.697L8 5.5L7.4085 5.303C7.24282 5.24777 7.09226 5.15472 6.96877 5.03123C6.84528 4.90774 6.75223 4.75718 6.697 4.5915L6.5 4Z"
                                 ></path>
                             </svg>
-                            <span className="text_button">Generate Site</span>
+                            <span className="text_button font-bold">Lumo AI </span>
                         </button>
                         {/* </div> */}
                     </div>

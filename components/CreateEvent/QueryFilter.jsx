@@ -132,6 +132,8 @@ const QueryFilter = ({ setShowFilter, setShowStageFilter, setShowGeo, setPropert
     const searchParams = useSearchParams();
     const currentEventType = searchParams.get("event");
     const [customEvents, setCustomEvents] = useState(null);
+    const [useNaturalLanguageFilter, setUseNaturalLanguageFilter] = useState(false);
+    const [naturalLanguageFilter, setNaturalLanguageFilter] = useState("");
 
     const addNewDropdown = () => {
         close();
@@ -541,12 +543,47 @@ const QueryFilter = ({ setShowFilter, setShowStageFilter, setShowGeo, setPropert
                             <div className='text-f-s'>
                                 Add custom filters to refine your query results.
                             </div>
-
-
-                            {/* Add Filter Button */}
-                            <button onClick={setShowFilter} className="mt-s default-button py-s">
-                                + Add Filter
-                            </button>
+                            {useNaturalLanguageFilter ? (
+                                <div className='flex items-center gap-xs'>
+                                    <input
+                                        type='checkbox'
+                                        checked={useNaturalLanguageFilter}
+                                        onChange={() => {
+                                            setUseNaturalLanguageFilter(!useNaturalLanguageFilter)
+                                            getData((prev) => ({ ...prev, 'useNaturalLanguageFilter': !prev.useNaturalLanguageFilter }))
+                                        }}
+                                    />
+                                    <span className='text-f-s'>Use Natural Language Filter</span>
+                                </div>
+                            ) : (
+                                <div className='flex items-center gap-xs'>
+                                    <input
+                                        type='checkbox'
+                                        checked={useNaturalLanguageFilter}
+                                        onChange={() => {
+                                            setUseNaturalLanguageFilter(!useNaturalLanguageFilter)
+                                            getData((prev) => ({ ...prev, 'useNaturalLanguageFilter': !prev.useNaturalLanguageFilter }))
+                                        }}
+                                    />
+                                    <span className='text-f-s'>Use Natural Language Filter</span>
+                                </div>
+                            )}
+                            {useNaturalLanguageFilter && (
+                                <textarea
+                                    placeholder='Write your filter in natural language'
+                                    value={naturalLanguageFilter}
+                                    onChange={(e) => {
+                                        setNaturalLanguageFilter(e.target.value)
+                                        getData((prev) => ({ ...prev, 'naturalLanguageFilter': e.target.value }))
+                                    }}
+                                    className='w-full mt-s border-effect rounded resize-none text-f-s h-[100px]'
+                                />
+                            )}
+                            {!useNaturalLanguageFilter && (
+                                <button onClick={setShowFilter} className="mt-s default-button py-s">
+                                    + Add Filter
+                                </button>
+                            )}
                         </div>
                     </div>
 

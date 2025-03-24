@@ -89,7 +89,10 @@ export const API_ENDPOINTS = {
     },
 
     AI: {
-        CustomEvents: 'analytics-v3/custom-events-nlp'
+        CustomEvents: 'analytics-v3/custom-events-nlp',
+        CustomEventsWithChat: 'analytics-v3/custom-events-with-chat',
+        ConversationAnalysis: 'analytics-v3/conversation-analysis',
+        ChatWithEventData: 'analytics-v3/chat-with-data'
     }
 
 }

@@ -290,10 +290,13 @@ const QueryBuilderSideNav = ({ setQueryData, setQueryFunnelData, setQuerySegment
             if (queryFilterData.customEventTypeName) {
 
                 data = { ...data, customEventTypeName: queryFilterData.customEventTypeName }
-                if (query && query[queryFilterData.customEventTypeName]) {
-                    data = { ...data, filters: query[queryFilterData.customEventTypeName] }
+                if (queryFilterData.useNaturalLanguageFilter) {
+                    data = { ...data, filterPrompt: queryFilterData.naturalLanguageFilter }
+                }else{
+                    if (query && query[queryFilterData.customEventTypeName]) {
+                        data = { ...data, filters: query[queryFilterData.customEventTypeName] }
+                    }
                 }
-
             }
             if (queryFilterData.startDate) {
                 data = { ...data, startDate: queryFilterData.startDate }

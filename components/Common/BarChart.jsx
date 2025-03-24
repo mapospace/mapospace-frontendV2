@@ -3,6 +3,7 @@ import { Bar } from 'react-chartjs-2';
 import React, { useEffect, useState } from 'react'
 import { Chart as ChartJS, CategoryScale, BarElement, Tooltip, Legend } from 'chart.js';
 import Select from "react-select";
+import getColorForValue from '@/utils/get-color-for-value';
 
 ChartJS.register(CategoryScale, BarElement, Tooltip, Legend);
 
@@ -26,12 +27,14 @@ const BarChart = ({ labels, values, height, labelName, period, showPeriod = true
 
         // Ensure `values` is a nested array (for multiple datasets) or wrap it if it's a single dataset.
         const formattedValues = Array.isArray(values[0]) ? values : [values];
-
+        // const maxValue = Math.max(...formattedValues[0]);
+        // const coolorData = formattedValues[0].map(value => getColorForValue(value, maxValue));
+        // console.log("coolorData", coolorData, maxValue, formattedValues[0])
         const datasets = formattedValues.map((value, index) => (
             {
                 label: index === 0 ? labelName : `Dataset ${index + 1}`,
                 data: value,
-                backgroundColor: index % 2 == 0 ? '#0136f8' : '#0136f8',
+                backgroundColor: index % 2 == 0 ? 'rgba(104, 62, 240, 1)' : 'rgba(104, 62, 240, 1)',
             }
         ));
 
