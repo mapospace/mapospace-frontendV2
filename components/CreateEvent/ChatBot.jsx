@@ -49,16 +49,17 @@ const ChatBot = ({ conversationId }) => {
     return (
         <>
             <div
-                className='chatbot-icon fixed right-5 bottom-5 bg-gradient-to-tr from-indigo-500 to-purple-600 rounded-full p-3 shadow-lg cursor-pointer hover:scale-105 transition duration-300 z-50'
+                className='chatbot-icon fixed right-5 bottom-5 bg-gradient-to-b from-secondary-900 to-purple-600 rounded-full py-m px-xl shadow-lg cursor-pointer transition-transform duration-300 ease-in-out hover:scale-110 hover:bg-gradient-to-b hover:from-secondary-900 hover:to-purple-700 z-50 flex items-center gap-l'
                 onClick={() => setIsVisible(!isVisible)}
             >
                 <FaComments size={28} className='text-white' />
+                <span className='text-f-xl font-bold text-white'>Lumo Chats</span>
             </div>
 
             {isVisible && (
                 <div
                     ref={chatRef}
-                    className='chatbot fixed right-5 bottom-20 w-96 max-h-[75vh] bg-white/70 backdrop-blur-xl shadow-2xl border border-gray-200 rounded-2xl p-4 flex flex-col'
+                    className='chatbot fixed right-5 bottom-20 w-96 max-h-[75vh] bg-white/70 backdrop-blur-xl shadow-2xl border border-neutral-300 rounded-2xl p-4 flex flex-col'
                 >
                     <div className='font-medium text-sm text-gray-600 mb-2'>Lumo Assistant</div>
 
@@ -66,11 +67,10 @@ const ChatBot = ({ conversationId }) => {
                         {messages.map((msg, index) => (
                             <div
                                 key={index}
-                                className={`max-w-[80%] px-4 py-2 text-sm rounded-xl ${
-                                    msg.sender === 'user'
-                                        ? 'ml-auto bg-gradient-to-r from-blue-500 to-indigo-500 text-white'
-                                        : 'bg-gray-100 text-gray-800'
-                                }`}
+                                className={`max-w-[80%] px-4 py-2 text-sm rounded-xl ${msg.sender === 'user'
+                                    ? 'ml-auto bg-gradient-to-r from-blue-500 to-indigo-500 text-white'
+                                    : 'bg-gray-100 text-gray-800'
+                                    }`}
                             >
                                 {msg.text}
                             </div>
@@ -87,11 +87,11 @@ const ChatBot = ({ conversationId }) => {
                             value={userInput}
                             onChange={(e) => setUserInput(e.target.value)}
                             placeholder='Type your message…'
-                            className='flex-1 px-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-300 text-sm'
+                            className='flex-1 px-4 py-2 rounded-full border border-neutral-300 focus:outline-none focus:ring-2 focus:ring-indigo-300 text-sm'
                         />
                         <button
                             onClick={handleSendMessage}
-                            className='bg-indigo-600 hover:bg-indigo-700 text-white text-sm px-4 py-2 rounded-full transition'
+                            className='bg-secondary-900 hover:bg-secondary-1000 text-white text-sm px-4 py-2 rounded-full transition'
                         >
                             Send
                         </button>

@@ -48,15 +48,16 @@ export default {
         },
         secondary: {
           50: '#f5f0ff',   // dreamy lavender fog
-          100: '#e0d9ff',   // soft lilac
-          200: '#d3bfff',   // candy orchid
-          300: '#b89cff',   // lavender jelly
-          400: '#9c7dff',   // periwinkle pop
-          500: '#8372ff',   // saturated indigo violet
-          600: '#a3c0ff',   // rich soft blue-violet
-          700: '#5e60ff',   // cooler blueish purple
-          800: '#768bff',   // sky-indigo punch
+          100: '#e0d8fc',   // soft lilac
+          200: '#d1c5fa',   // candy orchid
+          300: '#c2b1f9',   // lavender jelly
+          400: '#b39ef7',   // periwinkle pop
+          500: '#a48bf6',   // saturated indigo violet
+          600: '#9577f4',   // rich soft blue-violet
+          700: '#8664f3',   // cooler blueish purple
+          800: '#7751f1',   // sky-indigo punch
           900: '#683ef0',   // playful soft blue
+          1000: '#5d37d8'
         },
         neutral: {
           100: '#f9fafb',

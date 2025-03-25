@@ -49,7 +49,7 @@ const QueryEvents = ({ queryData, setOpenQuery, setLoading }) => {
             const endpoint = data.filterPrompt ? API_ENDPOINTS.AI.CustomEventsWithChat : API_ENDPOINTS.QueryBuilder.CustomEvents;
             const payload = data.filterPrompt ? {
                 ...data,
-            }:{...data, "limit": 10, "page": 1, 'generateInsights': enableInsights }
+            } : { ...data, "limit": 10, "page": 1, 'generateInsights': enableInsights }
             const response = await authService.postApiCallHandler(endpoint, payload);
 
             if (response?.error) {
@@ -66,7 +66,7 @@ const QueryEvents = ({ queryData, setOpenQuery, setLoading }) => {
             setTimeout(() => {
                 setLoading(false)
             }, 1000)
-            conversationAnalysisHandler({...payload,filters :response.data.filters})
+            conversationAnalysisHandler({ ...payload, filters: response.data.filters })
             if (enableInsights) {
                 setInsightsData(response.data.insights.insights)
                 setCategorical(response.data.insights.computedMetrics.categorical)
@@ -211,7 +211,7 @@ const QueryEvents = ({ queryData, setOpenQuery, setLoading }) => {
 
             </div>}
 
-            {uniqueKeys.length > 0 ? <>
+            {uniqueKeys.length > 0 && <>
                 <div className='flex justify-between '>
                     <div></div>
                     <div>
@@ -245,7 +245,7 @@ const QueryEvents = ({ queryData, setOpenQuery, setLoading }) => {
 
                     <div className='border rounded-bs '>
 
-                        <div className="w-full   overflow-x-auto  hide-scrollbar ">
+                        {queryResult.results.length > 0 ? <div className="w-full   overflow-x-auto  hide-scrollbar ">
                             <div className='flex  rounded-bs'>
                                 <div className='flex flex-col w-full'>
                                     <div className='flex bg-yellow-300 w-full '>
@@ -274,7 +274,12 @@ const QueryEvents = ({ queryData, setOpenQuery, setLoading }) => {
 
 
                             </div>
-                        </div>
+                        </div> : <div className='mb-2xl'>
+                            <div className='pb-s  mt-l  mb-xl'>
+                                <div className='text-f-4xl text-neutral-600 '>No data available</div>
+
+                            </div>
+                        </div>}
                     </div>
                     {/* <div className='py-s flex px-s justify-end gap-s'>
                         <button className='text-neutral-1200 hover:text-secondary-900'>
@@ -289,14 +294,10 @@ const QueryEvents = ({ queryData, setOpenQuery, setLoading }) => {
                         </button>
                     </div> */}
                 </div>
-            </>:<div className='mb-2xl'>
-                    <div className='pb-s  mt-l  mb-xl'>
-                        <div className='text-f-4xl text-neutral-600 '>No data available</div>
-                       
-                    </div>
-                    </div>
-                }
-     {uniqueKeys.length > 0 && <ChatBot conversationId={conversationId} />}
+            </>}
+            {/* {uniqueKeys.length > 0 && */}
+            <ChatBot conversationId={conversationId} />
+            {/*   } */}
         </div >
     )
 }
