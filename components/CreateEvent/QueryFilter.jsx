@@ -16,6 +16,7 @@ import { useSearchParams } from 'next/navigation';
 import { IoLayers } from "react-icons/io5";
 import { VscActivateBreakpoints } from "react-icons/vsc";
 import { MdDelete } from "react-icons/md";
+import { SiTicktick } from "react-icons/si";
 
 const style = {
     control: (provided) => ({
@@ -106,7 +107,7 @@ const operators = [
     { value: "regex", label: "regex match" }
 ];
 
-const QueryFilter = ({ setShowFilter, setShowStageFilter, setShowGeo, setPropertyNameList, setPropertyList, getData, propertyNameList, close, filterStatus }) => {
+const QueryFilter = ({ setShowFilter, setShowStageFilter, setShowGeo, setPropertyNameList, setPropertyList, getData, propertyNameList, close, filterStatus, polygonCreated }) => {
     const [eventNameList, setEventNameList] = useState([])
     const [eventList, setEventList] = useState([])
     const [openEventType, setOpenEventType] = useState(false);
@@ -510,15 +511,17 @@ const QueryFilter = ({ setShowFilter, setShowStageFilter, setShowGeo, setPropert
                         <div className='text-f-s'>
                             Choose a geographic area to filter your analytics data.
                         </div>
-                        <button className='border w-full p-s mt-s rounded-bs text-f-s flex justify-center items-center bg-neutral-200 h-10xl border-neutral-600 border-dashed' onClick={setShowGeo}>
+
+                        <div className={clsx('border w-full p-s mt-s rounded-bs text-f-l flex justify-center items-center  h-10xl  border-dashed', polygonCreated ? 'border-secondary-900 bg-secondary-200 cursor-default' : 'bg-neutral-200 border-neutral-600 cursor-pointer')}
+                            onClick={polygonCreated ? undefined : setShowGeo}>
                             <div className='relative flex items-center justify-center text-neutral-900 gap-s'>
-                                <PiPolygonFill className=' w-xl h-xl' />
+                                {polygonCreated ? <SiTicktick className=' w-xl h-xl' /> : <PiPolygonFill className=' w-xl h-xl' />}
                                 <div>
-                                    Select an area on the map.
+                                    {polygonCreated ? ' Area selected' : 'Select an area on the map.'}
                                 </div>
                             </div>
 
-                        </button>
+                        </div>
                     </div>
                 </div>
             </div>

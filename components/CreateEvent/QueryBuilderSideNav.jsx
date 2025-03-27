@@ -51,6 +51,7 @@ const QueryBuilderSideNav = ({ setQueryData, setQueryFunnelData, setQuerySegment
     const [selectedStageEvent, setSelectedStageEvent] = useState(null);
     const searchParams = useSearchParams();
     const currentEventType = searchParams.get("event");
+    const [polygonCreated, setPolygonCreated] = useState(false)
 
     useEffect(() => {
         function handleClickOutside(event) {
@@ -292,7 +293,7 @@ const QueryBuilderSideNav = ({ setQueryData, setQueryFunnelData, setQuerySegment
                 data = { ...data, customEventTypeName: queryFilterData.customEventTypeName }
                 if (queryFilterData.useNaturalLanguageFilter) {
                     data = { ...data, filterPrompt: queryFilterData.naturalLanguageFilter }
-                }else{
+                } else {
                     if (query && query[queryFilterData.customEventTypeName]) {
                         data = { ...data, filters: query[queryFilterData.customEventTypeName] }
                     }
@@ -398,7 +399,7 @@ const QueryBuilderSideNav = ({ setQueryData, setQueryFunnelData, setQuerySegment
                         <div className='text-f-l font-semibold'>Query Filter</div>
                     </div>
 
-                    <QueryFilter setShowFilter={openFilterHandler} filterStatus={filterStatus} close={closeFiltersHandler} setShowStageFilter={openStageFilterHandler} setShowGeo={openGeoHandler} setPropertyNameList={setPropertyNameList} setPropertyList={setPropertyList} getData={setQueryFilterData} propertyNameList={propertyNameList} />
+                    <QueryFilter setShowFilter={openFilterHandler} filterStatus={filterStatus} close={closeFiltersHandler} setShowStageFilter={openStageFilterHandler} setShowGeo={openGeoHandler} setPropertyNameList={setPropertyNameList} setPropertyList={setPropertyList} getData={setQueryFilterData} propertyNameList={propertyNameList} polygonCreated={polygonCreated} />
                 </div>
                 <div className='pt-l flex justify-end px-l border-t'>
                     <div className=' default-button py-s text-f-s' onClick={runQueryHandler} >
@@ -444,7 +445,7 @@ const QueryBuilderSideNav = ({ setQueryData, setQueryFunnelData, setQuerySegment
                         }} />
                     </div>
 
-                    <div className='w-full h-full bg-white p-xl pb-2xl overflow-y-scroll '>
+                    <div className='w-full h-full  p-xl pb-2xl overflow-hidden  flex flex-col'>
                         <div className={clsx('  w-full flex flex-col   rounded-lg relative')}>
                             <div className='flex flex-1  bg-white  rounded-lg border'>
                                 <input
@@ -534,10 +535,11 @@ const QueryBuilderSideNav = ({ setQueryData, setQueryFunnelData, setQuerySegment
                                 </div> : null}
                             </div>}
                         </div>
-                        <div className='bg-white w-full h-full relative mt-s'>
+                        <div className=' w-full h-full relative mt-s border rounded-bs'>
+
 
                             <Maps setSaveFormVisible={setSaveFormVisible} setSearchResultVisible={setSearchResultVisible} setCurrentPolygon={setCurrentPolygon} polygonSaved={polygonSaved} polygonCoordinates={polygonCoordinates}
-                                latlng={latlng} setAppliedFilter={setGeo} />
+                                latlng={latlng} setAppliedFilter={setGeo} setPolygonCreated={setPolygonCreated} />
 
 
                             {saveFormVisible && <div className='absolute w-[350px] h-full -right-0 top-0 bg-white bg-opacity-70 flex justify-between flex-col transition-transform rounded-l-md'>

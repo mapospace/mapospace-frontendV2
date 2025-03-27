@@ -3,6 +3,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { GoogleMap, Polygon, DrawingManager, OverlayView, Marker } from "@react-google-maps/api";
 import { IoIosCloseCircle } from "react-icons/io";
 import { MdOutlineDataSaverOn } from "react-icons/md";
+import { motion, AnimatePresence } from "framer-motion";
+import { SiTicktick } from "react-icons/si";
 
 
 const containerStyle = {
@@ -30,7 +32,7 @@ const mapStyle = [
 ]
 
 
-const Maps = ({ setSaveFormVisible, setSearchResultVisible, setCurrentPolygon, polygonSaved, polygonCoordinates, latlng, setAppliedFilter }) => {
+const Maps = ({ setSaveFormVisible, setSearchResultVisible, setCurrentPolygon, polygonSaved, polygonCoordinates, latlng, setAppliedFilter, setPolygonCreated = null }) => {
     const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
     const [polygonPaths, setPolygonPaths] = useState([]); // Temporary polygon coordinates
@@ -52,6 +54,9 @@ const Maps = ({ setSaveFormVisible, setSearchResultVisible, setCurrentPolygon, p
 
     useEffect(() => {
         if (polygonCoordinates.length > 0) {
+            if (polygonPaths.length > 0) {
+                setPolygonPaths([]); // Clear existing polygon
+            }
             setPolygonPaths(polygonCoordinates);
             setShowButtons(true);
             console.log("calculateCentroid", polygonCoordinates, calculateCentroid(polygonCoordinates));
@@ -59,6 +64,8 @@ const Maps = ({ setSaveFormVisible, setSearchResultVisible, setCurrentPolygon, p
             setDrawingMode(null);
         }
     }, [polygonCoordinates])
+
+
     // Function to calculate centroid of polygon
     const calculateCentroid = (coordinates) => {
         // let latSum = 0, lngSum = 0;
@@ -81,10 +88,12 @@ const Maps = ({ setSaveFormVisible, setSearchResultVisible, setCurrentPolygon, p
 
     // Function to handle polygon completion
     const onPolygonComplete = (polygon) => {
+        cancelHandler()
         const path = polygon.getPath().getArray().map(coord => ({
             lat: coord.lat(),
             lng: coord.lng()
         }));
+
         setPolygonPaths(path);
         console.log("filter Updated by appliedFilter", path)
         if (path.length > 0) {
@@ -105,8 +114,16 @@ const Maps = ({ setSaveFormVisible, setSearchResultVisible, setCurrentPolygon, p
 
         setCentroid(calculateCentroid(path)); // Update centroid
         setShowButtons(true); // Show Save & Cancel buttons
+        setPolygonCreated && setPolygonCreated(true);
         polygonRef.current = polygon; // Store the polygon instance
-        setDrawingMode(null);
+        if (drawingManagerRef.current) {
+            drawingManagerRef.current.setDrawingMode(null); // disables active tool
+            drawingManagerRef.current.setOptions({
+                drawingControl: false, // hides toolbar
+                drawingMode: null,     // ensures it's fully cleared
+            });
+        }
+        // alert("Polygon created successfully!")
     };
 
     // Cancel Handler: Remove the polygon from the map
@@ -115,22 +132,23 @@ const Maps = ({ setSaveFormVisible, setSearchResultVisible, setCurrentPolygon, p
             polygonRef.current.setMap(null); // Remove from the map
             polygonRef.current = null;
         }
+        setPolygonCreated && setPolygonCreated(false);
         setPolygonPaths([]); // Clear temporary polygon
         setShowButtons(false); // Hide buttons
         setCentroid(null); // Clear centroid
         setAppliedFilter((prevFilters) => {
-            const { geojson, ...updatedFilters } = prevFilters; // Destructure and remove geojson
-            return updatedFilters; // Return the new object without geojson
+            if (prevFilters && 'geojson' in prevFilters) {
+                const { geojson, ...updatedFilters } = prevFilters;
+                return updatedFilters;
+            }
+            return prevFilters || {}; // fallback in case it's null
         });
     };
 
     // Save Handler: Store the polygon and remove temporary one
     const saveHandler = () => {
-        // setSavedPolygons([...savedPolygons, polygonPaths]); // Save the polygon
         setSaveFormVisible(true);
         setSearchResultVisible(false)
-        // setCurrentPolygon()
-        //    cancelHandler();
         setCurrentPolygon(polygonPaths)
     };
 
@@ -140,11 +158,15 @@ const Maps = ({ setSaveFormVisible, setSearchResultVisible, setCurrentPolygon, p
             drawingManagerRef.current = drawingManager;
         }
     };
+
     useEffect(() => {
         if (mapRef.current && latlng) {
             mapRef.current.panTo(latlng);
         }
     }, [latlng]);
+
+
+
 
     if (!apiKey) return <p>Loading Google Maps...</p>;
 
@@ -220,7 +242,41 @@ const Maps = ({ setSaveFormVisible, setSearchResultVisible, setCurrentPolygon, p
                 )} */}
             {latlng && <Marker position={latlng} />}
             {/* Overlay Buttons at Polygon Centroid */}
-            {showButtons && centroid && (
+            <AnimatePresence>
+                {showButtons && centroid && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        transition={{ duration: 0.3, ease: "easeOut" }}
+                        className="absolute w-full top-0 z-50"
+                    >
+                        <div className="bg-white w-full py-m rounded-t-bs flex justify-between items-center px-s border-b shadow-md">
+                            <div className="text-f-l text-secondary-900 font-normal flex items-center gap-s">
+                                <SiTicktick />
+                                <div>
+                                    Polygon Created Successfully!!
+                                </div>
+                            </div>
+                            <div className="flex gap-s text-f-s">
+                                <button
+                                    className="px-l py-xs border rounded-bs text-secondary-900 border-secondary-900"
+                                    onClick={cancelHandler}
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    className="px-l py-xs border border-secondary-900 rounded-bs bg-secondary-900 text-white"
+                                    onClick={saveHandler}
+                                >
+                                    Save
+                                </button>
+                            </div>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+            {/* {showButtons && centroid && (
                 <OverlayView
                     position={centroid}
                     mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
@@ -242,7 +298,7 @@ const Maps = ({ setSaveFormVisible, setSearchResultVisible, setCurrentPolygon, p
                         </button>}
                     </div>
                 </OverlayView>
-            )}
+            )} */}
         </GoogleMap>
         // </LoadScriptNext>
     );
