@@ -194,7 +194,7 @@ const computedMetrics2 = {
     ]
 }
 
-const FunnelAnalysis = ({ queryFunnelData, setOpenQuery, setLoading }) => {
+const FunnelAnalysis = ({ queryFunnelData, setOpenQuery, setLoading, selectedRange }) => {
     const [queryFunnelResult, setQueryFunnelResult] = useState(null)
     const [enableInsights, setEnableInsights] = useState(false);
     const [funnelData, setFunnelData] = useState(null)
@@ -202,10 +202,10 @@ const FunnelAnalysis = ({ queryFunnelData, setOpenQuery, setLoading }) => {
     const [computedMetrics, setComputedMetrics] = useState(null)
     useEffect(() => {
         if (queryFunnelData != null) {
-            queryFunnelHandler(queryFunnelData);
+            queryFunnelHandler({ ...queryFunnelData, ...selectedRange });
 
         }
-    }, [queryFunnelData, enableInsights]);
+    }, [queryFunnelData, enableInsights, selectedRange]);
 
     const queryFunnelHandler = async (data) => {
         try {

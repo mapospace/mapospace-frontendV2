@@ -299,12 +299,12 @@ const QueryBuilderSideNav = ({ setQueryData, setQueryFunnelData, setQuerySegment
                     }
                 }
             }
-            if (queryFilterData.startDate) {
-                data = { ...data, startDate: queryFilterData.startDate }
-            }
-            if (queryFilterData.endDate) {
-                data = { ...data, endDate: queryFilterData.endDate }
-            }
+            // if (queryFilterData.startDate) {
+            //     data = { ...data, startDate: queryFilterData.startDate }
+            // }
+            // if (queryFilterData.endDate) {
+            //     data = { ...data, endDate: queryFilterData.endDate }
+            // }
             if (geo) {
                 data = { ...data, geojson: geo.geojson }
             }

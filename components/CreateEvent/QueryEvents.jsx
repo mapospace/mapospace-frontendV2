@@ -16,7 +16,7 @@ import { FaMapMarkerAlt, FaClock, FaFilter, FaList } from "react-icons/fa";
 import { motion } from "framer-motion";
 import ChatBot from './ChatBot';
 
-const QueryEvents = ({ queryData, setOpenQuery, setLoading }) => {
+const QueryEvents = ({ queryData, setOpenQuery, setLoading, selectedRange }) => {
     const [uniqueKeys, setUniqueKeys] = useState([]);
     const [queryResult, setQueryResult] = useState([]);
     const [enableInsights, setEnableInsights] = useState(false);
@@ -29,9 +29,9 @@ const QueryEvents = ({ queryData, setOpenQuery, setLoading }) => {
 
     useEffect(() => {
         if (queryData != null) {
-            queryHandler(queryData);
+            queryHandler({ ...queryData, ...selectedRange });
         }
-    }, [queryData, enableInsights]);
+    }, [queryData, enableInsights, selectedRange]);
 
     function formatTimestamp(timestamp) {
         if (!timestamp) return 'NA'; // Handle empty or undefined values

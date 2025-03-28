@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import AuthServices from "@/utils/axios-api";
 import { API_ENDPOINTS } from "@/utils/api-endpoints";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -16,13 +16,16 @@ import Segmentation from "@/components/CreateEvent/Segmentation";
 import Retention from "@/components/CreateEvent/Retention";
 import AIGeneration from "@/components/CreateEvent/AIGeneration";
 import AnalyticsSkeleton from "@/components/CreateEvent/AnalyticsSkeleton";
+import generateCustomDateRanges from "@/utils/generate-custom-date-ranges";
+import DatePicker from 'react-datepicker';
+
 
 
 
 const page = () => {
     const [catalogList, setCatalogList] = useState([]);
     const [openQuery, setOpenQuery] = useState(false);
-
+    const datePickerRef = useRef(null);
     const searchParams = useSearchParams();
     const currentEventType = searchParams.get("event");
     const router = useRouter();
@@ -30,7 +33,30 @@ const page = () => {
     const [queryFunnelData, setQueryFunnelData] = useState(null);
     const [querySegmentsData, setQuerySegmentsData] = useState(null);
     const [queryRetentionData, setQueryRetentionData] = useState(null);
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(false);
+    const [ranges, SetRanges] = useState([])
+    const [currentRange, setCurrentRange] = useState(null);
+    const [showCustom, setShowCustom] = useState(false);
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
+    const [selectedRange, setSelectedRange] = useState(null)
+
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (datePickerRef.current && !datePickerRef.current.contains(event.target)) {
+                setShowCustom(false);
+            }
+        }
+
+        if (showCustom) {
+            document.addEventListener("mousedown", handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [showCustom]);
+
 
     const fetchCatalogsList = async () => {
         try {
@@ -50,9 +76,35 @@ const page = () => {
 
     useEffect(() => {
         fetchCatalogsList();
-
+        const Ranges = generateCustomDateRanges();
+        console.log("Ranges", Ranges)
+        SetRanges(Ranges);
+        setCurrentRange(Ranges[Ranges.length - 1])
     }, [])
 
+
+    useEffect(() => {
+        if (currentRange != null && currentRange.id != 10) {
+            console.log("currentRange", currentRange)
+            let newData = { "startDate": currentRange.startDate, "endDate": currentRange.endDate };
+            console.log("currentRange custom event ", newData)
+            setSelectedRange(newData)
+        }
+
+    }, [currentRange])
+
+    const selectedRangeHandler = (data) => {
+        if (data.id == 10) {
+            setShowCustom(true)
+        }
+        else {
+            setShowCustom(false)
+            setStartDate(null);
+            setEndDate(null);
+        }
+        setCurrentRange(data)
+
+    }
 
 
     const chnageRouteHandler = (endpoint) => {
@@ -167,14 +219,66 @@ const page = () => {
                     </div>
 
                 </div>
+                <div className=' flex  flex-1 flex-col  gap-s mt-s  '>
+                    <div className='flex gap-s '>
+                        <div className='flex'>
+                            <div className='flex bg-neutral-200 rounded-bs p-xs text-f-m font-normal gap-xs relative '>
+                                <div className={`px-s py-xs cursor-pointer hover:bg-neutral-300 rounded-bs text-black ${currentRange && 10 == currentRange.id && 'bg-white hover:bg-white'} `} onClick={() => { selectedRangeHandler({ id: 10 }) }} >Custom</div>
+                                {ranges.length > 0 && ranges.map((range) => (
+                                    <div className={`px-s py-xs cursor-pointer hover:bg-neutral-300 rounded-bs text-black  ${range.id == currentRange.id && 'bg-white hover:bg-white'}`} key={range.id} onClick={() => { selectedRangeHandler(range) }}>{range.title}</div>
+                                ))}
+                                {showCustom && <div ref={datePickerRef} className='absolute bg-white border z-40 left-0 top-12 rounded-bs flex flex-col items-start p-s gap-s'>
+                                    <div className='flex justify-between items-center w-full'>
+                                        <div className='text-neutral-1200 font-semibold'> {startDate == null ? 'Start Date' : 'End Date'}</div>
+
+                                        <div className='text-secondary-900 cursor-pointer' onClick={() => {
+                                            setStartDate(null);
+                                            setEndDate(null);
+                                        }}>
+                                            Reset</div>
+                                    </div>
+
+                                    {startDate == null ? <div className=" custom-datepicker">
+                                        <DatePicker
+                                            selected={startDate}
+                                            onChange={(date) => setStartDate(date)}
+                                            showTimeSelect
+                                            dateFormat="Pp"
+                                            className="border  text-f-m  rounded-md p-2 w-full border-effect bg-white focus:border"
+                                            placeholderText="Start date and time"
+                                            popperPlacement="bottom-start"
+                                            inline
+                                        />
+                                    </div> : <div className="custom-datepicker">
+                                        <DatePicker
+                                            selected={endDate}
+                                            onChange={(date) => setEndDate(date)}
+                                            showTimeSelect
+                                            dateFormat="Pp"
+                                            className="border text-f-m rounded-md p-2 w-full border-effect"
+                                            placeholderText="End date and time"
+                                            popperPlacement="bottom-end"
+                                            inline
+                                        />
+                                    </div>
+
+                                    }
+
+
+                                </div>}
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
                 {loading && <AnalyticsSkeleton />}
 
                 {currentEventType == "dashboard" && <Dashboard />}
-                {currentEventType == "events" && <QueryEvents queryData={queryData} setOpenQuery={setOpenQuery} setLoading={setLoading} />}
+                {currentEventType == "events" && <QueryEvents queryData={queryData} setOpenQuery={setOpenQuery} setLoading={setLoading} selectedRange={selectedRange} />}
                 {currentEventType == "event-manager" && <EventManager />}
-                {currentEventType == "funnels" && <FunnelAnalysis queryFunnelData={queryFunnelData} setOpenQuery={setOpenQuery} setLoading={setLoading} />}
-                {currentEventType == "segmentation" && <Segmentation querySegmentsData={querySegmentsData} setOpenQuery={setOpenQuery} setLoading={setLoading} />}
-                {currentEventType == "retention" && <Retention queryRetentionData={queryRetentionData} setOpenQuery={setOpenQuery} setLoading={setLoading} />}
+                {currentEventType == "funnels" && <FunnelAnalysis queryFunnelData={queryFunnelData} setOpenQuery={setOpenQuery} setLoading={setLoading} selectedRange={selectedRange} />}
+                {currentEventType == "segmentation" && <Segmentation querySegmentsData={querySegmentsData} setOpenQuery={setOpenQuery} setLoading={setLoading} selectedRange={selectedRange} />}
+                {currentEventType == "retention" && <Retention queryRetentionData={queryRetentionData} setOpenQuery={setOpenQuery} setLoading={setLoading} selectedRange={selectedRange} />}
                 {currentEventType == "lumo" && <AIGeneration />}
 
             </div>

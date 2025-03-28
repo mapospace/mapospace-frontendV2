@@ -98,8 +98,8 @@ const MapContainer = ({ catalogList, setAppliedFilter, appliedFilter }) => {
 
     useEffect(() => {
         if (startDate && endDate) {
-            const startdateTime = startDate ? dateTimeConverter(startDate) : "";
-            const endDateTime = endDate ? dateTimeConverter(endDate) : "";
+            const startdateTime = startDate ? startDate : "";
+            const endDateTime = endDate ? endDate : "";
             let newData = { "startDate": startdateTime, "endDate": endDateTime };
             setAppliedFilter(prev => ({
                 ...(prev ?? {}),

@@ -24,15 +24,15 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 //     { ipAddress: "4", make: "OnePlus", userCount: 1 },
 // ];
 
-const Segmentation = ({ querySegmentsData, setOpenQuery, setLoading }) => {
+const Segmentation = ({ querySegmentsData, setOpenQuery, setLoading, selectedRange }) => {
     const [segmentData, setSegmentData] = useState(null);
     const [uniqueKeys, setUniqueKeys] = useState([]);
     useEffect(() => {
         if (querySegmentsData != null) {
-            queryFunnelHandler(querySegmentsData);
+            queryFunnelHandler({ ...querySegmentsData, ...selectedRange });
 
         }
-    }, [querySegmentsData]);
+    }, [querySegmentsData, selectedRange]);
 
     const queryFunnelHandler = async (data) => {
         try {

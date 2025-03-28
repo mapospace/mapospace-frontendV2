@@ -4,15 +4,15 @@ import React, { useEffect, useState } from 'react'
 import { FaMapMarkerAlt, FaClock, FaLayerGroup, FaUndo } from "react-icons/fa";
 import { motion } from "framer-motion";
 
-const Retention = ({ queryRetentionData, setOpenQuery, setLoading }) => {
+const Retention = ({ queryRetentionData, setOpenQuery, setLoading, selectedRange }) => {
     const [retentionRate, setRetentionRate] = useState(null);
 
     useEffect(() => {
         if (queryRetentionData != null) {
-            queryFunnelHandler(queryRetentionData);
+            queryFunnelHandler({ ...queryRetentionData, ...selectedRange });
 
         }
-    }, [queryRetentionData]);
+    }, [queryRetentionData, selectedRange]);
 
     const queryFunnelHandler = async (data) => {
         try {

@@ -122,12 +122,12 @@ const QueryFilter = ({ setShowFilter, setShowStageFilter, setShowGeo, setPropert
     const [selectedSegmentsValueOption, setSelectedSegmentsValueOption] = useState([]);
     const [selectedRetentionBaseValueOption, setSelectedRetentionBaseValueOption] = useState(null);
     const [selectedRetentionReturnValueOption, setSelectedRetentionReturnValueOption] = useState(null);
-    const [startDate, setStartDate] = useState(null);
-    const [showStartDate, setShowStartDate] = useState(false);
-    const [startDateValue, setStartDateValue] = useState(null);
-    const [endDate, setEndDate] = useState(null);
-    const [showEndDate, setShowEndDate] = useState(false);
-    const [endDateValue, setEndDateValue] = useState(null);
+    // const [startDate, setStartDate] = useState(null);
+    // const [showStartDate, setShowStartDate] = useState(false);
+    // const [startDateValue, setStartDateValue] = useState(null);
+    // const [endDate, setEndDate] = useState(null);
+    // const [showEndDate, setShowEndDate] = useState(false);
+    // const [endDateValue, setEndDateValue] = useState(null);
     // const [selectedInterval, setSelectedInterval] = useState("monthly");
     // const [enabled, setEnabled] = useState(false);
     const searchParams = useSearchParams();
@@ -210,11 +210,11 @@ const QueryFilter = ({ setShowFilter, setShowStageFilter, setShowGeo, setPropert
         }
     };
 
-    const dateTimeConverter = (data) => {
-        const date = new Date(data);
-        const isoDate = date.toISOString();
-        return isoDate;
-    }
+    // const dateTimeConverter = (data) => {
+    //     const date = new Date(data);
+    //     const isoDate = date.toISOString();
+    //     return isoDate;
+    // }
 
     const propertyListHandler = (eventName, list) => {
 
@@ -392,7 +392,7 @@ const QueryFilter = ({ setShowFilter, setShowStageFilter, setShowGeo, setPropert
                 </div>
             </div>}
             {/* DATE RANGE */}
-            <div className='p-xs border mt-m mx-s rounded-bs'>
+            {/* <div className='p-xs border mt-m mx-s rounded-bs'>
                 <div className='flex justify-between items-center cursor-pointer' onClick={() => {
                     setOpenDateRange(prev => !prev);
                     setTimeout(() => {
@@ -490,7 +490,7 @@ const QueryFilter = ({ setShowFilter, setShowStageFilter, setShowGeo, setPropert
                         )}
                     </div>
                 </div>
-            </div>
+            </div> */}
             {/* GEO MAP */}
             <div className='p-xs border mt-m mx-s rounded-bs'>
                 <div className='flex justify-between items-center cursor-pointer' onClick={() => { setOpenGeoFilter(prev => !prev) }}>
