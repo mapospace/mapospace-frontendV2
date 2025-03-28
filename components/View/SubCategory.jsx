@@ -41,12 +41,12 @@ const SubCategory = ({ appliedFilter }) => {
     return (
         <div className=' hide-scrollbar '>
             <div className=' gap-l grid  grid-cols-4 mt-xl'>
-                <div className="col-span-2 h-full bg-white rounded-lg flex flex-col border border-neutral-200">
-                    <div className='flex justify-between px-xl pb-s pt-l text-f-l font-semibold text-neutral-1200 '>
+                <div className="col-span-2 h-full bg-white rounded-lg flex flex-col border ">
+                    <div className='px-xl pb-s pt-l text-f-l  text-neutral-1200'>
                         <h3 className="text-f-l font-semibold text-neutral-1200  ">
-                            Categories View
+                            Sub Categories View
                         </h3>
-
+                        <p className='text-f-m text-neutral-600'>Displays the total number of views per sub-category, helping identify which segments attract the most user interest.</p>
                     </div>
                     <div className='p-xl pt-s '>
                         <div className=' text-f-m font-semibold text-neutral-1200 flex bg-neutral-200 border-b-2 border-neutral-200  '>
@@ -73,7 +73,7 @@ const SubCategory = ({ appliedFilter }) => {
 
 
 
-                    <DoughnutContainer endpoint={API_ENDPOINTS.ViewSubCategoryOverTime} appliedFilter={appliedFilter} label="View Sub Categories Over Time" From="ViewSubCategory" />
+                    <DoughnutContainer endpoint={API_ENDPOINTS.ViewSubCategoryOverTime} appliedFilter={appliedFilter} label="View Sub Categories Over Time" From="ViewSubCategory" description='Visualizes how views are distributed across sub-categories over time, offering a quick glance at which areas maintain high visibility.' />
 
 
                 </div>

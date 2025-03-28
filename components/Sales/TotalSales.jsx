@@ -253,14 +253,24 @@ const TotalSales = ({ appliedFilter }) => {
                 </div>
 
             </div>
-            <div className="grid  md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-xl mt-xl h-[400px] ">
+            <div className="grid  md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-xl mt-xl ">
                 <div className='col-span-2'>
-                    {linelabels.length > 0 && totalOrders.length > 0 && <LineChart labels={linelabels} values={totalOrders} labelName="Total Orders" period={setLinePeriod} />}
+                    {linelabels.length > 0 && totalOrders.length > 0 && <LineChart
+                        labels={linelabels}
+                        values={totalOrders}
+                        labelName="Total Orders"
+                        period={setLinePeriod}
+                        description='Line chart showing daily order trends to track demand patterns and identify peak activity periods.'
+                    />}
                 </div>
 
-                <div className="col-span-2  bg-white rounded-bs flex flex-col border border-neutral-200 ">
-                    <div className='px-xl pb-s pt-l text-f-l font-semibold text-neutral-1200 '>
-                        Revenue By Order
+                <div className="col-span-2  bg-white rounded-bs flex flex-col border  ">
+                    <div className='px-xl pb-s pt-l text-f-l  text-neutral-1200 '>
+                        <h3 className="text-f-l font-semibold text-neutral-1200  ">
+                            Revenue By Order
+                        </h3>
+                        <p className='text-f-m text-neutral-600'>Table showing daily orders and revenue to analyze sales performance and revenue efficiency.</p>
+
                     </div>
                     <div className='p-xl pt-s h-full '>
 
@@ -287,9 +297,9 @@ const TotalSales = ({ appliedFilter }) => {
 
                 </div>
             </div>
-            <div className="grid  md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-xl mt-xl h-[400px]">
+            <div className="grid  md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-xl mt-xl ">
 
-                <div className="col-span-1 h-full relative bg-white text-neutral-1200  rounded-bs flex justify-between flex-col border border-neutral-200 ">
+                <div className="col-span-1 h-full relative bg-white text-neutral-1200  rounded-bs flex justify-between flex-col border  ">
                     <div className='px-xl'>
                         <div className='text-f-8xl px-xl text-center font-semibold  text-neutral-1200 pt-l'>Average</div>
                         <div className='text-f-8xl px-xl text-center font-semibold  text-neutral-1200 '> Order Value</div>
@@ -300,18 +310,32 @@ const TotalSales = ({ appliedFilter }) => {
                     {appliedFilter && appliedFilter.startDate && appliedFilter.endDate && <div className='bg-neutral-200 px-xl py-xl text-neutral-900 text-f-xl text-start'> From:  {appliedFilter.startDate.split('T')[0]} - {appliedFilter.endDate.split('T')[0]}</div>}
                 </div>
                 <div className='col-span-2'>
-                    {labels.length > 0 && totalOrders.length > 0 && <BarChart labels={labels} values={totalRevenue} labelName="Total Revenue" period={setBarPeriod} />}
+                    {labels.length > 0 && totalOrders.length > 0 && <BarChart
+                        labels={labels}
+                        values={totalRevenue}
+                        labelName="Total Revenue"
+                        period={setBarPeriod}
+                        description="Bar chart showing daily revenue trends to monitor sales performance and identify high-revenue days."
+                    />}
                 </div>
             </div>
-            <div className="grid  md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-xl mt-xl h-[400px]">
+            <div className="grid  md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-xl mt-xl">
                 <div className='col-span-2'>
-                    {orderlabels.length > 0 && totalOrders.length > 0 && <LineChart labels={orderlabels} values={orderRevenue} labelName="Average Order Over Time" period={setOrderPeriod} />}
+                    {orderlabels.length > 0 && totalOrders.length > 0 && <LineChart labels={orderlabels} values={orderRevenue} labelName="Average Order Over Time" period={setOrderPeriod} description="Line chart showing fluctuations in average order value per day, helping track spending trends and customer purchase behavior." />}
                 </div>
 
-                <div className="col-span-1 h-full bg-white rounded-bs flex flex-col border border-neutral-200 ">
+                <div className="col-span-1 h-full bg-white rounded-bs flex flex-col border  ">
 
-                    <div className='px-xl pb-s pt-l text-f-l font-semibold text-neutral-1200 '>
-                        Order Value
+                    <div className='px-xl pb-s pt-l text-f-l  text-neutral-1200 '>
+                        <h3 className="text-f-l font-semibold text-neutral-1200  ">
+                            Order Value
+                        </h3>
+                        <p className='text-f-m text-neutral-600'>
+                            Table summarizing daily average order values to monitor order quality and spot shifts in customer buying patterns.
+                        </p>
+
+
+
                     </div>
                     <div className='p-xl pt-s '>
                         <div className=' text-f-m font-semibold text-neutral-1200 flex bg-neutral-200 border-b border-neutral-200  '>
@@ -332,7 +356,7 @@ const TotalSales = ({ appliedFilter }) => {
 
                 </div>
             </div>
-            <div className=' gap-l grid  grid-cols-4 mt-xl'>
+            {/* <div className=' gap-l grid  grid-cols-4 mt-xl'>
                 <div className="col-span-4 h-full bg-white rounded-bs flex flex-col border  ">
                     <div className='px-xl pb-s pt-l text-f-l font-semibold text-neutral-1200 '>
                         Top Products By Quantity
@@ -342,7 +366,7 @@ const TotalSales = ({ appliedFilter }) => {
                     </div>
 
                 </div>
-            </div>
+            </div> */}
 
         </div>
     )

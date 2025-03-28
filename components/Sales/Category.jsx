@@ -51,12 +51,18 @@ const Category = ({ appliedFilter }) => {
     return (
         <div className=' hide-scrollbar '>
             <div className=' gap-l grid  grid-cols-4 mt-xl'>
-                <div className="col-span-2 h-full bg-white rounded-lg flex flex-col border border-neutral-200">
-                    <div className='flex justify-between px-xl pb-s pt-l text-f-l font-semibold text-neutral-1200 '>
-                        <h3 className="text-f-l font-semibold text-neutral-1200  ">
-                            Top Product By {selectedSortOption.label}
-                        </h3>
-                        <div className='flex gap-s'>
+                <div className="col-span-2 h-full bg-white rounded-lg flex flex-col border ">
+                    <div className='flex justify-between px-xl pb-s pt-l text-f-l text-neutral-1200 gap-xl '>
+                        <div className='  text-f-l  text-neutral-1200 '>
+                            <h3 className="text-f-l font-semibold text-neutral-1200  ">
+                                Top Product By {selectedSortOption.label}
+                            </h3>
+                            <p className='text-f-m text-neutral-600'>  Table showing revenue and quantity sold by category, helping identify which product categories drive the most sales.</p>
+
+                        </div>
+
+
+                        <div className='w-[130px]'>
                             <Select
                                 options={dataValues}
                                 value={selectedSortOption}
@@ -109,9 +115,9 @@ const Category = ({ appliedFilter }) => {
                         <div className='flex text-f-m  h-[300px]  flex-col overflow-y-scroll hide-scrollbar'>
                             {topCategory.map((category, index) => (<div className={clsx(' flex  border-b-2 border-neutral-200  text-neutral-1200', index >= topCategoryByRevenue.length - 1 && 'border-b-0')} key={index} >
                                 <div className='py-m px-l flex-[0.4] text-center'>{index + 1}</div>
-                                <div className='py-m px-l flex-1 text-center  '>{category.category}</div>
-                                <div className='py-m px-l flex-1 text-center  '>{category.totalQuantitySold}</div>
-                                <div className='py-m px-l flex-1 text-center'>{Number(category.totalRevenue).toFixed(2)}</div>
+                                <div className='py-m px-l flex-1 text-center  '>{category.category ? category.category : 'N/A'}</div>
+                                <div className='py-m px-l flex-1 text-center  '>{category.totalQuantitySold ? category.totalQuantitySold : 'N/A'}</div>
+                                <div className='py-m px-l flex-1 text-center'>{Number(category.totalRevenue ? category.totalRevenue : 0).toFixed(2)}</div>
 
                             </div>))}
 
@@ -125,7 +131,7 @@ const Category = ({ appliedFilter }) => {
 
 
 
-                    <DoughnutContainer endpoint={API_ENDPOINTS.TopSellingCategoryOverTime} appliedFilter={appliedFilter} label="Top Selling Categories Over Time" From="SaleCategory" />
+                    <DoughnutContainer endpoint={API_ENDPOINTS.TopSellingCategoryOverTime} appliedFilter={appliedFilter} label="Top Selling Categories Over Time" From="SaleCategory" description='Donut chart tracking the performance of top-selling categories over time to visualize market share and customer preference trends.' />
 
 
                 </div>

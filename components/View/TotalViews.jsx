@@ -141,7 +141,7 @@ const TotalViews = ({ appliedFilter }) => {
         <div className='pb-4xl hide-scrollbar'>
             <div className="grid  md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-xl mt-xl h-[400px]">
 
-                <div className="col-span-1 h-full relative bg-white text-neutral-1200  rounded-bs flex justify-between flex-col border border-neutral-200 ">
+                <div className="col-span-1 h-full relative bg-white text-neutral-1200  rounded-bs flex justify-between flex-col border  ">
                     <div className='px-xl'>
                         <div className='text-f-8xl px-xl text-center font-semibold  text-neutral-1200 pt-l'>Total Views</div>
                         {/* <div className='text-f-8xl px-xl text-center font-semibold  text-neutral-1200 '> Order Value</div> */}
@@ -153,20 +153,21 @@ const TotalViews = ({ appliedFilter }) => {
                 </div>
                 <div className="col-span-2 h-full bg-white rounded-bs flex flex-col border">
 
-                    <HistogramChart data={histogramData} bins={histogramRanges} setBins={setHistogramRanges} label="Top Views Range Distribution" />
+                    <HistogramChart data={histogramData} bins={histogramRanges} setBins={setHistogramRanges} label="Top Views Range Distribution" description='Histogram showing how products are distributed based on their view counts, helping identify visibility patterns across different view ranges.' />
 
 
                 </div>
             </div>
 
-            <div className="grid  md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-xl mt-xl h-[400px] ">
+            <div className="grid  md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-xl mt-xl  ">
                 <div className='col-span-2'>
-                    {linelabels.length > 0 && totalViewsValue.length > 0 && <LineChart labels={linelabels} values={totalViewsValue} labelName="Total Views" period={setLinePeriod} />}
+                    {linelabels.length > 0 && totalViewsValue.length > 0 && <LineChart labels={linelabels} values={totalViewsValue} labelName="Total Views" period={setLinePeriod} description='Line chart displaying daily view trends to track product visibility and user engagement patterns over time.' />}
                 </div>
 
-                <div className="col-span-2  bg-white rounded-bs flex flex-col border border-neutral-200 ">
-                    <div className='px-xl pb-s pt-l text-f-l font-semibold text-neutral-1200 '>
-                        Total Views
+                <div className="col-span-2  bg-white rounded-bs flex flex-col border  ">
+                    <div className='px-xl pb-s pt-l  text-neutral-1200 '>
+                        <h3 className='text-f-l  font-semibold'>Total Views Per Day</h3>
+                        <p className='text-f-m text-neutral-600'>Table showing the number of views recorded each day, useful for identifying peak traffic periods and monitoring audience activity.</p>
                     </div>
                     <div className='p-xl pt-s h-full '>
 
@@ -193,9 +194,15 @@ const TotalViews = ({ appliedFilter }) => {
             </div>
             <div className=' gap-l grid  grid-cols-4 mt-xl'>
                 <div className="col-span-4 h-full bg-white rounded-bs flex flex-col border  ">
-                    <div className='px-xl pb-s pt-l text-f-l font-semibold text-neutral-1200 '>
-                        Sankey of View Product
+                    <div className='px-xl pb-s pt-l text-f-l  text-neutral-1200 '>
+
+                        <h3 className="text-f-l font-semibold text-neutral-1200  ">
+                            Sankey of View Product
+                        </h3>
+
+                        <p className='text-f-m text-neutral-600'>This Sankey chart illustrates how total product views are distributed across different categories and individual products, offering a clear visual flow of user interest from broader categories to specific items.</p>
                     </div>
+
                     <div className='p-xl pt-s h-[450px] '>
                         {sankeyData.length > 0 && <SankeyChart data={sankeyData} />}
                     </div>

@@ -52,11 +52,17 @@ const SubCategory = ({ appliedFilter }) => {
         <div className=' hide-scrollbar'>
             <div className=' gap-l grid  grid-cols-4 mt-xl'>
                 <div className="col-span-2 h-full bg-white rounded-bs flex flex-col border">
-                    <div className='flex justify-between px-xl pb-s pt-l text-f-l font-semibold text-neutral-1200 '>
-                        <h3 className="text-f-l font-semibold text-neutral-1200  ">
-                            Top Product By {selectedSortOption.label}
-                        </h3>
-                        <div className='flex gap-s'>
+                    <div className='flex justify-between px-xl pb-s pt-l text-f-l  text-neutral-1200 '>
+                        <div className='  text-f-l  text-neutral-1200 '>
+                            <h3 className="text-f-l font-semibold text-neutral-1200  ">
+                                Top Product By {selectedSortOption.label}
+                            </h3>
+                            <p className='text-f-m text-neutral-600'>  This table displays the top-performing sub-categories based on total revenue and quantity sold. It helps identify which sub-categories are driving the most value and volume in sales.</p>
+
+                        </div>
+
+
+                        <div className='w-[130px]'>
                             <Select
                                 options={dataValues}
                                 value={selectedSortOption}
@@ -122,7 +128,7 @@ const SubCategory = ({ appliedFilter }) => {
 
                 <div className="col-span-2 h-full bg-white rounded-bs flex flex-col ">
 
-                    <DoughnutContainer endpoint={API_ENDPOINTS.TopSellingSubCategoryOverTime} appliedFilter={appliedFilter} label="Top Selling Sub Categories Over Time" From="SaleSubCategory" />
+                    <DoughnutContainer endpoint={API_ENDPOINTS.TopSellingSubCategoryOverTime} appliedFilter={appliedFilter} label="Top Selling Sub Categories Over Time" From="SaleSubCategory" description='The doughnut chart visualizes the distribution of top-selling sub-categories over time, offering a quick view of which segments dominate customer purchases.' />
 
                 </div>
             </div>

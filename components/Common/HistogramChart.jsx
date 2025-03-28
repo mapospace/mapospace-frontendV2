@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import {
     Chart as ChartJS,
@@ -18,15 +18,29 @@ import { FaL } from "react-icons/fa6";
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 
-const HistogramChart = ({ data, bins, setBins, label }) => {
+const HistogramChart = ({ data, bins, setBins, label, description }) => {
     const [endValue, setEndValue] = useState("");
     const [startValue, setStartValue] = useState("0");
     const [ranges, setRanges] = useState([]);
     const [showRangeMeter, setShowRangeMeter] = useState(false);
+    const rangeRef = useRef(null);
 
-    //      const data = [10, 20, 50, 150, 250, 500, 2000, 5000, 12000, 18000, 19000]; // Sample data
-    //   const bins = [0, 50, 100, 200, 500, 1000, 10000, 20000];
-    // Function to count occurrences in each bin ranges
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (rangeRef.current && !rangeRef.current.contains(event.target)) {
+                setShowRangeMeter(false);
+            }
+        }
+
+        if (showRangeMeter) {
+            document.addEventListener("mousedown", handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [showRangeMeter]);
+
     const binCounts = bins.slice(1).map((upperBound, i) => {
         const lowerBound = bins[i];
         return data.filter((value) => value >= lowerBound && value < upperBound).length;
@@ -93,11 +107,16 @@ const HistogramChart = ({ data, bins, setBins, label }) => {
     }
 
     return <>
-        <div className='px-xl pb-s pt-l text-f-l font-semibold text-neutral-1200 flex justify-between items-center'>
-            <h3 className="text-f-l font-semibold text-neutral-1200  ">{label}</h3>
+        <div className='px-xl pb-s pt-l text-f-l  text-neutral-1200 flex justify-between items-center gap-xl'>
+            <div className='flex flex-col'>
+                <h3 className="text-f-l font-semibold text-neutral-1200  ">
+                    {label}
+                </h3>
+                <p className='text-f-m text-neutral-600'>{description}</p>
+            </div>
             <div className='text-f-m font-normal relative'>
-                <button className='py-xs px-s border rounded-md border-neutral-1200' onClick={() => { setShowRangeMeter(prev => !prev) }}>Add Range + </button>
-                {showRangeMeter && <div className='w-[300px]  absolute top-10 right-0 bg-white bg-opacity-70 border  rounded-md p-s flex flex-col'>
+                <button className='py-xs px-s border rounded-md border-neutral-1200 text-nowrap' onClick={() => { setShowRangeMeter(prev => !prev) }}>Add Range + </button>
+                {showRangeMeter && <div className='w-[300px]  absolute top-10 right-0 bg-white bg-opacity-70 border  rounded-md p-s flex flex-col' ref={rangeRef}>
                     <div className="flex w-full gap-s items-center">
                         <div className="flex-1 bg-white border border-neutral-500 rounded-md py-xs px-s">
                             {startValue}

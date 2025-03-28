@@ -266,18 +266,6 @@ const Product = ({ appliedFilter }) => {
 
     return (
         <div className='pb-4xl hide-scrollbar'>
-            <div className=' gap-l grid  grid-cols-4 mt-xl'>
-                <div className="col-span-4 h-full bg-white rounded-bs flex flex-col border  ">
-                    <div className='px-xl pb-s pt-l text-f-l font-semibold text-neutral-1200 '>
-                        Top Products By Quantity
-                    </div>
-                    <div className='p-xl pt-s h-[450px] '>
-                        {sankeyData.length > 0 && <SankeyChart data={sankeyData} />}
-                    </div>
-
-                </div>
-            </div>
-            {/* <div className="text-neutral-1000 pb-xl "><MapContainer catalogList={catalogList} setAppliedFilter={setAppliedFilter} /></div> */}
             <div className=' gap-xl grid  grid-cols-4  mt-xl'>
                 <div className='relative col-span-1 rounded-bs    bg-white text-black border   text-center'>
                     <div className='text-f-5xl px-xl text-start font-semibold  text-neutral-1200 pt-l'>Total Sales</div>
@@ -305,14 +293,40 @@ const Product = ({ appliedFilter }) => {
                 </div>
 
             </div>
+            <div className=' gap-l grid  grid-cols-4 mt-xl'>
+                <div className="col-span-4 h-full bg-white rounded-bs flex flex-col border  ">
+                    <div className='px-xl pb-s pt-l text-f-l  text-neutral-1200 '>
+
+                        <h3 className="text-f-l font-semibold text-neutral-1200  ">
+                            Top Products By Quantity
+                        </h3>
+
+                        <p className='text-f-m text-neutral-600'> Sankey chart visualizing product categories and top-selling items by quantity, highlighting key contributors to total sales across different segments.</p>
+                    </div>
+
+                    <div className='p-xl pt-s h-[450px] '>
+                        {sankeyData.length > 0 && <SankeyChart data={sankeyData} />}
+                    </div>
+
+                </div>
+            </div>
+            {/* <div className="text-neutral-1000 pb-xl "><MapContainer catalogList={catalogList} setAppliedFilter={setAppliedFilter} /></div> */}
+
 
             <div className=' gap-xl grid  grid-cols-4 mt-xl '>
                 <div className="col-span-2 h-full bg-white rounded-bs flex flex-col border">
-                    <div className='flex justify-between px-xl pb-s pt-l text-f-l font-semibold text-neutral-1200 '>
-                        <h3 className="text-f-l font-semibold text-neutral-1200  ">
-                            Top Product By {selectedSortOption.label}
-                        </h3>
-                        <div className='flex gap-s'>
+                    <div className='flex justify-between px-xl pb-s pt-l text-f-l  text-neutral-1200 gap-xl  '>
+
+                        <div className='  text-f-l  text-neutral-1200 '>
+                            <h3 className="text-f-l font-semibold text-neutral-1200  ">
+                                Top Product By {selectedSortOption.label}
+                            </h3>
+                            <p className='text-f-m text-neutral-600'>Table listing products that generated the highest revenue, showing their total quantity sold and total earnings to highlight top-performing items.</p>
+
+                        </div>
+
+
+                        <div className='w-[230px] '>
                             <Select
                                 options={dataValues}
                                 value={selectedSortOption}
@@ -377,7 +391,7 @@ const Product = ({ appliedFilter }) => {
                 </div>
 
                 <div className="col-span-2 h-full bg-white rounded-lg flex flex-col ">
-                    <DoughnutContainer endpoint={API_ENDPOINTS.TopSellingProductsOverTime} appliedFilter={appliedFilter} label="Top Selling Products Over Time" From="SaleProduct" />
+                    <DoughnutContainer endpoint={API_ENDPOINTS.TopSellingProductsOverTime} appliedFilter={appliedFilter} label="Top Selling Products Over Time" From="SaleProduct" description="Donut chart tracking sales trends of key products over time, helping visualize which items consistently lead in quantity sold." />
                 </div>
 
             </div>
@@ -386,7 +400,7 @@ const Product = ({ appliedFilter }) => {
 
                 <div className="col-span-4 h-full bg-white rounded-bs flex flex-col border">
 
-                    <HistogramChart data={histogramData} bins={histogramRanges} setBins={setHistogramRanges} label="Top Products By Quantity" />
+                    <HistogramChart data={histogramData} bins={histogramRanges} setBins={setHistogramRanges} label="Top Products By Quantity" description='Histogram showing the distribution of products based on quantity sold, helping identify how many products fall within specific sales ranges.' />
 
 
                 </div>
@@ -444,10 +458,12 @@ const Product = ({ appliedFilter }) => {
 
             <div className='p-xl border rounded-bs  mt-xl'>
                 <div className='text-neutral-1200 text-f-xl font-semibold'>Categories Analytics</div>
+                <p className='text-f-m text-neutral-600'>This section provides insights into sales performance across different product categories. It highlights top categories by total revenue and tracks how category-wise sales evolve over time, helping identify key drivers of business growth and customer preferences.</p>
                 <Category appliedFilter={appliedFilter} />
             </div>
             <div className='p-xl border rounded-bs mt-xl'>
                 <div className='text-neutral-1200 text-f-xl font-semibold'>Sub Categories Analytics</div>
+                <p className='text-f-m text-neutral-600'>This section highlights performance across sub-categories by showcasing top-selling segments by revenue and tracking their sales trends over time.</p>
                 <SubCategory appliedFilter={appliedFilter} />
             </div>
 

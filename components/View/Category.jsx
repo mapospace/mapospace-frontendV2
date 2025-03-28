@@ -39,12 +39,12 @@ const Category = ({ appliedFilter }) => {
     return (
         <div className=' hide-scrollbar '>
             <div className=' gap-l grid  grid-cols-4 mt-xl'>
-                <div className="col-span-2 h-full bg-white rounded-lg flex flex-col border border-neutral-200">
-                    <div className='flex justify-between px-xl pb-s pt-l text-f-l font-semibold text-neutral-1200 '>
+                <div className="col-span-2 h-full bg-white rounded-lg flex flex-col border ">
+                    <div className='px-xl pb-s pt-l text-f-l  text-neutral-1200 '>
                         <h3 className="text-f-l font-semibold text-neutral-1200  ">
                             Categories View
                         </h3>
-
+                        <p className='text-f-m text-neutral-600'> This table shows the total number of views received by each product category, helping identify which categories attract the most customer attention.</p>
                     </div>
                     <div className='p-xl pt-s '>
                         <div className=' text-f-m font-semibold text-neutral-1200 flex bg-neutral-200 border-b-2 border-neutral-200  '>
@@ -71,7 +71,7 @@ const Category = ({ appliedFilter }) => {
 
 
 
-                    <DoughnutContainer endpoint={API_ENDPOINTS.ViewCategoryOverTime} appliedFilter={appliedFilter} label="View Categories Over Time" From="ViewCategory" />
+                    <DoughnutContainer endpoint={API_ENDPOINTS.ViewCategoryOverTime} appliedFilter={appliedFilter} label="View Categories Over Time" From="ViewCategory" description='The donut chart visualizes the distribution of category views over time, offering a quick glance at which categories consistently capture user interest.' />
 
 
                 </div>

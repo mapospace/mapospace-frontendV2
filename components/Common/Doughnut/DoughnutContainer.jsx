@@ -3,7 +3,7 @@ import DoughnutChart from '../Doughnut';
 import AuthServices from '@/utils/axios-api';
 import { customError } from '../Toast';
 
-const DoughnutContainer = ({ endpoint, appliedFilter, label, From }) => {
+const DoughnutContainer = ({ endpoint, appliedFilter, label, From, description }) => {
     const [productPeriod, setProductPeriod] = useState('day');
     const [productLabelForDoughnut, setProductLabelForDoughnut] = useState([]);
     const [productValueForDoughnut, setProductValueForDoughnut] = useState([]);
@@ -190,7 +190,7 @@ const DoughnutContainer = ({ endpoint, appliedFilter, label, From }) => {
 
 
     return (
-        <DoughnutChart labels={productLabelForDoughnut} values={productValueForDoughnut} labelName={label} period={setProductPeriod} productListDoughtnutPeriod={productListDoughtnutPeriod} setSelectedPeriod={setSelectedPeriod} />
+        <DoughnutChart labels={productLabelForDoughnut} values={productValueForDoughnut} labelName={label} period={setProductPeriod} productListDoughtnutPeriod={productListDoughtnutPeriod} setSelectedPeriod={setSelectedPeriod} description={description} />
     )
 }
 

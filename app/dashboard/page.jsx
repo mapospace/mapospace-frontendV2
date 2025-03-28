@@ -9,12 +9,88 @@ import { MdWifiTethering } from "react-icons/md";
 import Image from 'next/image'
 import CardBg1 from '@/public/card/Card1.png'
 import { useRouter } from 'next/navigation'
+import { Bar, Doughnut } from 'react-chartjs-2';
+import {
+    Chart as ChartJS,
+    ArcElement,
+    Tooltip,
+    Legend,
+    CategoryScale,
+    LinearScale,
+    BarElement,
+} from 'chart.js';
+
+ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement);
 
 const page = () => {
     const router = useRouter()
     const [ranges, SetRanges] = useState([])
     const [currentRange, setCurrentRange] = useState(null);
-    const [h3Data, setH3Data] = useState([])
+    const [h3Data, setH3Data] = useState([]);
+
+    const eventSplitData = {
+        labels: ['CTA', 'Element'],
+        datasets: [
+            {
+                data: [65, 35],
+                backgroundColor: ['#9F8CFF', '#A0EACF'],
+                borderWidth: 0,
+            },
+        ],
+    };
+
+    const osUsageData = {
+        labels: ['Android', 'iOS', 'Web'],
+        datasets: [
+            {
+                data: [60, 35, 5],
+                backgroundColor: ['#4D9DE0', '#FF6B6B', '#FFD166'],
+                borderWidth: 0,
+            },
+        ],
+    };
+
+    const userBarData = {
+        labels: ['User 1', 'User 2', 'User 3', 'User 4'],
+        datasets: [
+            {
+                label: 'Users',
+                data: [4000, 3000, 5000, 2780],
+                backgroundColor: '#6C4EE3',
+                borderRadius: 4,
+                barPercentage: 0.5,
+                categoryPercentage: 1.0,
+            },
+        ],
+    };
+
+    const barOptions = {
+        plugins: {
+            legend: { display: false },
+            tooltip: {
+                enabled: true,
+                callbacks: {
+                    label: function (context) {
+                        return `${context.dataset.label}: ${context.raw}`;
+                    },
+                },
+            },
+        },
+        responsive: true,
+        maintainAspectRatio: false,
+        indexAxis: 'y',
+        scales: {
+            x: {
+                beginAtZero: true,
+                ticks: { display: false },
+                grid: { display: false },
+            },
+            y: {
+                ticks: { color: '#333', font: { size: 14 } },
+                grid: { display: false },
+            },
+        },
+    };
 
     useEffect(() => {
         const Ranges = generateCustomDateRanges();
@@ -94,67 +170,89 @@ const page = () => {
                     ))}
                 </div>
             </div>
-            <div className=' gap-l grid  grid-cols-3 mt-xl h-[220px]'>
-                <div className='col-span-1 bg-white bg-opacity-80 rounded-bs border text-black py-s px-xl flex  flex-col leading-[45px]'>
-                    <div className='text-f-2xl flex justify-between items-center'>
-                        <div className='text-f-l'>Total Sales</div>
-                        <LiaChartLineSolid />
-                    </div>
-                    <div className='text-f-6xl font-semibold '>542631</div>
-                    <div className='text-neutral-600 font-f-l'>+20.1% from previous period</div>
+            <div className=" grid  grid-cols-2 gap-xl font-sans    mt-xl">
+                <div className="col-span-1 p-xl bg-white rounded-bs border">
+                    <h2 className="text-f-l font-bold">TOTAL events in this Month</h2>
+                    <p className="text-gray-500">All events across all platforms</p>
+                    <p className="text-f-6xl font-bold text-secondary-900 mt-2">3.2m</p>
+                    <p className="text-green-600 font-medium mt-1">+12% from last month</p>
                 </div>
-                <div className='col-span-1 bg-white bg-opacity-80 rounded-bs border text-black py-s px-xl flex  flex-col leading-[45px]'>
-                    <div className='text-f-2xl flex justify-between items-center'>
-                        <div className='text-f-l'>Total Sales</div>
-                        <MdWifiTethering />
-                    </div>
-                    <div className='text-f-6xl font-semibold '>542631</div>
-                    <div className='text-neutral-600 font-f-l'>+20.1% from previous period</div>
-                </div>
-                <div className='col-span-1 bg-white bg-opacity-80 rounded-bs border text-black py-s px-xl flex  flex-col leading-[45px]'>
-                    <div className='text-f-2xl flex justify-between items-center'>
-                        <div className='text-f-l'>Total Sales</div>
-                        <MdWifiTethering />
-                    </div>
-                    <div className='text-f-6xl font-semibold '>542631</div>
-                    <div className='text-neutral-600 font-f-l'>+20.1% from previous period</div>
+                <div className="col-span-1 p-xl bg-white rounded-bs border">
+                    <h2 className="text-f-l font-bold">Total unique users in this month</h2>
+                    <p className="text-gray-500">Active users across all platforms</p>
+                    <p className="text-f-6xl font-bold text-secondary-900 mt-2">1 mn.</p>
+                    <p className="text-green-600 font-medium mt-1">+8% from last month</p>
                 </div>
 
+            </div>
+            <div className="grid  grid-cols-3 gap-xl font-sans    mt-xl">
+                <div className="p-xl bg-white rounded-bs border">
+                    <h2 className="text-f-l font-bold">Event count split by event type</h2>
+                    <p className="text-gray-500">Distribution of events by category</p>
+                    <div className='p-l w-full h-[300px]  flex justify-center'>
 
+                        <Doughnut data={eventSplitData} />
+                    </div>
+                </div>
+                <div className="p-xl bg-white rounded-bs border">
+                    <h2 className="text-f-l font-bold">Unique users in this month</h2>
+                    <p className="text-gray-500">User growth over time</p>
+                    <div className='p-l w-full h-[300px]  flex justify-center'>
+
+                        <Bar data={userBarData} options={barOptions} />
+                    </div>
+                </div>
+                <div className="p-xl bg-white rounded-bs border">
+                    <h2 className="text-f-l font-bold">Usage split by OS</h2>
+                    <p className="text-gray-500">Unique users by platform</p>
+                    <div className='p-l w-full h-[300px] flex justify-center'>
+
+                        <Doughnut data={osUsageData} />
+                    </div>
+                </div>
             </div>
             <div className='rounded-bs border p-xl  mt-xl'>
                 <div className='w-full h-[100vh] relative '>
                     <H3Map h3Data={h3Data} type="product" />
                 </div>
-                <div className='flex gap-xl mt-xl '>
+                <div className="grid  grid-cols-4 gap-xl font-sans    mt-xl">
 
-                    <div className='flex-1 bg-white bg-opacity-80 rounded-bs  text-black py-s px-xl flex items-center  gap-l'>
-                        <MdWifiTethering />
+                    <div className='col-span-1  bg-white bg-opacity-80 rounded-bs  text-black py-s px-xl flex items-center  gap-l  border p-xl'>
                         <div className='text-f-2xl flex flex-col justify-between items-start'>
-                            <div className='text-f-m text-neutral-600'>Total Regions</div>
-                            <div className='text-f-2xl font-semibold '>542631</div>
+                            <div className='text-f-xl font-semibold text-black flex gap-s items-center'>
+                                <MdWifiTethering />
+                                <div> Total Regions</div>
+                            </div>
+                            <div className='text-f-6xl font-semibold text-secondary-900'>7842631</div>
                         </div>
                     </div>
 
-                    <div className='flex-1 bg-white bg-opacity-80 rounded-bs  text-black py-s px-xl flex items-center  gap-l'>
-                        <MdWifiTethering />
+                    <div className='col-span-1  bg-white bg-opacity-80 rounded-bs  text-black py-s px-xl flex items-center  gap-l  border p-xl'>
                         <div className='text-f-2xl flex flex-col justify-between items-start'>
-                            <div className='text-f-m text-neutral-600'>Highest Region</div>
-                            <div className='text-f-2xl font-semibold '>542631</div>
+                            <div className='text-f-xl font-semibold text-black flex gap-s items-center'>
+                                <MdWifiTethering />
+                                <div>Highest Region</div>
+                            </div>
+                            <div className='text-f-6xl font-semibold text-secondary-900'>52631</div>
                         </div>
                     </div>
-                    <div className='flex-1 bg-white bg-opacity-80 rounded-bs  text-black py-s px-xl flex items-center  gap-l'>
-                        <MdWifiTethering />
+                    <div className='col-span-1  bg-white bg-opacity-80 rounded-bs  text-black py-s px-xl flex items-center  gap-l  border p-xl'>
                         <div className='text-f-2xl flex flex-col justify-between items-start'>
-                            <div className='text-f-m text-neutral-600'>Average Sales/Region</div>
-                            <div className='text-f-2xl font-semibold '>542631</div>
+                            <div className='text-f-xl font-semibold text-black flex gap-s items-center'>
+                                <MdWifiTethering />
+                                <div>Average Sales / Region</div>
+                            </div>
+                            <div className='text-f-6xl font-semibold text-secondary-900'>1242631</div>
                         </div>
                     </div>
-                    <div className='flex-1 bg-white bg-opacity-80 rounded-bs  text-black py-s px-xl flex items-center  gap-l'>
-                        <MdWifiTethering />
+                    <div className='col-span-1  bg-white bg-opacity-80 rounded-bs  text-black  flex items-center  gap-l border p-xl'>
+
                         <div className='text-f-2xl flex flex-col justify-between items-start'>
-                            <div className='text-f-m text-neutral-600'>Growth Rate</div>
-                            <div className='text-f-2xl font-semibold '>542631</div>
+                            <div className='text-f-xl font-semibold text-black flex gap-s items-center'>
+                                <MdWifiTethering />
+                                <div> Growth Rate</div>
+                            </div>
+                            <div className='text-f-6xl font-semibold text-secondary-900'>2631</div>
                         </div>
                     </div>
 

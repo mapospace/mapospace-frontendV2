@@ -48,16 +48,16 @@ const Dashboard = () => {
     return (
         <div className="p-8 bg-white min-h-screen pt-9xl" >
             <div className=' flex justify-between  items-end'>
-                <div className='text-neutral-1300 font-semibold text-2xl'>{currentCategory == "products" ? "Product" : "Sale"} Analytics</div>
+                <div className='text-neutral-1300 font-semibold text-2xl'>{currentCategory == "products" ? "View Product" : "View"} Analytics</div>
                 <div className="flex text-black">
                     <div
-                        className={clsx("border-b border-neutral-600  px-s py-xs text-f-m   cursor-pointer", currentCategory == "total_view" && 'bg-neutral-200 border-b-2 rounded-t-bxs')}
+                        className={clsx("border-b border-neutral-600  px-s py-xs text-f-m   cursor-pointer", currentCategory == "total_view" && 'bg-secondary-600 border-secondary-900 text-white  border-b-2 rounded-t-bxs')}
                         onClick={() => { chnageRouteHandler('/dashboard/views?type=total_view') }}
                     >
                         Overview
                     </div>
                     <div
-                        className={clsx("border-b border-neutral-600  px-s py-xs text-f-m  cursor-pointer", currentCategory == "products" && 'bg-neutral-200 border-b-2 rounded-t-bxs')}
+                        className={clsx("border-b border-neutral-600  px-s py-xs text-f-m  cursor-pointer", currentCategory == "products" && 'bg-secondary-600 border-secondary-900 text-white  border-b-2 rounded-t-bxs')}
                         onClick={() => { chnageRouteHandler('/dashboard/views?type=products') }}
                     >
                         Product

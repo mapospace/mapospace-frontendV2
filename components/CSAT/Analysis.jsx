@@ -320,13 +320,17 @@ const Analysis = ({ appliedFilter }) => {
             </div>
             <div className="grid  md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-xl mt-xl  ">
                 <div className='col-span-2'>
-                    {linelabels.length > 0 && lineValues.length > 0 && <LineChart labels={linelabels} values={lineValues} labelName="Resolution Over Time" period={setLinePeriod} />}
+                    {linelabels.length > 0 && lineValues.length > 0 && <LineChart labels={linelabels} values={lineValues} labelName="Resolution Over Time" period={setLinePeriod} description="Line chart tracking daily average resolution time for support tickets, helping monitor trends and identify days with faster or slower response efficiency." />}
                 </div>
 
-                <div className="col-span-2  bg-white rounded-bs flex flex-col border border-neutral-200 ">
-                    <div className='px-xl pb-s pt-l text-f-l font-semibold text-neutral-1200 '>
-                        Average Resolution Time
+                <div className="col-span-2  bg-white rounded-bs flex flex-col border ">
+                    <div className='px-xl pb-s pt-l text-f-l  text-neutral-1200'>
+                        <h3 className="text-f-l font-semibold text-neutral-1200  ">
+                            Average Resolution Time
+                        </h3>
+                        <p className='text-f-m text-neutral-600'>Table showing the number of tickets resolved each day along with the average time taken, giving a clear view of support performance over time.</p>
                     </div>
+
                     <div className='p-xl pt-s h-full '>
 
                         <div className=' text-f-m font-semibold text-neutral-1200 flex bg-neutral-200 border-b border-neutral-200 '>
@@ -352,12 +356,17 @@ const Analysis = ({ appliedFilter }) => {
 
                 </div>
             </div>
-            <div className="grid  md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-xl mt-xl h-[400px]">
+            <div className="grid  md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-xl mt-xl ">
 
-                <div className="col-span-2  bg-white rounded-bs flex flex-col border border-neutral-200 ">
-                    <div className='px-xl pb-s pt-l text-f-l font-semibold text-neutral-1200 '>
-                        Score Distribution By Day Of Week
+                <div className="col-span-2  bg-white rounded-bs flex flex-col border  ">
+                    <div className='px-xl pb-s pt-l text-f-l  text-neutral-1200'>
+                        <h3 className="text-f-l font-semibold text-neutral-1200  ">
+                            Score Distribution By Day Of Week
+                        </h3>
+                        <p className='text-f-m text-neutral-600'>Displays the total number of support tickets and the average CSAT (Customer Satisfaction) score for each day of the week, helping analyze daily performance trends.</p>
                     </div>
+
+
                     <div className='p-xl pt-s h-full '>
 
                         <div className=' text-f-m font-semibold text-neutral-1200 flex bg-neutral-200 border-b border-neutral-200 '>
@@ -383,7 +392,7 @@ const Analysis = ({ appliedFilter }) => {
 
                 </div>
                 <div className='col-span-2'>
-                    {barlabels.length > 0 && barValues.length > 0 && <BarChart labels={barlabels} values={barValues} labelName="  Score Distribution " showPeriod={false} />}
+                    {barlabels.length > 0 && barValues.length > 0 && <BarChart labels={barlabels} values={barValues} labelName="  Score Distribution " showPeriod={false} description="Bar chart visualizing ticket volume across the week, offering insights into which days experience higher customer interactions and potential satisfaction variations." />}
                 </div>
             </div>
             <div className=' gap-xl grid  grid-cols-4 mt-xl  min-h-[500px]'>
@@ -391,7 +400,7 @@ const Analysis = ({ appliedFilter }) => {
 
                 <div className="col-span-4 h-full bg-white rounded-bs flex flex-col border">
 
-                    <HistogramChart data={histogramData} bins={histogramRanges} setBins={setHistogramRanges} label="Support Ticket Distribution" />
+                    <HistogramChart data={histogramData} bins={histogramRanges} setBins={setHistogramRanges} label="Support Ticket Distribution" description="This histogram displays the distribution of support tickets across defined ticket count ranges, helping visualize the volume pattern and frequency of support activity." />
 
 
                 </div>
@@ -399,13 +408,18 @@ const Analysis = ({ appliedFilter }) => {
             </div>
             <div className="grid  md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-xl mt-xl  ">
                 <div className='col-span-2'>
-                    {lineScorelabels.length > 0 && lineScoreValues.length > 0 && <LineChart labels={lineScorelabels} values={lineScoreValues} labelName="Score Over Time" period={setLineScorePeriod} />}
+                    {lineScorelabels.length > 0 && lineScoreValues.length > 0 && <LineChart labels={lineScorelabels} values={lineScoreValues} labelName="Score Over Time" period={setLineScorePeriod} description='A line chart showing how customer satisfaction (CSAT) scores fluctuate weekly. It helps track trends and identify performance highs and lows.' />}
                 </div>
 
-                <div className="col-span-2  bg-white rounded-bs flex flex-col border border-neutral-200 ">
-                    <div className='px-xl pb-s pt-l text-f-l font-semibold text-neutral-1200 '>
-                        Score Over Time
+                <div className="col-span-2  bg-white rounded-bs flex flex-col border  ">
+                    <div className='px-xl pb-s pt-l text-f-l  text-neutral-1200'>
+                        <h3 className="text-f-l font-semibold text-neutral-1200  ">
+                            Average Csat Score  Over Time
+                        </h3>
+                        <p className='text-f-m text-neutral-600'>A table summarizing weekly CSAT performance with total tickets and average scores, useful for quick comparison across weeks.</p>
                     </div>
+
+
                     <div className='p-xl pt-s h-full '>
 
                         <div className=' text-f-m font-semibold text-neutral-1200 flex bg-neutral-200 border-b border-neutral-200 '>
@@ -432,13 +446,13 @@ const Analysis = ({ appliedFilter }) => {
                 </div>
             </div>
 
-            <div className="grid  md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-xl mt-xl h-[400px]">
+            <div className="grid  md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-xl mt-xl ">
 
                 <div className='col-span-2'>
-                    {lineSupportTicketlabels.length > 0 && lineSupportTicketValues.length > 0 && <LineChart labels={lineSupportTicketlabels} values={lineSupportTicketValues} labelName="Support Ticket" period={setLineSupportTicketPeriod} />}
+                    {lineSupportTicketlabels.length > 0 && lineSupportTicketValues.length > 0 && <LineChart labels={lineSupportTicketlabels} values={lineSupportTicketValues} labelName="Support Ticket" period={setLineSupportTicketPeriod} description="The line chart shows daily support ticket trends over the month. Peaks indicate days with high user issues, helping to plan team workloads." />}
                 </div>
                 <div className='col-span-2'>
-                    {barPeekslabels.length > 0 && barPeeksValues.length > 0 && <BarChart labels={barPeekslabels} values={barPeeksValues} labelName="Peak Hours Analysis" showPeriod={false} />}
+                    {barPeekslabels.length > 0 && barPeeksValues.length > 0 && <BarChart labels={barPeekslabels} values={barPeeksValues} labelName="Peak Hours Analysis" showPeriod={false} description="The bar chart highlights the hours of the day when the most support tickets were raised. This helps identify the busiest support hours for better staffing and responsiveness." />}
                 </div>
             </div>
             <div className="grid  md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-xl mt-xl h-[600px]">

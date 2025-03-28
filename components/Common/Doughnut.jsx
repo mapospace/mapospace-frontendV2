@@ -24,7 +24,7 @@ const colors = [
     "#145a32", "#512e5f", "#76448a", "#2471a3", "#0b5345"
 ]
 
-const DoughnutChart = ({ labels, values, labelName, period, productListDoughtnutPeriod, setSelectedPeriod }) => {
+const DoughnutChart = ({ labels, values, labelName, period, productListDoughtnutPeriod, setSelectedPeriod, description }) => {
     const [data, setData] = useState({ labels: [], datasets: [] });
     const [selectedOption, setSelectedOption] = useState(dataValues[0]);
     const secondCheck = productListDoughtnutPeriod.map((data) => { return { value: data, label: data } })
@@ -79,90 +79,101 @@ const DoughnutChart = ({ labels, values, labelName, period, productListDoughtnut
 
     return (
         <div className="flex-1 flex flex-col h-full border rounded-bs bg-white">
-            <div className='flex justify-between px-xl pb-s pt-l text-f-l font-semibold text-neutral-1200 '>
-                <h3 className="text-f-l font-semibold text-neutral-1200  ">
-                    {labelName}
-                </h3>
+            <div className='flex justify-between px-xl pb-s pt-l text-neutral-1200 '>
+                <div className='flex flex-col'>
+                    <h3 className="text-f-l font-semibold text-neutral-1200  ">
+                        {labelName}
+                    </h3>
+                    <p className='text-f-m text-neutral-600'>{description}</p>
+                </div>
                 <div className='flex gap-s'>
-                    <Select
-                        options={dataValues}
-                        value={selectedOption}
-                        onChange={(selected) => setSelectedOption(selected)}
-                        isSearchable={false}
-                        className="!m-0 !p-0 !h-auto !w-auto !border-none !shadow-none text-black text-f-s"
-                        styles={{
-                            control: (provided) => ({
-                                ...provided,
-                                minHeight: 'unset',  // Remove default min-height
-                                height: 'auto',
-                                padding: "2px",
-                                margin: 0,
-                                border: '1px solid #4d4d4d',
-                                boxShadow: 'none',
-                                backgroundColor: 'transparent',
-                            }),
-                            valueContainer: (provided) => ({
-                                ...provided,
-                                padding: '2px', // Ensure no extra padding
-                                margin: 0,
-                            }),
-                            indicatorsContainer: (provided) => ({
-                                ...provided,
-                                padding: '2px',
-                            }),
-                            dropdownIndicator: (provided) => ({
-                                ...provided,
-                                padding: '0px', // Removes space around the dropdown arrow
-                                margin: 0,
-                            }),
-                            singleValue: (provided) => ({
-                                ...provided,
-                                padding: 0,
-                                margin: 0,
-                            }),
-                        }}
-                    />
-                    {productListDoughtnutPeriod.length > 0 && <Select
-                        options={secondCheck}
-                        value={selectedSecondOption}
-                        onChange={(selected) => {
-                            setSelectedSecondOption(selected)
-                            setSelectedPeriod(selected.value)
-                        }}
-                        isSearchable={false}
-                        className="!m-0 !p-0 !h-auto !w-auto !border-none !shadow-none text-black text-f-s"
-                        styles={{
-                            control: (provided) => ({
-                                ...provided,
-                                minHeight: 'unset',  // Remove default min-height
-                                height: 'auto',
-                                padding: "2px",
-                                margin: 0,
-                                border: '1px solid #4d4d4d',
-                                boxShadow: 'none',
-                                backgroundColor: 'transparent',
-                            }),
-                            valueContainer: (provided) => ({
-                                ...provided,
-                                padding: '2px', // Ensure no extra padding
-                                margin: 0,
-                            }),
-                            indicatorsContainer: (provided) => ({
-                                ...provided,
-                                padding: '2px',
-                            }),
-                            dropdownIndicator: (provided) => ({
-                                ...provided,
-                                padding: '0px', // Removes space around the dropdown arrow
-                                margin: 0,
-                            }),
-                            singleValue: (provided) => ({
-                                ...provided,
-                                padding: 0,
-                                margin: 0,
-                            }),
-                        }}
-                    />}
+                    <div className='w-[80px]'>
+                        <Select
+                            options={dataValues}
+                            value={selectedOption}
+                            onChange={(selected) => setSelectedOption(selected)}
+                            isSearchable={false}
+                            className="!m-0 !p-0 !h-auto !w-auto !border-none !shadow-none text-black text-f-s"
+                            styles={{
+                                control: (provided) => ({
+                                    ...provided,
+                                    minHeight: 'unset',  // Remove default min-height
+                                    height: 'auto',
+                                    padding: "2px",
+                                    margin: 0,
+                                    border: '1px solid #4d4d4d',
+                                    boxShadow: 'none',
+                                    backgroundColor: 'transparent',
+                                }),
+                                valueContainer: (provided) => ({
+                                    ...provided,
+                                    padding: '2px', // Ensure no extra padding
+                                    margin: 0,
+                                }),
+                                indicatorsContainer: (provided) => ({
+                                    ...provided,
+                                    padding: '2px',
+                                }),
+                                dropdownIndicator: (provided) => ({
+                                    ...provided,
+                                    padding: '0px', // Removes space around the dropdown arrow
+                                    margin: 0,
+                                }),
+                                singleValue: (provided) => ({
+                                    ...provided,
+                                    padding: 0,
+                                    margin: 0,
+                                }),
+                            }}
+                        />
+                    </div>
+
+                    {productListDoughtnutPeriod.length > 0 &&
+                        <div className='w-[130px]'>
+                            <Select
+                                options={secondCheck}
+                                value={selectedSecondOption}
+                                onChange={(selected) => {
+                                    setSelectedSecondOption(selected)
+                                    setSelectedPeriod(selected.value)
+                                }}
+                                isSearchable={false}
+                                className="!m-0 !p-0 !h-auto !w-auto !border-none !shadow-none text-black text-f-s"
+                                styles={{
+                                    control: (provided) => ({
+                                        ...provided,
+                                        minHeight: 'unset',  // Remove default min-height
+                                        height: 'auto',
+                                        padding: "2px",
+                                        margin: 0,
+                                        border: '1px solid #4d4d4d',
+                                        boxShadow: 'none',
+                                        backgroundColor: 'transparent',
+                                    }),
+                                    valueContainer: (provided) => ({
+                                        ...provided,
+                                        padding: '2px', // Ensure no extra padding
+                                        margin: 0,
+                                    }),
+                                    indicatorsContainer: (provided) => ({
+                                        ...provided,
+                                        padding: '2px',
+                                    }),
+                                    dropdownIndicator: (provided) => ({
+                                        ...provided,
+                                        padding: '0px', // Removes space around the dropdown arrow
+                                        margin: 0,
+                                    }),
+                                    singleValue: (provided) => ({
+                                        ...provided,
+                                        padding: 0,
+                                        margin: 0,
+                                    }),
+                                }}
+                            />
+                        </div>
+
+                    }
                 </div>
             </div>
 
