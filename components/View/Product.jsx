@@ -3,6 +3,11 @@ import Category from './Category'
 import SubCategory from './SubCategory'
 
 const Product = ({ appliedFilter }) => {
+    // Ensure appliedFilter is not null before rendering child components
+    if (!appliedFilter) {
+        return null; // Or return a loading state/placeholder
+    }
+
     return (
         <div className='pb-4xl hide-scrollbar'>
             <div className='p-xl border rounded-bs  mt-xl'>

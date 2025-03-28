@@ -24,28 +24,33 @@ const Category = ({ appliedFilter }) => {
     }, [appliedFilter])
 
     useEffect(() => {
-        topCategoryByRevenue && topCategoryByQuantity && selectedSortOption.value == "revenue" ? setTopCategory(topCategoryByRevenue) : setTopCategory(topCategoryByQuantity);
+        const currentData = selectedSortOption?.value === "revenue" ? 
+            (topCategoryByRevenue || []) : 
+            (topCategoryByQuantity || []);
+        setTopCategory(currentData);
     }, [selectedSortOption, topCategoryByQuantity, topCategoryByRevenue])
 
     const salesByCategoryHandler = async (type, setValue) => {
         try {
             const authService = new AuthServices();
-            const response = await authService.postApiCallHandler(API_ENDPOINTS.SalesByCategory, { ...appliedFilter, "limit": 10, sortBy: type });
+            const response = await authService.postApiCallHandler(API_ENDPOINTS.SalesByCategory, { 
+                ...appliedFilter, 
+                "limit": 10, 
+                sortBy: type 
+            });
 
             if (response?.error) {
-                console.log(response)
-                customError(response.message || "Failed to fetch data.");
+                console.log(response);
+                customError(response?.message || "Failed to fetch data.");
                 return;
             }
+
             console.log("salesByCategoryHandler", response?.data);
-            setValue(response.data)
-            // setProductList(response?.data)
-            // setTopProductsByQuantity(response?.data.topProductsByQuantity)
-            // setTopProductsByRevenue(response?.data.topProductsByRevenue)
+            setValue(response?.data || []);
 
         } catch (err) {
-            console.error("Error fetching user details:", err);
-
+            console.error("Error fetching category data:", err);
+            setValue([]); // Set empty array on error
         }
     }
     return (
@@ -113,14 +118,22 @@ const Category = ({ appliedFilter }) => {
 
                         </div>
                         <div className='flex text-f-m  h-[300px]  flex-col overflow-y-scroll hide-scrollbar'>
-                            {topCategory.map((category, index) => (<div className={clsx(' flex  border-b-2 border-neutral-200  text-neutral-1200', index >= topCategoryByRevenue.length - 1 && 'border-b-0')} key={index} >
-                                <div className='py-m px-l flex-[0.4] text-center'>{index + 1}</div>
-                                <div className='py-m px-l flex-1 text-center  '>{category.category ? category.category : 'N/A'}</div>
-                                <div className='py-m px-l flex-1 text-center  '>{category.totalQuantitySold ? category.totalQuantitySold : 'N/A'}</div>
-                                <div className='py-m px-l flex-1 text-center'>{Number(category.totalRevenue ? category.totalRevenue : 0).toFixed(2)}</div>
-
-                            </div>))}
-
+                            {(topCategory || []).map((category, index) => (
+                                <div 
+                                    className={clsx(
+                                        'flex border-b-2 border-neutral-200 text-neutral-1200', 
+                                        index >= (topCategoryByRevenue?.length || 0) - 1 && 'border-b-0'
+                                    )} 
+                                    key={index}
+                                >
+                                    <div className='py-m px-l flex-[0.4] text-center'>{index + 1}</div>
+                                    <div className='py-m px-l flex-1 text-center'>{category?.category || 'N/A'}</div>
+                                    <div className='py-m px-l flex-1 text-center'>{category?.totalQuantitySold || 0}</div>
+                                    <div className='py-m px-l flex-1 text-center'>
+                                        {Number(category?.totalRevenue || 0).toFixed(2)}
+                                    </div>
+                                </div>
+                            ))}
                         </div>
                     </div>
 

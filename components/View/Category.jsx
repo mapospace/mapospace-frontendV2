@@ -20,20 +20,21 @@ const Category = ({ appliedFilter }) => {
     const salesByCategoryHandler = async (type, setValue) => {
         try {
             const authService = new AuthServices();
-            const response = await authService.postApiCallHandler(API_ENDPOINTS.ViewCategory, { ...appliedFilter });
+            const response = await authService.postApiCallHandler(API_ENDPOINTS.ViewCategory, { 
+                ...appliedFilter 
+            });
 
             if (response?.error) {
-                console.log(response)
-                customError(response.message || "Failed to fetch data.");
+                console.log(response);
+                customError(response?.message || "Failed to fetch data.");
                 return;
             }
             console.log("view ByCategoryHandler", response?.data);
-            setValue(response.data)
-
+            setValue(response?.data || []);
 
         } catch (err) {
-            console.error("Error fetching user details:", err);
-
+            console.error("Error fetching category views:", err);
+            setValue([]); // Set empty array on error
         }
     }
     return (
@@ -54,13 +55,19 @@ const Category = ({ appliedFilter }) => {
 
                         </div>
                         <div className='flex text-f-m  h-[300px]  flex-col overflow-y-scroll hide-scrollbar'>
-                            {topCategory.map((category, index) => (<div className={clsx(' flex  border-b-2 border-neutral-200  text-neutral-1200', index >= topCategory.length - 1 && 'border-b-0')} key={index} >
-                                <div className='py-m px-l flex-[0.4] text-center'>{index + 1}</div>
-                                <div className='py-m px-l flex-1 text-center  '>{category.category || "Undefined"}</div>
-                                <div className='py-m px-l flex-1 text-center  '>{category.totalViews}</div>
-
-                            </div>))}
-
+                            {(topCategory || []).map((category, index) => (
+                                <div 
+                                    className={clsx(
+                                        'flex border-b-2 border-neutral-200 text-neutral-1200',
+                                        index >= (topCategory?.length || 0) - 1 && 'border-b-0'
+                                    )} 
+                                    key={index}
+                                >
+                                    <div className='py-m px-l flex-[0.4] text-center'>{index + 1}</div>
+                                    <div className='py-m px-l flex-1 text-center'>{category?.category || 'N/A'}</div>
+                                    <div className='py-m px-l flex-1 text-center'>{category?.totalViews || 0}</div>
+                                </div>
+                            ))}
                         </div>
                     </div>
 

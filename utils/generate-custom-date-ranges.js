@@ -2,31 +2,104 @@ function generateCustomDateRanges() {
     const dateRanges = [];
     const currentDate = new Date();
 
-    // Helper function to format date as YYYY-MM-DD
-    const formatDate = (date) => date.toISOString();
+    // Format with explicit UTC start time
+    const formatStartDate = (date) => {
+        const d = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), 0, 0, 0));
+        return d.toISOString();
+    };
 
-    // Last Month
-    let startDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
-    let endDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
-    dateRanges.push({ startDate: formatDate(startDate), endDate: formatDate(endDate), title: "Last month", id: 1 });
+    // Format with explicit UTC end time
+    const formatEndDate = (date) => {
+        const d = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), 23, 59, 59));
+        return d.toISOString();
+    };
 
-    // Last 3 Months
-    startDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 3, 1);
-    endDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
-    dateRanges.push({ startDate: formatDate(startDate), endDate: formatDate(endDate), title: "Last 3 months", id: 2 });
+    // Helper to subtract days
+    const subtractDays = (date, days) => new Date(date.getTime() - days * 24 * 60 * 60 * 1000);
 
-    // Last 6 Months
-    startDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 6, 1);
-    endDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
-    dateRanges.push({ startDate: formatDate(startDate), endDate: formatDate(endDate), title: "Last 6 months", id: 3 });
+    let startDate, endDate;
 
-    // Last Year
-    startDate = new Date(currentDate.getFullYear() - 1, 0, 1); // Jan 1st of last year
-    endDate = new Date(currentDate.getFullYear() - 1, 11, 31); // Dec 31st of last year
-    dateRanges.push({ startDate: formatDate(startDate), endDate: formatDate(endDate), title: "Last year", id: 4 });
+    // Today
+    startDate = new Date();
+    endDate = new Date();
+    dateRanges.push({
+        startDate: formatStartDate(startDate),
+        endDate: formatEndDate(endDate),
+        title: "Today",
+        id: 1
+    });
+
+    // Last 2 Days
+    startDate = subtractDays(currentDate, 2);
+    endDate = subtractDays(currentDate, 1);
+    dateRanges.push({
+        startDate: formatStartDate(startDate),
+        endDate: formatEndDate(endDate),
+        title: "Last 2 days",
+        id: 2
+    });
+
+    // Last 7 Days (Last Week)
+    startDate = subtractDays(currentDate, 7);
+    endDate = subtractDays(currentDate, 1);
+    dateRanges.push({
+        startDate: formatStartDate(startDate),
+        endDate: formatEndDate(endDate),
+        title: "Last week",
+        id: 3
+    });
+
+    // Last 14 Days (Last 2 Weeks)
+    startDate = subtractDays(currentDate, 14);
+    endDate = subtractDays(currentDate, 1);
+    dateRanges.push({
+        startDate: formatStartDate(startDate),
+        endDate: formatEndDate(endDate),
+        title: "Last 2 weeks",
+        id: 4
+    });
+
+    // Last 30 Days
+    startDate = subtractDays(currentDate, 30);
+    endDate = subtractDays(currentDate, 1);
+    dateRanges.push({
+        startDate: formatStartDate(startDate),
+        endDate: formatEndDate(endDate),
+        title: "Last 30 days",
+        id: 5
+    });
+
+    // Last 90 Days
+    startDate = subtractDays(currentDate, 90);
+    endDate = subtractDays(currentDate, 1);
+    dateRanges.push({
+        startDate: formatStartDate(startDate),
+        endDate: formatEndDate(endDate),
+        title: "Last 90 days",
+        id: 6
+    });
+
+    // Last 180 Days
+    startDate = subtractDays(currentDate, 180);
+    endDate = subtractDays(currentDate, 1);
+    dateRanges.push({
+        startDate: formatStartDate(startDate),
+        endDate: formatEndDate(endDate),
+        title: "Last 180 days",
+        id: 7
+    });
+
+    // Last 365 Days
+    startDate = subtractDays(currentDate, 365);
+    endDate = subtractDays(currentDate, 1);
+    dateRanges.push({
+        startDate: formatStartDate(startDate),
+        endDate: formatEndDate(endDate),
+        title: "Last 365 days",
+        id: 8
+    });
 
     return dateRanges;
 }
-
 
 export default generateCustomDateRanges;

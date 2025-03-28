@@ -26,26 +26,32 @@ const SubCategory = ({ appliedFilter }) => {
     }, [appliedFilter])
 
     useEffect(() => {
-        topSubCategoryByRevenue && topSubCategoryByQuantity && selectedSortOption.value == "revenue" ? setTopSubCategory(topSubCategoryByRevenue) : setTopSubCategory(topSubCategoryByQuantity);
+        const currentData = selectedSortOption?.value === "revenue" ? 
+            (topSubCategoryByRevenue || []) : 
+            (topSubCategoryByQuantity || []);
+        setTopSubCategory(currentData);
     }, [selectedSortOption, topSubCategoryByQuantity, topSubCategoryByRevenue])
 
     const salesByCategoryHandler = async (type, setValue) => {
         try {
             const authService = new AuthServices();
-            const response = await authService.postApiCallHandler(API_ENDPOINTS.SalesBySubCategory, { ...appliedFilter, "limit": 10, sortBy: type });
+            const response = await authService.postApiCallHandler(API_ENDPOINTS.SalesBySubCategory, { 
+                ...appliedFilter, 
+                "limit": 10, 
+                sortBy: type 
+            });
 
             if (response?.error) {
-                console.log(response)
-                customError(response.message || "Failed to fetch data.");
+                console.log(response);
+                customError(response?.message || "Failed to fetch data.");
                 return;
             }
             console.log("salesByCategoryHandler", response?.data);
-            setValue(response.data)
-
+            setValue(response?.data || []);
 
         } catch (err) {
-            console.error("Error fetching user details:", err);
-
+            console.error("Error fetching subcategory data:", err);
+            setValue([]); // Set empty array on error
         }
     }
     return (
@@ -113,14 +119,22 @@ const SubCategory = ({ appliedFilter }) => {
 
                         </div>
                         <div className='flex text-f-m  h-[300px]  flex-col overflow-y-scroll hide-scrollbar'>
-                            {topSubCategory.map((subCategory, index) => (<div className={clsx(' flex  border-b-2 border-neutral-200  text-neutral-1200', index >= topSubCategoryByRevenue.length - 1 && 'border-b-0')} key={index} >
-                                <div className='py-m px-l flex-[0.4] text-center'>{index + 1}</div>
-                                <div className='py-m px-l flex-1 text-center  '>{subCategory.subcategory}</div>
-                                <div className='py-m px-l flex-1 text-center  '>{subCategory.totalQuantitySold}</div>
-                                <div className='py-m px-l flex-1 text-center'>{Number(subCategory.totalRevenue).toFixed(2)}</div>
-
-                            </div>))}
-
+                            {(topSubCategory || []).map((subCategory, index) => (
+                                <div 
+                                    className={clsx(
+                                        'flex border-b-2 border-neutral-200 text-neutral-1200',
+                                        index >= (topSubCategoryByRevenue?.length || 0) - 1 && 'border-b-0'
+                                    )} 
+                                    key={index}
+                                >
+                                    <div className='py-m px-l flex-[0.4] text-center'>{index + 1}</div>
+                                    <div className='py-m px-l flex-1 text-center'>{subCategory?.subcategory || 'N/A'}</div>
+                                    <div className='py-m px-l flex-1 text-center'>{subCategory?.totalQuantitySold || 0}</div>
+                                    <div className='py-m px-l flex-1 text-center'>
+                                        {Number(subCategory?.totalRevenue || 0).toFixed(2)}
+                                    </div>
+                                </div>
+                            ))}
                         </div>
                     </div>
 

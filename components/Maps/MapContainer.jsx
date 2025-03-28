@@ -72,7 +72,7 @@ const MapContainer = ({ catalogList, setAppliedFilter, appliedFilter }) => {
         const Ranges = generateCustomDateRanges();
         console.log("Ranges", Ranges)
         SetRanges(Ranges);
-        setCurrentRange(Ranges[0])
+        setCurrentRange(Ranges[Ranges.length - 1])
     }, [])
 
     useEffect(() => {

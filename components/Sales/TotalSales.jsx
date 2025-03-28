@@ -81,7 +81,10 @@ const TotalSales = ({ appliedFilter }) => {
                 return;
             }
             console.log("total sales => ", response?.data);
-            setTotalSales(response.data[0])
+            setTotalSales({
+                totalSales: response?.data?.[0]?.totalSales || 0,
+                totalItems: response?.data?.[0]?.totalItems || 0,
+            })
 
 
         } catch (err) {
@@ -101,7 +104,9 @@ const TotalSales = ({ appliedFilter }) => {
                 return;
             }
             console.log("OrderSaleHandler", response?.data);
-            setOrderSales(response.data[0])
+            setOrderSales({
+                averageAmountSpentPerOrder: response?.data?.[0]?.averageAmountSpentPerOrder || 0,
+            })
 
 
         } catch (err) {
@@ -131,9 +136,10 @@ const TotalSales = ({ appliedFilter }) => {
                 return;
             }
             console.log("orderSaleBarOverTimeHandler", response?.data);
-            let getlabels = response.data.map(data => { return data.period })
-            let getTotalRevenue = response.data.map(data => { return data.averageOrderValue })
-            setOrderOverTime(response?.data)
+            const data = response?.data || [];
+            let getlabels = data.map(data => data?.period || 'N/A');
+            let getTotalRevenue = data.map(data => data?.averageOrderValue || 0);
+            setOrderOverTime(data);
             setOrderLabels(getlabels);
             setOrderRevenue([getTotalRevenue]);
         } catch (err) {
@@ -152,9 +158,8 @@ const TotalSales = ({ appliedFilter }) => {
                 customError(response.message || "Failed to fetch data.");
                 return;
             }
-            console.log("sale Sankey Handler => ", response?.data.sankeyDiagramData);
-            // setTotalSales(response.data[0])
-            setSankeyData(response?.data.sankeyDiagramData)
+            console.log("sale Sankey Handler => ", response?.data?.sankeyDiagramData);
+            setSankeyData(response?.data?.sankeyDiagramData || [])
 
 
         } catch (err) {
@@ -174,16 +179,17 @@ const TotalSales = ({ appliedFilter }) => {
                 return;
             }
             console.log("total sales over all", response?.data);
-            let getlabels = response.data.map(data => { return data._id })
-            let getTotalRevenue = response.data.map(data => { return data.totalRevenue })
+            const data = response?.data || [];
+            let getlabels = data.map(data => data?._id || 'N/A');
+            let getTotalRevenue = data.map(data => data?.totalRevenue || 0);
             setLabels(getlabels);
-            setTotalRevenue([getTotalRevenue])
-            let getTotalOrders = response.data.map(data => { return data.totalOrders })
+            setTotalRevenue([getTotalRevenue]);
+            let getTotalOrders = data.map(data => data?.totalOrders || 0);
             if (barPeriod == "day") {
-                const averageOrder = getTotalOrders.reduce((sum, num) => sum + num, 0) / getTotalOrders.length;
-                const maxEntry = response.data.reduce((max, entry) => (entry.totalRevenue > max.totalRevenue ? entry : max), response.data[0]);
-                setAverageOrder(averageOrder)
-                setMaxRevenue(maxEntry)
+                const averageOrder = getTotalOrders.length > 0 ? getTotalOrders.reduce((sum, num) => sum + num, 0) / getTotalOrders.length : 0;
+                const maxEntry = data.length > 0 ? data.reduce((max, entry) => ((entry?.totalRevenue || 0) > (max?.totalRevenue || 0) ? entry : max), data[0]) : { totalRevenue: 0, _id: "NA" };
+                setAverageOrder(averageOrder);
+                setMaxRevenue(maxEntry);
             }
 
 
@@ -203,19 +209,18 @@ const TotalSales = ({ appliedFilter }) => {
                 customError(response.message || "Failed to fetch data.");
                 return;
             }
-            console.log("total sales over all", response?.data);
-            setTotalSalesOverTime(response.data);
-            let getlabels = response.data.map(data => { return data._id })
-            let getTotalOrders = response.data.map(data => { return data.totalOrders })
-            // let getTotalRevenue = response.data.map(data => { return data.totalRevenue })
+            console.log("total sales line over time", response?.data);
+            const data = response?.data || [];
+            let getlabels = data.map(data => data?._id || 'N/A');
+            let getTotalRevenue = data.map(data => data?.totalRevenue || 0);
             setLineLabels(getlabels);
-            setTotalOrders([getTotalOrders])
-            // setTotalRevenue([getTotalRevenue])
+            setTotalSalesOverTime(data);
+            setTotalOrders([getTotalRevenue]);
             if (linePeriod == "day") {
-                const averageOrder = getTotalOrders.reduce((sum, num) => sum + num, 0) / getTotalOrders.length;
-                const maxEntry = response.data.reduce((max, entry) => (entry.totalRevenue > max.totalRevenue ? entry : max), response.data[0]);
-                setAverageOrder(averageOrder)
-                setMaxRevenue(maxEntry)
+                const averageOrder = data.length > 0 ? data.reduce((sum, num) => sum + num.totalOrders, 0) / data.length : 0;
+                const maxEntry = data.length > 0 ? data.reduce((max, entry) => ((entry?.totalRevenue || 0) > (max?.totalRevenue || 0) ? entry : max), data[0]) : { totalRevenue: 0, _id: "NA" };
+                setAverageOrder(averageOrder);
+                setMaxRevenue(maxEntry);
             }
         } catch (err) {
             console.error("Error fetching user details:", err);

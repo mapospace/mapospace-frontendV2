@@ -23,16 +23,15 @@ const DoughnutContainer = ({ endpoint, appliedFilter, label, From, description }
     }, [appliedFilter, productPeriod])
 
     useEffect(() => {
-        if (selectedPeriod != null) {
-
-            const getData = productList.filter((product) => product.period == selectedPeriod)
-
-            From == "SaleProduct" && getProductLabelAndValues(getData[0].topProductsByRevenue)
-            From == "SaleCategory" && getCategoryLabelAndValues(getData[0].topCategoriesByRevenue)
-            From === "SaleSubCategory" && getSubCategoryLabelAndValues(getData[0].topSubCategoriesByRevenue)
-            From === "ViewCategory" && getViewCategoryLabelAndValues(getData[0].topCategoriesByViews)
-            From === "ViewSubCategory" && getViewSubCategoryLabelAndValues(getData[0].topSubcategoriesByViews)
-
+        if (selectedPeriod != null && productList.length > 0) {
+            const getData = productList.filter((product) => product?.period === selectedPeriod) || [];
+            if (getData.length > 0) {
+                From === "SaleProduct" && getProductLabelAndValues(getData[0]?.topProductsByRevenue || []);
+                From === "SaleCategory" && getCategoryLabelAndValues(getData[0]?.topCategoriesByRevenue || []);
+                From === "SaleSubCategory" && getSubCategoryLabelAndValues(getData[0]?.topSubCategoriesByRevenue || []);
+                From === "ViewCategory" && getViewCategoryLabelAndValues(getData[0]?.topCategoriesByViews || []);
+                From === "ViewSubCategory" && getViewSubCategoryLabelAndValues(getData[0]?.topSubcategoriesByViews || []);
+            }
         }
     }, [selectedPeriod])
 
@@ -47,12 +46,12 @@ const DoughnutContainer = ({ endpoint, appliedFilter, label, From, description }
                 return;
             }
             console.log("topSellingProductOverallHandler", response?.data);
-            setProductList(response.data)
-            let periods = response.data.map((data) => { return data.period });
-            console.log("periods", periods)
-            setProductListDoughtnutPeriod(periods)
-
-            getProductLabelAndValues(response.data[0].topProductsByRevenue)
+            const data = response?.data || [];
+            setProductList(data);
+            const periods = data.map((item) => item?.period || 'N/A');
+            console.log("periods", periods);
+            setProductListDoughtnutPeriod(periods);
+            getProductLabelAndValues(data[0]?.topProductsByRevenue || []);
 
         } catch (err) {
             console.error("Error fetching user details:", err);
@@ -60,11 +59,11 @@ const DoughnutContainer = ({ endpoint, appliedFilter, label, From, description }
         }
     }
 
-    const getProductLabelAndValues = (values) => {
-        let getlabels = values.map(data => { return data.productName })
-        let getValue = values.map(data => { return data.totalRevenue })
+    const getProductLabelAndValues = (values = []) => {
+        const getlabels = values.map(data => data?.productName || 'N/A');
+        const getValue = values.map(data => data?.totalRevenue || 0);
         setProductLabelForDoughnut(getlabels);
-        setProductValueForDoughnut(getValue)
+        setProductValueForDoughnut(getValue);
     }
 
     const topSellingCategoryOverallHandler = async (period) => {
@@ -78,11 +77,12 @@ const DoughnutContainer = ({ endpoint, appliedFilter, label, From, description }
                 return;
             }
             console.log("topSellingCategoryOverallHandler", response?.data);
-            setProductList(response.data)
-            let periods = response.data.map((data) => { return data.period });
-            console.log("periods", periods)
-            setProductListDoughtnutPeriod(periods)
-            getCategoryLabelAndValues(response.data[0].topCategoriesByRevenue)
+            const data = response?.data || [];
+            setProductList(data);
+            const periods = data.map((item) => item?.period || 'N/A');
+            console.log("periods", periods);
+            setProductListDoughtnutPeriod(periods);
+            getCategoryLabelAndValues(data[0]?.topCategoriesByRevenue || []);
 
         } catch (err) {
             console.error("Error fetching user details:", err);
@@ -101,11 +101,12 @@ const DoughnutContainer = ({ endpoint, appliedFilter, label, From, description }
                 return;
             }
             console.log("ViewCategoryOverallHandler", response?.data);
-            setProductList(response.data)
-            let periods = response.data.map((data) => { return data.period });
-            console.log("periods", periods)
-            setProductListDoughtnutPeriod(periods)
-            getViewCategoryLabelAndValues(response.data[0].topCategoriesByViews)
+            const data = response?.data || [];
+            setProductList(data);
+            const periods = data.map((item) => item?.period || 'N/A');
+            console.log("periods", periods);
+            setProductListDoughtnutPeriod(periods);
+            getViewCategoryLabelAndValues(data[0]?.topCategoriesByViews || []);
 
         } catch (err) {
             console.error("Error fetching user details:", err);
@@ -124,11 +125,12 @@ const DoughnutContainer = ({ endpoint, appliedFilter, label, From, description }
                 return;
             }
             console.log("ViewCategoryOverallHandler", response?.data);
-            setProductList(response.data)
-            let periods = response.data.map((data) => { return data.period });
-            console.log("periods", periods)
-            setProductListDoughtnutPeriod(periods)
-            getViewSubCategoryLabelAndValues(response.data[0].topSubcategoriesByViews)
+            const data = response?.data || [];
+            setProductList(data);
+            const periods = data.map((item) => item?.period || 'N/A');
+            console.log("periods", periods);
+            setProductListDoughtnutPeriod(periods);
+            getViewSubCategoryLabelAndValues(data[0]?.topSubcategoriesByViews || []);
 
         } catch (err) {
             console.error("Error fetching user details:", err);
@@ -136,20 +138,19 @@ const DoughnutContainer = ({ endpoint, appliedFilter, label, From, description }
         }
     }
 
-    const getCategoryLabelAndValues = (values) => {
-        let getlabels = values.map(data => { return data.category })
-        let getValue = values.map(data => { return data.totalRevenue })
+    const getCategoryLabelAndValues = (values = []) => {
+        const getlabels = values.map(data => data?.category || 'N/A');
+        const getValue = values.map(data => data?.totalRevenue || 0);
         setProductLabelForDoughnut(getlabels);
-        setProductValueForDoughnut(getValue)
+        setProductValueForDoughnut(getValue);
     }
 
-    const getViewCategoryLabelAndValues = (values) => {
-        let getlabels = values.map(data => { return data.category })
-        let getValue = values.map(data => { return data.totalViews })
+    const getViewCategoryLabelAndValues = (values = []) => {
+        const getlabels = values.map(data => data?.category || 'N/A');
+        const getValue = values.map(data => data?.totalViews || 0);
         setProductLabelForDoughnut(getlabels);
-        setProductValueForDoughnut(getValue)
+        setProductValueForDoughnut(getValue);
     }
-
 
     const topSellingSubCategoryOverallHandler = async (period) => {
         try {
@@ -162,11 +163,12 @@ const DoughnutContainer = ({ endpoint, appliedFilter, label, From, description }
                 return;
             }
             console.log("topSellingSubCategoryOverallHandler", response?.data);
-            setProductList(response.data)
-            let periods = response.data.map((data) => { return data.period });
-            console.log("periods", periods)
-            setProductListDoughtnutPeriod(periods)
-            getCategoryLabelAndValues(response.data[0].topSubCategoriesByRevenue)
+            const data = response?.data || [];
+            setProductList(data);
+            const periods = data.map((item) => item?.period || 'N/A');
+            console.log("periods", periods);
+            setProductListDoughtnutPeriod(periods);
+            getSubCategoryLabelAndValues(data[0]?.topSubCategoriesByRevenue || []);
 
         } catch (err) {
             console.error("Error fetching user details:", err);
@@ -174,20 +176,19 @@ const DoughnutContainer = ({ endpoint, appliedFilter, label, From, description }
         }
     }
 
-    const getSubCategoryLabelAndValues = (values) => {
-        let getlabels = values.map(data => { return data.subcategory })
-        let getValue = values.map(data => { return data.totalRevenue })
+    const getSubCategoryLabelAndValues = (values = []) => {
+        const getlabels = values.map(data => data?.subcategory || 'N/A');
+        const getValue = values.map(data => data?.totalRevenue || 0);
         setProductLabelForDoughnut(getlabels);
-        setProductValueForDoughnut(getValue)
+        setProductValueForDoughnut(getValue);
     }
 
-    const getViewSubCategoryLabelAndValues = (values) => {
-        let getlabels = values.map(data => { return data.subcategory })
-        let getValue = values.map(data => { return data.totalViews })
+    const getViewSubCategoryLabelAndValues = (values = []) => {
+        const getlabels = values.map(data => data?.subcategory || 'N/A');
+        const getValue = values.map(data => data?.totalViews || 0);
         setProductLabelForDoughnut(getlabels);
-        setProductValueForDoughnut(getValue)
+        setProductValueForDoughnut(getValue);
     }
-
 
     return (
         <DoughnutChart labels={productLabelForDoughnut} values={productValueForDoughnut} labelName={label} period={setProductPeriod} productListDoughtnutPeriod={productListDoughtnutPeriod} setSelectedPeriod={setSelectedPeriod} description={description} />

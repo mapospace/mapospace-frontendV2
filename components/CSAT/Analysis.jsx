@@ -104,7 +104,10 @@ const Analysis = ({ appliedFilter }) => {
                 return;
             }
             console.log("scoreAnalysisHandler", response.data)
-            setScoreAnalysis(response.data)
+            setScoreAnalysis({
+                averageCsatScore: response.data?.averageCsatScore || 0,
+                totalTickets: response.data?.totalTickets || 0
+            })
         } catch (err) {
             console.error("Error fetching user details:", err);
         }
@@ -120,7 +123,10 @@ const Analysis = ({ appliedFilter }) => {
                 return;
             }
             console.log("raisedByUsersHandler", response.data)
-            setRaisedByUsers(response.data)
+            setRaisedByUsers({
+                averageTickets: response.data?.averageTickets || 0,
+                totalUsers: response.data?.totalUsers || 0
+            })
         } catch (err) {
             console.error("Error fetching user details:", err);
         }
@@ -136,7 +142,10 @@ const Analysis = ({ appliedFilter }) => {
                 return;
             }
             console.log("resolutionTimeAnalysisHandler", response.data)
-            setResolutionTime(response.data)
+            setResolutionTime({
+                averageResolutionTime: response.data?.averageResolutionTime || 0,
+                totalTickets: response.data?.totalTickets || 0
+            })
         } catch (err) {
             console.error("Error fetching user details:", err);
         }
@@ -152,9 +161,9 @@ const Analysis = ({ appliedFilter }) => {
                 return;
             }
             console.log("resolutionTimeOverTimeHandler", response.data)
-            let getlabels = response.data.map(data => { return data._id })
-            let averageResolutionTime = response.data.map(data => { return data.averageResolutionTime })
-            setAvgResolutionTimes(response.data)
+            let getlabels = response.data?.map(data => data?._id) || []
+            let averageResolutionTime = response.data?.map(data => data?.averageResolutionTime) || []
+            setAvgResolutionTimes(response.data || [])
             setLineLabels(getlabels)
             setLineValues(averageResolutionTime)
         } catch (err) {
@@ -172,8 +181,8 @@ const Analysis = ({ appliedFilter }) => {
                 return;
             }
             console.log("supportTicketVolumeOverTimeHandler", response.data)
-            let getlabels = response.data.map(data => { return data._id })
-            let averageResolutionTime = response.data.map(data => { return data.totalTickets })
+            let getlabels = response.data?.map(data => data?._id) || []
+            let averageResolutionTime = response.data?.map(data => data?.totalTickets) || []
             setLineSupportTicketLabels(getlabels)
             setLineSupportTicketValues(averageResolutionTime)
         } catch (err) {
@@ -190,10 +199,10 @@ const Analysis = ({ appliedFilter }) => {
                 console.log(response.message || "Failed to fetch data.");
                 return;
             }
-            console.log("resolutionTimeOverTimeHandler", response.data)
-            let getlabels = response.data.map(data => { return data._id })
-            let scoreValues = response.data.map(data => { return data.averageCsatScore })
-            setScoreOverTime(response.data)
+            console.log("ScoreOverTimeHandler", response.data)
+            let getlabels = response.data?.map(data => data?._id) || []
+            let scoreValues = response.data?.map(data => data?.averageCsatScore) || []
+            setScoreOverTime(response.data || [])
             setLineScoreLabels(getlabels)
             setLineScoreValues(scoreValues)
         } catch (err) {
@@ -212,11 +221,11 @@ const Analysis = ({ appliedFilter }) => {
             }
             console.log("scoreDistributionByDayOfWeekHandler", response.data)
             // setResolutionTime(response.data)
-            let getlabels = response.data.map(data => { return data.dayOfWeek })
-            let getValues = response.data.map(data => { return data.totalTickets })
+            let getlabels = response.data?.map(data => data?.dayOfWeek) || []
+            let getValues = response.data?.map(data => data?.totalTickets) || []
             setBarLabels(getlabels);
             setBarValues(getValues);
-            setTotalTickets(response.data)
+            setTotalTickets(response.data || [])
         } catch (err) {
             console.error("Error fetching user details:", err);
         }
@@ -231,10 +240,10 @@ const Analysis = ({ appliedFilter }) => {
                 console.log(response.message || "Failed to fetch data.");
                 return;
             }
-            console.log("scoreDistributionByDayOfWeekHandler", response.data)
+            console.log("peakHoursAnalysisHandler", response.data)
             // setResolutionTime(response.data)
-            let getlabels = response.data.map(data => { return data.hour })
-            let getValues = response.data.map(data => { return data.totalTickets })
+            let getlabels = response.data?.map(data => data?.hour) || []
+            let getValues = response.data?.map(data => data?.totalTickets) || []
             setBarPeeksLabels(getlabels);
             setBarPeeksValues(getValues);
         } catch (err) {
@@ -251,7 +260,7 @@ const Analysis = ({ appliedFilter }) => {
                 console.log(response.message || "Failed to fetch data.");
                 return;
             }
-            const data = response.data.map((data) => { return data.count })
+            const data = response.data?.map((data) => { return data?.count }) || []
             console.log("supportTicketDistributionHandler", data)
             setHistogramData(data)
         } catch (err) {
@@ -281,7 +290,7 @@ const Analysis = ({ appliedFilter }) => {
                 return;
             }
             console.log("h3ClustingHandler", response?.data);
-            setH3Data(response.data)
+            setH3Data(response.data || [])
 
         } catch (err) {
             console.error("Error fetching user details:", err);
@@ -344,9 +353,9 @@ const Analysis = ({ appliedFilter }) => {
                         <div className='flex text-f-m  h-[270px]  flex-col overflow-y-scroll hide-scrollbar bg-white'>
                             {avgResolutionTimes.map((avgResolutionTime, index) => (<div className={clsx(' flex  border-b border-neutral-200  text-neutral-1200', index >= avgResolutionTime.length - 1 && 'border-b-0')} key={index} >
                                 <div className='py-m px-l flex-[0.5] text-center'>{index + 1}</div>
-                                <div className='py-m px-l flex-1 text-center  '>{avgResolutionTime._id}</div>
-                                <div className='py-m px-l flex-[0.7] text-center'>{avgResolutionTime.totalTickets}</div>
-                                <div className='py-m px-l flex-1 text-center'>{Number(avgResolutionTime.averageResolutionTime).toFixed(2)}</div>
+                                <div className='py-m px-l flex-1 text-center  '>{avgResolutionTime?._id}</div>
+                                <div className='py-m px-l flex-[0.7] text-center'>{avgResolutionTime?.totalTickets}</div>
+                                <div className='py-m px-l flex-1 text-center'>{Number(avgResolutionTime?.averageResolutionTime).toFixed(2)}</div>
 
                             </div>))}
                         </div>
@@ -356,8 +365,7 @@ const Analysis = ({ appliedFilter }) => {
 
                 </div>
             </div>
-            <div className="grid  md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-xl mt-xl ">
-
+            <div className="grid  md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-xl mt-xl  ">
                 <div className="col-span-2  bg-white rounded-bs flex flex-col border  ">
                     <div className='px-xl pb-s pt-l text-f-l  text-neutral-1200'>
                         <h3 className="text-f-l font-semibold text-neutral-1200  ">
@@ -380,9 +388,9 @@ const Analysis = ({ appliedFilter }) => {
                         <div className='flex text-f-m  h-[270px]  flex-col overflow-y-scroll hide-scrollbar bg-white'>
                             {totalTickets.map((totalTicket, index) => (<div className={clsx(' flex  border-b border-neutral-200  text-neutral-1200', index >= totalTicket.length - 1 && 'border-b-0')} key={index} >
                                 <div className='py-m px-l flex-[0.5] text-center'>{index + 1}</div>
-                                <div className='py-m px-l flex-1 text-center  '>{totalTicket.dayOfWeek}</div>
-                                <div className='py-m px-l flex-1 text-center'>{totalTicket.totalTickets}</div>
-                                <div className='py-m px-l flex-1 text-center'>{Number(totalTicket.averageCsatScore).toFixed(2)}</div>
+                                <div className='py-m px-l flex-1 text-center  '>{totalTicket?.dayOfWeek}</div>
+                                <div className='py-m px-l flex-1 text-center'>{totalTicket?.totalTickets}</div>
+                                <div className='py-m px-l flex-1 text-center'>{Number(totalTicket?.averageCsatScore).toFixed(2)}</div>
 
                             </div>))}
                         </div>
@@ -395,16 +403,10 @@ const Analysis = ({ appliedFilter }) => {
                     {barlabels.length > 0 && barValues.length > 0 && <BarChart labels={barlabels} values={barValues} labelName="  Score Distribution " showPeriod={false} description="Bar chart visualizing ticket volume across the week, offering insights into which days experience higher customer interactions and potential satisfaction variations." />}
                 </div>
             </div>
-            <div className=' gap-xl grid  grid-cols-4 mt-xl  min-h-[500px]'>
-
-
+            <div className='grid  md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-xl mt-xl  min-h-[500px]'>
                 <div className="col-span-4 h-full bg-white rounded-bs flex flex-col border">
-
                     <HistogramChart data={histogramData} bins={histogramRanges} setBins={setHistogramRanges} label="Support Ticket Distribution" description="This histogram displays the distribution of support tickets across defined ticket count ranges, helping visualize the volume pattern and frequency of support activity." />
-
-
                 </div>
-
             </div>
             <div className="grid  md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-xl mt-xl  ">
                 <div className='col-span-2'>
@@ -433,9 +435,9 @@ const Analysis = ({ appliedFilter }) => {
                         <div className='flex text-f-m  h-[270px]  flex-col overflow-y-scroll hide-scrollbar bg-white'>
                             {scoreOverTime.map((score, index) => (<div className={clsx(' flex  border-b border-neutral-200  text-neutral-1200', index >= scoreOverTime.length - 1 && 'border-b-0')} key={index} >
                                 <div className='py-m px-l flex-[0.5] text-center'>{index + 1}</div>
-                                <div className='py-m px-l flex-1 text-center  '>{score._id}</div>
-                                <div className='py-m px-l flex-[0.7] text-center'>{score.totalTickets}</div>
-                                <div className='py-m px-l flex-1 text-center'>{Number(score.averageCsatScore).toFixed(2)}</div>
+                                <div className='py-m px-l flex-1 text-center  '>{score?._id}</div>
+                                <div className='py-m px-l flex-[0.7] text-center'>{score?.totalTickets}</div>
+                                <div className='py-m px-l flex-1 text-center'>{Number(score?.averageCsatScore).toFixed(2)}</div>
 
                             </div>))}
                         </div>

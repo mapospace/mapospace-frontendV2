@@ -102,7 +102,10 @@ const Product = ({ appliedFilter }) => {
                 return;
             }
             console.log("total sales => ", response?.data);
-            setTotalSales(response.data[0])
+            setTotalSales({
+                totalSales: response?.data?.[0]?.totalSales || 0,
+                totalItems: response?.data?.[0]?.totalItems || 0,
+            })
 
 
         } catch (err) {
@@ -123,7 +126,7 @@ const Product = ({ appliedFilter }) => {
             }
             console.log("productSankeyHandler => ", response?.data);
             // setTotalSales(response.data[0])
-            setSankeyData(response?.data)
+            setSankeyData(response?.data || [])
 
 
         } catch (err) {
@@ -154,9 +157,10 @@ const Product = ({ appliedFilter }) => {
                 return;
             }
             console.log("total sales over all", response?.data);
-            let getTotalOrders = response.data.map(data => { return data.totalOrders })
-            const averageOrder = getTotalOrders.reduce((sum, num) => sum + num, 0) / getTotalOrders.length;
-            const maxEntry = response.data.reduce((max, entry) => (entry.totalRevenue > max.totalRevenue ? entry : max), response.data[0]);
+            const data = response?.data || [];
+            let getTotalOrders = data.map(data => data?.totalOrders || 0);
+            const averageOrder = getTotalOrders.length > 0 ? getTotalOrders.reduce((sum, num) => sum + num, 0) / getTotalOrders.length : 0;
+            const maxEntry = data.length > 0 ? data.reduce((max, entry) => ((entry?.totalRevenue || 0) > (max?.totalRevenue || 0) ? entry : max), data[0]) : { totalRevenue: 0, _id: "NA" };
             setAverageOrder(averageOrder)
             setMaxRevenue(maxEntry)
         } catch (err) {
@@ -177,8 +181,8 @@ const Product = ({ appliedFilter }) => {
             }
             console.log("topSellingProductsHandler", response?.data);
             // setProductList(response?.data)
-            setTopProductsByQuantity(response?.data.topProductsByQuantity)
-            setTopProductsByRevenue(response?.data.topProductsByRevenue)
+            setTopProductsByQuantity(response?.data?.topProductsByQuantity || [])
+            setTopProductsByRevenue(response?.data?.topProductsByRevenue || [])
 
         } catch (err) {
             console.error("Error fetching user details:", err);
@@ -197,8 +201,9 @@ const Product = ({ appliedFilter }) => {
                 return;
             }
             console.log("orderValueDistributionHandler", response?.data);
-            const data = response.data.map((data) => { return data.count })
-            setHistogramData(data)
+            const data = response?.data || [];
+            const counts = data.map(item => item?.count || 0);
+            setHistogramData(counts)
 
 
         } catch (err) {
@@ -218,7 +223,7 @@ const Product = ({ appliedFilter }) => {
                 return;
             }
             console.log("h3ClustingHandler", response?.data);
-            setH3Data(response.data)
+            setH3Data(response?.data || [])
 
         } catch (err) {
             console.error("Error fetching user details:", err);
@@ -237,7 +242,7 @@ const Product = ({ appliedFilter }) => {
                 return;
             }
             console.log("heatMapHandler", response?.data);
-            setHeatMapData(response.data)
+            setHeatMapData(response?.data || [])
 
         } catch (err) {
             console.error("Error fetching user details:", err);
@@ -256,7 +261,7 @@ const Product = ({ appliedFilter }) => {
                 return;
             }
             console.log("PerformClusteringHandler", response?.data);
-            setClusterData(response.data)
+            setClusterData(response?.data || [])
 
         } catch (err) {
             console.error("Error fetching user details:", err);
@@ -265,210 +270,215 @@ const Product = ({ appliedFilter }) => {
     }
 
     return (
-        <div className='pb-4xl hide-scrollbar'>
-            <div className=' gap-xl grid  grid-cols-4  mt-xl'>
-                <div className='relative col-span-1 rounded-bs    bg-white text-black border   text-center'>
-                    <div className='text-f-5xl px-xl text-start font-semibold  text-neutral-1200 pt-l'>Total Sales</div>
-                    <div className='text-center px-xl font-semibold text-f-10xl text-secondary-900'>{formatNumber(totalSales.totalSales)}</div>
-                    {appliedFilter && appliedFilter.startDate && appliedFilter.endDate && <div className='bg-neutral-200 px-xl py-s text-neutral-900 text-f-m text-start'> From:  {appliedFilter.startDate.split('T')[0]} - {appliedFilter.endDate.split('T')[0]}</div>}
-                    <InfoToast info="This indicates the total number of sales recorded in the system." top={2} right={2} innerRight={-70} />
-                </div>
-                <div className='relative flex-1 rounded-bs   bg-white text-black  border  '>
-                    <div className='text-f-5xl px-xl font-semibold text-start text-neutral-1200 pt-l'>Total Order</div>
-                    <div className='text-center px-xl font-semibold text-f-10xl text-secondary-900'>{formatNumber(totalSales.totalItems)}</div>
-                    {appliedFilter && appliedFilter.startDate && appliedFilter.endDate && <div className='bg-neutral-200 px-xl py-s text-neutral-900 text-f-m text-start'> From:  {appliedFilter.startDate.split('T')[0]} - {appliedFilter.endDate.split('T')[0]}</div>}
-                    <InfoToast info="This represents the total number of orders placed." top={2} right={2} innerRight={-70} />
-                </div>
-                <div className='relative col-span-1 rounded-bs    bg-white text-black border  '>
-                    <div className='text-f-5xl px-xl font-semibold text-start text-neutral-1200 pt-l'>Average Order</div>
-                    <div className='text-center px-xl  font-semibold text-f-10xl text-secondary-900'>{formatNumber((averageOrder.toFixed(0)))}</div>
-                    {appliedFilter && appliedFilter.startDate && appliedFilter.endDate && <div className='bg-neutral-200 px-xl py-s text-neutral-900 text-f-m text-start'> From:  {appliedFilter.startDate.split('T')[0]} - {appliedFilter.endDate.split('T')[0]}</div>}
-                    <InfoToast info="This provides insight into the average value of orders over a specific period." top={2} right={2} innerRight={-70} />
-                </div>
-                <div className='relative flex-1 rounded-bs  bg-white text-black  border  '>
-                    <div className='text-f-5xl px-xl font-semibold  text-start  text-neutral-1200 pt-l'>Max Revenue</div>
-                    <div className='text-center  px-xl font-semibold text-f-10xl text-secondary-900'>{formatNumber(maxRevenue.totalRevenue)}</div>
-                    <div className='bg-neutral-200 px-xl py-s text-neutral-900 text-f-m start'> At:  {maxRevenue._id}</div>
-                    <InfoToast info="This shows the highest revenue recorded and the corresponding date." top={2} right={2} innerRight={-40} popAlign={false} />
-                </div>
-
-            </div>
-            <div className=' gap-l grid  grid-cols-4 mt-xl'>
-                <div className="col-span-4 h-full bg-white rounded-bs flex flex-col border  ">
-                    <div className='px-xl pb-s pt-l text-f-l  text-neutral-1200 '>
-
-                        <h3 className="text-f-l font-semibold text-neutral-1200  ">
-                            Top Products By Quantity
-                        </h3>
-
-                        <p className='text-f-m text-neutral-600'> Sankey chart visualizing product categories and top-selling items by quantity, highlighting key contributors to total sales across different segments.</p>
+        <div className="flex flex-col">
+            <div className="pb-4xl hide-scrollbar">
+                {/* Sales statistics grid */}
+                <div className="gap-xl grid grid-cols-4 mt-xl">
+                    <div className='relative col-span-1 rounded-bs    bg-white text-black border   text-center'>
+                        <div className='text-f-5xl px-xl text-start font-semibold  text-neutral-1200 pt-l'>Total Sales</div>
+                        <div className='text-center px-xl font-semibold text-f-10xl text-secondary-900'>{formatNumber(totalSales.totalSales)}</div>
+                        {appliedFilter && appliedFilter.startDate && appliedFilter.endDate && <div className='bg-neutral-200 px-xl py-s text-neutral-900 text-f-m text-start'> From:  {appliedFilter.startDate.split('T')[0]} - {appliedFilter.endDate.split('T')[0]}</div>}
+                        <InfoToast info="This indicates the total number of sales recorded in the system." top={2} right={2} innerRight={-70} />
                     </div>
-
-                    <div className='p-xl pt-s h-[450px] '>
-                        {sankeyData.length > 0 && <SankeyChart data={sankeyData} />}
+                    <div className='relative flex-1 rounded-bs   bg-white text-black  border  '>
+                        <div className='text-f-5xl px-xl font-semibold text-start text-neutral-1200 pt-l'>Total Order</div>
+                        <div className='text-center px-xl font-semibold text-f-10xl text-secondary-900'>{formatNumber(totalSales.totalItems)}</div>
+                        {appliedFilter && appliedFilter.startDate && appliedFilter.endDate && <div className='bg-neutral-200 px-xl py-s text-neutral-900 text-f-m text-start'> From:  {appliedFilter.startDate.split('T')[0]} - {appliedFilter.endDate.split('T')[0]}</div>}
+                        <InfoToast info="This represents the total number of orders placed." top={2} right={2} innerRight={-70} />
+                    </div>
+                    <div className='relative col-span-1 rounded-bs    bg-white text-black border  '>
+                        <div className='text-f-5xl px-xl font-semibold text-start text-neutral-1200 pt-l'>Average Order</div>
+                        <div className='text-center px-xl  font-semibold text-f-10xl text-secondary-900'>{formatNumber((averageOrder.toFixed(0)))}</div>
+                        {appliedFilter && appliedFilter.startDate && appliedFilter.endDate && <div className='bg-neutral-200 px-xl py-s text-neutral-900 text-f-m text-start'> From:  {appliedFilter.startDate.split('T')[0]} - {appliedFilter.endDate.split('T')[0]}</div>}
+                        <InfoToast info="This provides insight into the average value of orders over a specific period." top={2} right={2} innerRight={-70} />
+                    </div>
+                    <div className='relative flex-1 rounded-bs  bg-white text-black  border  '>
+                        <div className='text-f-5xl px-xl font-semibold  text-start  text-neutral-1200 pt-l'>Max Revenue</div>
+                        <div className='text-center  px-xl font-semibold text-f-10xl text-secondary-900'>{formatNumber(maxRevenue.totalRevenue)}</div>
+                        <div className='bg-neutral-200 px-xl py-s text-neutral-900 text-f-m start'> At:  {maxRevenue._id}</div>
+                        <InfoToast info="This shows the highest revenue recorded and the corresponding date." top={2} right={2} innerRight={-40} popAlign={false} />
                     </div>
 
                 </div>
-            </div>
-            {/* <div className="text-neutral-1000 pb-xl "><MapContainer catalogList={catalogList} setAppliedFilter={setAppliedFilter} /></div> */}
+                {/* Sankey chart section */}
+                <div className="gap-l grid grid-cols-4 mt-xl">
+                    <div className="col-span-4 h-full bg-white rounded-bs flex flex-col border">
+                        <div className='px-xl pb-s pt-l text-f-l  text-neutral-1200 '>
 
-
-            <div className=' gap-xl grid  grid-cols-4 mt-xl '>
-                <div className="col-span-2 h-full bg-white rounded-bs flex flex-col border">
-                    <div className='flex justify-between px-xl pb-s pt-l text-f-l  text-neutral-1200 gap-xl  '>
-
-                        <div className='  text-f-l  text-neutral-1200 '>
                             <h3 className="text-f-l font-semibold text-neutral-1200  ">
-                                Top Product By {selectedSortOption.label}
+                                Top Products By Quantity
                             </h3>
-                            <p className='text-f-m text-neutral-600'>Table listing products that generated the highest revenue, showing their total quantity sold and total earnings to highlight top-performing items.</p>
 
+                            <p className='text-f-m text-neutral-600'> Sankey chart visualizing product categories and top-selling items by quantity, highlighting key contributors to total sales across different segments.</p>
                         </div>
 
-
-                        <div className='w-[230px] '>
-                            <Select
-                                options={dataValues}
-                                value={selectedSortOption}
-                                onChange={(selected) => setSelectedSortOption(selected)}
-                                isSearchable={false}
-                                className="!m-0 !p-0 !h-auto !w-auto !border-none !shadow-none text-black text-f-s"
-                                styles={{
-                                    control: (provided) => ({
-                                        ...provided,
-                                        minHeight: 'unset',  // Remove default min-height
-                                        height: 'auto',
-                                        padding: "2px",
-                                        margin: 0,
-                                        border: '1px solid #4d4d4d',
-                                        boxShadow: 'none',
-                                        backgroundColor: 'transparent',
-                                    }),
-                                    valueContainer: (provided) => ({
-                                        ...provided,
-                                        padding: '2px', // Ensure no extra padding
-                                        margin: 0,
-                                    }),
-                                    indicatorsContainer: (provided) => ({
-                                        ...provided,
-                                        padding: '2px',
-                                    }),
-                                    dropdownIndicator: (provided) => ({
-                                        ...provided,
-                                        padding: '0px', // Removes space around the dropdown arrow
-                                        margin: 0,
-                                    }),
-                                    singleValue: (provided) => ({
-                                        ...provided,
-                                        padding: 0,
-                                        margin: 0,
-                                    }),
-                                }}
-                            />
-
+                        <div className='p-xl pt-s h-[450px] '>
+                            {sankeyData.length > 0 && <SankeyChart data={sankeyData} />}
                         </div>
-                    </div>
-                    <div className='p-xl pt-s '>
-                        <div className=' text-f-m font-semibold text-neutral-1200 flex bg-neutral-200 border-b border-neutral-200  '>
-                            <div className='py-m flex-[0.4] text-center px-l '>S. No</div>
-                            <div className='py-m flex-1 text-center px-l  border-neutral-900'>Name</div>
-                            <div className='py-m flex-1 text-center px-l'>Total Quantity Sold</div>
-                            <div className='py-m flex-1 text-center px-l  border-neutral-900'>Total Revenue</div>
-
-                        </div>
-                        <div className='flex text-f-m  h-[300px]  flex-col overflow-y-scroll hide-scrollbar'>
-                            {topProducts.map((product, index) => (<div className={clsx(' flex  border-b border-neutral-200  text-neutral-1200', index >= topProductsByQuantity.length - 1 && 'border-b-0')} key={index} >
-                                <div className='py-m px-l flex-[0.4] text-center'>{index + 1}</div>
-                                <div className='py-m px-l flex-1 text-center  '>{product._id}</div>
-                                <div className='py-m px-l flex-1 text-center  '>{product.totalQuantitySold}</div>
-                                <div className='py-m px-l flex-1 text-center'>{Number(product.totalRevenue).toFixed(2)}</div>
-
-                            </div>))}
-
-                        </div>
-                    </div>
-
-                </div>
-
-                <div className="col-span-2 h-full bg-white rounded-lg flex flex-col ">
-                    <DoughnutContainer endpoint={API_ENDPOINTS.TopSellingProductsOverTime} appliedFilter={appliedFilter} label="Top Selling Products Over Time" From="SaleProduct" description="Donut chart tracking sales trends of key products over time, helping visualize which items consistently lead in quantity sold." />
-                </div>
-
-            </div>
-            <div className=' gap-xl grid  grid-cols-4 mt-xl  min-h-[500px]'>
-
-
-                <div className="col-span-4 h-full bg-white rounded-bs flex flex-col border">
-
-                    <HistogramChart data={histogramData} bins={histogramRanges} setBins={setHistogramRanges} label="Top Products By Quantity" description='Histogram showing the distribution of products based on quantity sold, helping identify how many products fall within specific sales ranges.' />
-
-
-                </div>
-
-            </div>
-
-            <div className='p-xl  border rounded-bs mt-xl flex flex-col gap-xl'>
-                <div className='text-neutral-1200 text-f-xl font-semibold'>
-                    Map Visualization
-                </div>
-                <div className=' gap-xl grid  grid-cols-5  h-[100vh]'>
-                    <div className='col-span-4 h-full'>
-                        {currentMap == 0 && h3Data && <HexaPolygonMap h3Data={h3Data} setH3Resolution={setH3Resolution} label="Order Value" Icon={BsCartCheckFill} type="product" />}
-                        {currentMap == 1 && heatMapData.length > 0 && <Heatmap data={heatMapData} setBinSize={setBinSize} label="Sales Value" Icon={MdPointOfSale} />}
-                        {currentMap == 2 && <ClusterMap data={clusterData} label="Order Value" Icon={BsCartCheckFill} />}
 
                     </div>
-                    <div className='col-span-1 h-full  flex flex-col gap-xl '>
-                        <button className={clsx("w-full h-[150px] bg-white text-neutral-1200 text-f-s py-xs rounded-bs border", currentMap == 0 && 'border-secondary-900')} onClick={() => setCurrentMap(0)}>
-                            <div>
-                                <div className='pb-xs'>H3 Visualization</div>
-                                <div className='relative w-full h-full'>
-                                    <img className='w-full  h-[130px] object-cover rounded-bs' src='../dashboard/h3.png' alt='h3' />
-                                    <div className='absolute bg-black inset-0 rounded-bs bg-opacity-40'></div>
-                                </div>
+                </div>
+                {/* Top products section */}
+                <div className="gap-xl grid grid-cols-4 mt-xl">
+                    <div className="col-span-2 h-full bg-white rounded-bs flex flex-col border">
+                        <div className='flex justify-between px-xl pb-s pt-l text-f-l  text-neutral-1200 gap-xl  '>
+
+                            <div className='  text-f-l  text-neutral-1200 '>
+                                <h3 className="text-f-l font-semibold text-neutral-1200  ">
+                                    Top Product By {selectedSortOption.label}
+                                </h3>
+                                <p className='text-f-m text-neutral-600'>Table listing products that generated the highest revenue, showing their total quantity sold and total earnings to highlight top-performing items.</p>
+
                             </div>
 
-                        </button>
-                        <button className={clsx("w-full h-[150px] bg-white text-neutral-1200 text-f-s py-xs rounded-bs border", currentMap == 2 && 'border-secondary-900')} onClick={() => setCurrentMap(2)}>
-                            <div>
-                                <div className='pb-xs'>Clusting Visualization</div>
-                                <div className='relative w-full h-full'>
 
-                                    <img className='w-full object-cover rounded-bs h-[130px]' src='../dashboard/clusting.png' alt='clusting' />
-                                    <div className='absolute bg-black inset-0 rounded-bs bg-opacity-40'></div>
-                                </div>
+                            <div className='w-[230px] '>
+                                <Select
+                                    options={dataValues}
+                                    value={selectedSortOption}
+                                    onChange={(selected) => setSelectedSortOption(selected)}
+                                    isSearchable={false}
+                                    className="!m-0 !p-0 !h-auto !w-auto !border-none !shadow-none text-black text-f-s"
+                                    styles={{
+                                        control: (provided) => ({
+                                            ...provided,
+                                            minHeight: 'unset',  // Remove default min-height
+                                            height: 'auto',
+                                            padding: "2px",
+                                            margin: 0,
+                                            border: '1px solid #4d4d4d',
+                                            boxShadow: 'none',
+                                            backgroundColor: 'transparent',
+                                        }),
+                                        valueContainer: (provided) => ({
+                                            ...provided,
+                                            padding: '2px', // Ensure no extra padding
+                                            margin: 0,
+                                        }),
+                                        indicatorsContainer: (provided) => ({
+                                            ...provided,
+                                            padding: '2px',
+                                        }),
+                                        dropdownIndicator: (provided) => ({
+                                            ...provided,
+                                            padding: '0px', // Removes space around the dropdown arrow
+                                            margin: 0,
+                                        }),
+                                        singleValue: (provided) => ({
+                                            ...provided,
+                                            padding: 0,
+                                            margin: 0,
+                                        }),
+                                    }}
+                                />
+
                             </div>
+                        </div>
+                        <div className='p-xl pt-s '>
+                            <div className=' text-f-m font-semibold text-neutral-1200 flex bg-neutral-200 border-b border-neutral-200  '>
+                                <div className='py-m flex-[0.4] text-center px-l '>S. No</div>
+                                <div className='py-m flex-1 text-center px-l  border-neutral-900'>Name</div>
+                                <div className='py-m flex-1 text-center px-l'>Total Quantity Sold</div>
+                                <div className='py-m flex-1 text-center px-l  border-neutral-900'>Total Revenue</div>
 
-                        </button>
-                        <button className={clsx("w-full h-[150px] bg-white text-neutral-1200 text-f-s py-xs rounded-bs border", currentMap == 1 && 'border-secondary-900')} onClick={() => setCurrentMap(1)}>
-                            <div>
-                                <div className='pb-xs'>Heatmap Visualization</div>
-                                <div className='relative w-full h-full'>
-
-                                    <img className='w-full object-cover rounded-bs h-[130px]' src='../dashboard/heatmap.png' alt='heatmap' />
-                                    <div className='absolute bg-black inset-0 rounded-bs bg-opacity-40'></div>
-                                </div>
                             </div>
+                            <div className='flex text-f-m  h-[300px]  flex-col overflow-y-scroll hide-scrollbar'>
+                                {topProducts.map((product, index) => (<div className={clsx(' flex  border-b border-neutral-200  text-neutral-1200', index >= topProductsByQuantity.length - 1 && 'border-b-0')} key={index} >
+                                    <div className='py-m px-l flex-[0.4] text-center'>{index + 1}</div>
+                                    <div className='py-m px-l flex-1 text-center  '>{product._id}</div>
+                                    <div className='py-m px-l flex-1 text-center  '>{product.totalQuantitySold}</div>
+                                    <div className='py-m px-l flex-1 text-center'>{Number(product.totalRevenue).toFixed(2)}</div>
 
-                        </button>
+                                </div>))}
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div className="col-span-2 h-full bg-white rounded-lg flex flex-col">
+                        <DoughnutContainer endpoint={API_ENDPOINTS.TopSellingProductsOverTime} appliedFilter={appliedFilter} label="Top Selling Products Over Time" From="SaleProduct" description="Donut chart tracking sales trends of key products over time, helping visualize which items consistently lead in quantity sold." />
+                    </div>
+
+                </div>
+                {/* Histogram section */}
+                <div className="gap-xl grid grid-cols-4 mt-xl min-h-[500px]">
+                    <div className="col-span-4 h-full bg-white rounded-bs flex flex-col border">
+                        <HistogramChart 
+                            data={histogramData} 
+                            bins={histogramRanges} 
+                            setBins={setHistogramRanges} 
+                            label="Support Ticket Distribution" 
+                            description="This histogram displays the distribution of support tickets across defined ticket count ranges, helping visualize the volume pattern and frequency of support activity." 
+                        />
                     </div>
                 </div>
-            </div>
 
+                {/* Map visualization section */}
+                <div className="p-xl border rounded-bs mt-xl flex flex-col gap-xl">
+                    {/* Map visualization buttons */}
+                    <div className='text-neutral-1200 text-f-xl font-semibold'>
+                        Map Visualization
+                    </div>
+                    <div className=' gap-xl grid  grid-cols-5  h-[100vh]'>
+                        <div className='col-span-4 h-full'>
+                            {currentMap == 0 && h3Data && <HexaPolygonMap h3Data={h3Data} setH3Resolution={setH3Resolution} label="Order Value" Icon={BsCartCheckFill} type="product" />}
+                            {currentMap == 1 && heatMapData.length > 0 && <Heatmap data={heatMapData} setBinSize={setBinSize} label="Sales Value" Icon={MdPointOfSale} />}
+                            {currentMap == 2 && <ClusterMap data={clusterData} label="Order Value" Icon={BsCartCheckFill} />}
 
-            <div className='p-xl border rounded-bs  mt-xl'>
-                <div className='text-neutral-1200 text-f-xl font-semibold'>Categories Analytics</div>
-                <p className='text-f-m text-neutral-600'>This section provides insights into sales performance across different product categories. It highlights top categories by total revenue and tracks how category-wise sales evolve over time, helping identify key drivers of business growth and customer preferences.</p>
-                <Category appliedFilter={appliedFilter} />
-            </div>
-            <div className='p-xl border rounded-bs mt-xl'>
-                <div className='text-neutral-1200 text-f-xl font-semibold'>Sub Categories Analytics</div>
-                <p className='text-f-m text-neutral-600'>This section highlights performance across sub-categories by showcasing top-selling segments by revenue and tracking their sales trends over time.</p>
-                <SubCategory appliedFilter={appliedFilter} />
-            </div>
+                        </div>
+                        <div className='col-span-1 h-full  flex flex-col gap-xl '>
+                            <button className={clsx("w-full h-[150px] bg-white text-neutral-1200 text-f-s py-xs rounded-bs border", currentMap == 0 && 'border-secondary-900')} onClick={() => setCurrentMap(0)}>
+                                <div>
+                                    <div className='pb-xs'>H3 Visualization</div>
+                                    <div className='relative w-full h-full'>
+                                        <img className='w-full  h-[130px] object-cover rounded-bs' src='../dashboard/h3.png' alt='h3' />
+                                        <div className='absolute bg-black inset-0 rounded-bs bg-opacity-40'></div>
+                                    </div>
+                                </div>
 
+                            </button>
+                            <button className={clsx("w-full h-[150px] bg-white text-neutral-1200 text-f-s py-xs rounded-bs border", currentMap == 2 && 'border-secondary-900')} onClick={() => setCurrentMap(2)}>
+                                <div>
+                                    <div className='pb-xs'>Clusting Visualization</div>
+                                    <div className='relative w-full h-full'>
+
+                                        <img className='w-full object-cover rounded-bs h-[130px]' src='../dashboard/clusting.png' alt='clusting' />
+                                        <div className='absolute bg-black inset-0 rounded-bs bg-opacity-40'></div>
+                                    </div>
+                                </div>
+
+                            </button>
+                            <button className={clsx("w-full h-[150px] bg-white text-neutral-1200 text-f-s py-xs rounded-bs border", currentMap == 1 && 'border-secondary-900')} onClick={() => setCurrentMap(1)}>
+                                <div>
+                                    <div className='pb-xs'>Heatmap Visualization</div>
+                                    <div className='relative w-full h-full'>
+
+                                        <img className='w-full object-cover rounded-bs h-[130px]' src='../dashboard/heatmap.png' alt='heatmap' />
+                                        <div className='absolute bg-black inset-0 rounded-bs bg-opacity-40'></div>
+                                    </div>
+                                </div>
+
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Categories section */}
+                <div className="p-xl border rounded-bs mt-xl">
+                    <div className='text-neutral-1200 text-f-xl font-semibold'>Categories Analytics</div>
+                    <p className='text-f-m text-neutral-600'>This section provides insights into sales performance across different product categories. It highlights top categories by total revenue and tracks how category-wise sales evolve over time, helping identify key drivers of business growth and customer preferences.</p>
+                    <Category appliedFilter={appliedFilter} />
+                </div>
+                {/* Sub-categories section */}
+                <div className="p-xl border rounded-bs mt-xl">
+                    <div className='text-neutral-1200 text-f-xl font-semibold'>Sub Categories Analytics</div>
+                    <p className='text-f-m text-neutral-600'>This section highlights performance across sub-categories by showcasing top-selling segments by revenue and tracking their sales trends over time.</p>
+                    <SubCategory appliedFilter={appliedFilter} />
+                </div>
+
+            </div>
         </div>
-    )
+    );
 }
 
 export default Product

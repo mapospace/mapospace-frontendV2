@@ -58,82 +58,92 @@ const TotalViews = ({ appliedFilter }) => {
             const response = await authService.postApiCallHandler(API_ENDPOINTS.TotalViews, appliedFilter);
 
             if (response?.error) {
-                console.log(response)
-                customError(response.message || "Failed to fetch data.");
+                console.log(response);
+                customError(response?.message || "Failed to fetch data.");
                 return;
             }
-            console.log("total sales => ", response?.data);
-            setTotalViews(response.data[0])
-
+            console.log("total views => ", response?.data);
+            setTotalViews(response?.data?.[0] || { totalViews: 0 });
 
         } catch (err) {
-            console.error("Error fetching user details:", err);
-
+            console.error("Error fetching total views:", err);
+            setTotalViews({ totalViews: 0 });
         }
     }
 
     const totalViewLineOverTimeHandler = async (period) => {
         try {
             const authService = new AuthServices();
-            const response = await authService.postApiCallHandler(API_ENDPOINTS.TotalViewsOverTime, { ...appliedFilter, "period": period });
+            const response = await authService.postApiCallHandler(API_ENDPOINTS.TotalViewsOverTime, { 
+                ...appliedFilter, 
+                "period": period 
+            });
 
             if (response?.error) {
-                console.log(response)
-                customError(response.message || "Failed to fetch data.");
+                console.log(response);
+                customError(response?.message || "Failed to fetch data.");
                 return;
             }
-            console.log("total sales over all", response?.data);
-            setTotalViewsOverTime(response.data);
-            let getlabels = response.data.map(data => { return data._id })
-            let getTotalViews = response.data.map(data => { return data.totalViews })
+            console.log("total views over time", response?.data);
+            const data = response?.data || [];
+            setTotalViewsOverTime(data);
+            
+            const getlabels = data.map(item => item?._id || 'N/A');
+            const getTotalViews = data.map(item => item?.totalViews || 0);
 
             setLineLabels(getlabels);
-            setTotalViewsValue([getTotalViews])
+            setTotalViewsValue([getTotalViews]);
 
         } catch (err) {
-            console.error("Error fetching user details:", err);
-
+            console.error("Error fetching views over time:", err);
+            setTotalViewsOverTime([]);
+            setLineLabels([]);
+            setTotalViewsValue([[]]);
         }
     }
 
     const viewSankeyHandler = async () => {
         try {
             const authService = new AuthServices();
-            const response = await authService.postApiCallHandler(API_ENDPOINTS.ViewsSankeySwitch, { ...appliedFilter, "groupBy": "productName" });
+            const response = await authService.postApiCallHandler(API_ENDPOINTS.ViewsSankeySwitch, { 
+                ...appliedFilter, 
+                "groupBy": "productName" 
+            });
 
             if (response?.error) {
-                console.log(response)
-                customError(response.message || "Failed to fetch data.");
+                console.log(response);
+                customError(response?.message || "Failed to fetch data.");
                 return;
             }
-            console.log("sale Sankey Handler => ", response?.data.sankeyDiagramData);
-            // setTotalSales(response.data[0])
-            setSankeyData(response?.data.sankeyDiagramData)
-
+            console.log("view Sankey Handler => ", response?.data?.sankeyDiagramData);
+            setSankeyData(response?.data?.sankeyDiagramData || []);
 
         } catch (err) {
-            console.error("Error fetching user details:", err);
-
+            console.error("Error fetching sankey data:", err);
+            setSankeyData([]);
         }
     }
+
     const orderValueDistributionHandler = async (ranges) => {
         try {
             const authService = new AuthServices();
-            const response = await authService.postApiCallHandler(API_ENDPOINTS.TopViewsRangeDistribution, { ...appliedFilter, "ranges": ranges });
+            const response = await authService.postApiCallHandler(API_ENDPOINTS.TopViewsRangeDistribution, { 
+                ...appliedFilter, 
+                "ranges": ranges 
+            });
 
             if (response?.error) {
-                console.log(response)
-                customError(response.message || "Failed to fetch data.");
+                console.log(response);
+                customError(response?.message || "Failed to fetch data.");
                 return;
             }
             console.log("orderValueDistributionHandler", response?.data);
-            const data = response.data.map((data) => { return data.count })
-            setHistogramData(data)
-
+            const data = (response?.data || []).map(item => item?.count || 0);
+            setHistogramData(data);
 
         } catch (err) {
-            console.error("Error fetching user details:", err);
-
+            console.error("Error fetching distribution data:", err);
+            setHistogramData([]);
         }
     }
 
@@ -145,7 +155,7 @@ const TotalViews = ({ appliedFilter }) => {
                     <div className='px-xl'>
                         <div className='text-f-8xl px-xl text-center font-semibold  text-neutral-1200 pt-l'>Total Views</div>
                         {/* <div className='text-f-8xl px-xl text-center font-semibold  text-neutral-1200 '> Order Value</div> */}
-                        <div className='text-center px-xl font-semibold text-f-10xl text-secondary-900'>{formatNumber(totalViews.totalViews)}</div>
+                        <div className='text-center px-xl font-semibold text-f-10xl text-secondary-900'>{formatNumber(totalViews?.totalViews || 0)}</div>
                     </div>
 
                     <InfoToast info="This indicates the average order value of sales recorded in the system." top={2} right={2} innerRight={-70} />
@@ -179,12 +189,19 @@ const TotalViews = ({ appliedFilter }) => {
                         </div>
 
                         <div className='flex text-f-m  h-[270px]  flex-col overflow-y-scroll hide-scrollbar bg-white'>
-                            {totalViewsOverTime.map((view, index) => (<div className={clsx(' flex  border-b border-neutral-200  text-neutral-1200', index >= totalViewsOverTime.length - 1 && 'border-b-0')} key={index} >
-                                <div className='py-m px-l flex-[0.5] text-center'>{index + 1}</div>
-                                <div className='py-m px-l flex-1 text-center  '>{view._id}</div>
-                                <div className='py-m px-l flex-1 text-center'>{view.totalViews}</div>
-
-                            </div>))}
+                            {(totalViewsOverTime || []).map((view, index) => (
+                                <div 
+                                    className={clsx(
+                                        'flex border-b border-neutral-200 text-neutral-1200',
+                                        index >= (totalViewsOverTime?.length || 0) - 1 && 'border-b-0'
+                                    )} 
+                                    key={index}
+                                >
+                                    <div className='py-m px-l flex-[0.5] text-center'>{index + 1}</div>
+                                    <div className='py-m px-l flex-1 text-center'>{view?._id || 'N/A'}</div>
+                                    <div className='py-m px-l flex-1 text-center'>{view?.totalViews || 0}</div>
+                                </div>
+                            ))}
                         </div>
 
                     </div>
