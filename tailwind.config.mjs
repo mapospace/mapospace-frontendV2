@@ -19,6 +19,22 @@ export default {
       '100%': { transform: 'translateY(0)', opacity: 1 },
     },
   },
+  extend: {
+    keyframes: {
+      pop: {
+        '0%': { transform: 'scale(0.95)', opacity: 0 },
+        '100%': { transform: 'scale(1)', opacity: 1 },
+      },
+      fadeIn: {
+        '0%': { opacity: 0 },
+        '100%': { opacity: 1 },
+      },
+    },
+    animation: {
+      pop: 'pop 0.3s ease-in-out',
+      fadeIn: 'fadeIn 0.5s ease-in-out',
+    },
+  },
   theme: {
     extend: {
       colors: {

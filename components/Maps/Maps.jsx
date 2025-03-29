@@ -20,15 +20,63 @@ const containerStyle = {
 
 const mapStyle = [
     {
-        "featureType": "poi",
-        "elementType": "all",
-        "stylers": [{ "visibility": "off" }]
-    },
-    {
-        "featureType": "transit",
-        "elementType": "all",
-        "stylers": [{ "visibility": "off" }]
-    }
+        elementType: "geometry",
+        stylers: [{ color: "#f0f0f7" }] // Slight violet-gray background
+      },
+      {
+        elementType: "labels.icon",
+        stylers: [{ visibility: "off" }]
+      },
+      {
+        elementType: "labels.text.fill",
+        stylers: [{ color: "#4b5563" }] // dark gray text
+      },
+      {
+        elementType: "labels.text.stroke",
+        stylers: [{ color: "#ffffff" }]
+      },
+      {
+        featureType: "administrative",
+        elementType: "geometry.stroke",
+        stylers: [{ color: "#d1d5db" }] // border lines subtle
+      },
+      {
+        featureType: "poi",
+        stylers: [{ visibility: "off" }]
+      },
+      {
+        featureType: "road",
+        elementType: "geometry",
+        stylers: [{ color: "#cbd5e1" }] // grayish roads
+      },
+      {
+        featureType: "road",
+        elementType: "geometry.stroke",
+        stylers: [{ color: "#9ca3af" }]
+      },
+      {
+        featureType: "road",
+        elementType: "labels.text.fill",
+        stylers: [{ color: "#6b7280" }]
+      },
+      {
+        featureType: "transit",
+        stylers: [{ visibility: "off" }]
+      },
+      {
+        featureType: "water",
+        elementType: "geometry",
+        stylers: [{ color: "#d1c5fa" }] // lavender water (brand color 200)
+      },
+      {
+        featureType: "water",
+        elementType: "labels.text.fill",
+        stylers: [{ color: "#5d37d8" }] // deep purple water label
+      },
+      {
+        featureType: "landscape.man_made",
+        stylers: [{ visibility: "off" }]
+      }
 ]
 
 

@@ -9,17 +9,57 @@ ChartJS.register(SankeyController, Flow, Tooltip, Legend);
 
 // Predefined color palette
 const colors = [
-    "#e74c3c", "#f39c12", "#f1c40f", "#1abc9c", "#3498db",
-    "#9b59b6", "#2ecc71", "#34495e", "#16a085", "#27ae60",
-    "#2980b9", "#8e44ad", "#2c3e50", "#c0392b", "#d35400",
-    "#e67e22", "#e74c3c", "#f39c12", "#f1c40f", "#1abc9c",
-    "#3498db", "#9b59b6", "#2ecc71", "#34495e", "#16a085",
-    "#27ae60", "#2980b9", "#8e44ad", "#2c3e50", "#c0392b",
-    "#d35400", "#e67e22", "#ecf0f1", "#bdc3c7", "#95a5a6",
-    "#7f8c8d", "#ff5733", "#c70039", "#900c3f", "#581845",
-    "#6a0572", "#9400d3", "#4a235a", "#154360", "#0e6655",
-    "#145a32", "#512e5f", "#76448a", "#2471a3", "#0b5345"
-];
+    "#FF6B6B", // Coral Red
+    "#FFB347", // Soft Orange
+    "#FFD93D", // Golden Yellow
+    "#6BCB77", // Fresh Green
+    "#4D96FF", // Soft Blue
+    "#9D4EDD", // Violet Purple
+    "#F38BA0", // Rose Pink
+    "#00C2CB", // Aqua Cyan
+    "#845EC2", // Indigo
+    "#2C73D2", // Royal Blue
+    "#008E9B", // Deep Teal
+    "#59C9A5", // Mint Green
+    "#5C5470", // Slate Gray
+    "#FFA351", // Melon Orange
+    "#AFD275", // Avocado Green
+    "#FFC75F", // Sunny Yellow
+    "#FF8066", // Peach Red
+    "#B39CD0", // Lilac
+    "#6A0572", // Deep Purple
+    "#247BA0", // Ocean Blue
+    "#70C1B3", // Soft Mint
+    "#FF165D", // Raspberry
+    "#F6AE2D", // Honey
+    "#86BBD8", // Sky Blue
+    "#33658A", // Midnight Blue
+    "#2F4858", // Graphite
+    "#5EAAA8", // Misty Aqua
+    "#A28089", // Dusty Rose
+    "#F7A9A8", // Baby Pink
+    "#D7263D", // Strong Red
+    "#3F88C5", // Electric Blue
+    "#FFBA08", // Saffron
+    "#6A994E", // Forest Green
+    "#386641", // Olive Green
+    "#D9BF77", // Sand
+    "#BC6C25", // Earthy Brown
+    "#6F1D1B", // Maroon Brown
+    "#BB3E03", // Rust Orange
+    "#9B2226", // Blood Red
+    "#AE2012", // Brick Red
+    "#B5838D", // Mauve
+    "#FF99C8", // Pastel Pink
+    "#FCF6BD", // Light Cream
+    "#D0F4DE", // Pale Mint
+    "#A9DEF9", // Light Blue
+    "#E4C1F9", // Lavender
+    "#9BF6FF", // Baby Blue
+    "#B5E48C", // Spring Green
+    "#FDE4CF"  // Pale Peach
+  ];
+  
 
 const SankeyChart = ({ data }) => {
     // Assign colors sequentially to unique nodes
