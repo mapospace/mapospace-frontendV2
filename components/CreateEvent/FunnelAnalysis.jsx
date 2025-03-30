@@ -451,7 +451,7 @@ const ComputedMetrics = ({ metrics }) => {
                                             className="h-10xl bg-red-500 rounded-md text-center text-white text-sm flex justify-center items-center "
                                             style={{ width: `${(drop.dropOffRate ? drop.dropOffRate > 100 ? (drop.dropOffRate % 100) : drop.dropOffRate : 0)}%` }}
                                         >
-                                            <div className={clsx('text-f-2xl', drop.dropOffRate.toFixed(2) == 0 && ' ml-[100px]')}>
+                                            <div className={clsx('text-f-2xl', drop.dropOffRate.toFixed(2) == 0 && ' ml-[100px] text-neutral-900')}>
                                                 {drop.dropOffRate ? drop.dropOffRate.toFixed(2) : 0}%
                                             </div>
 
@@ -475,7 +475,7 @@ const ComputedMetrics = ({ metrics }) => {
                                             className="h-10xl bg-green-500 rounded-md text-center text-white text-sm flex justify-center items-center "
                                             style={{ width: `${(conv.rate ? conv.rate > 100 ? (conv.rate % 100) : conv.rate : 0)}%` }}
                                         >
-                                            <div className={clsx('text-f-2xl', conv.rate.toFixed(2) == 0 && ' ml-[100px]')}>
+                                            <div className={clsx('text-f-2xl', conv.rate.toFixed(2) == 0 && ' ml-[100px] text-neutral-900')}>
                                                 {conv.rate.toFixed(2)}%
                                             </div>
 
