@@ -625,19 +625,19 @@ const FunnelFilterInstructions = ({ setOpenQuery }) => {
                         Icon: FaFilter,
                         title: "Custom Event Stages",
                         desc: "Define different event stages to track user progression within the funnel.",
-                        iconClass: "text-primary-900"
+                        iconClass: "text-secondary-900"
                     },
                     {
                         Icon: FaMapMarkerAlt,
                         title: "Geo Map",
                         desc: "Select geographical regions to analyze funnel data based on location.",
-                        iconClass: "text-brand1-700"
+                        iconClass: "text-green-700"
                     },
                     {
                         Icon: FaClock,
                         title: "Duration",
                         desc: "Specify time frames to track user behavior across different funnel stages.",
-                        iconClass: "text-secondary-900"
+                        iconClass: "text-orange-500"
                     },
                     {
                         Icon: FaList,
@@ -648,7 +648,7 @@ const FunnelFilterInstructions = ({ setOpenQuery }) => {
                 ].map(({ Icon, title, desc, iconClass }, i) => (
                     <motion.div
                         key={i}
-                        className="p-xl flex flex-col items-center border rounded-bs"
+                        className="p-xl flex flex-col items-center border rounded-bs fancy-card"
                         custom={i}
                         initial="hidden"
                         animate="visible"

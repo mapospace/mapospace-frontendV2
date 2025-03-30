@@ -108,19 +108,19 @@ const RetentionFilterInstructions = ({ setOpenQuery }) => {
                         Icon: FaLayerGroup,
                         title: "Base Event Type",
                         desc: "Select the initial event that marks the start of a user’s journey.",
-                        iconClass: "text-primary-900"
+                        iconClass: "text-secondary-900"
                     },
                     {
                         Icon: FaUndo,
                         title: "Return Event Type",
                         desc: "Define the follow-up event that determines user retention.",
-                        iconClass: "text-brand1-700"
+                        iconClass: "text-green-700"
                     },
                     {
                         Icon: FaMapMarkerAlt,
                         title: "Geo Map",
                         desc: "Select geographical regions to analyze retention trends by location.",
-                        iconClass: "text-secondary-900"
+                        iconClass: "text-orange-500"
                     },
                     {
                         Icon: FaClock,
@@ -131,7 +131,7 @@ const RetentionFilterInstructions = ({ setOpenQuery }) => {
                 ].map(({ Icon, title, desc, iconClass }, i) => (
                     <motion.div
                         key={i}
-                        className="p-xl flex flex-col items-center border rounded-bs"
+                        className="p-xl flex flex-col items-center border rounded-bs fancy-card"
                         custom={i}
                         initial="hidden"
                         animate="visible"

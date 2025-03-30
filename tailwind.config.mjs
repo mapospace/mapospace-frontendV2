@@ -34,10 +34,21 @@ export default {
       pop: 'pop 0.3s ease-in-out',
       fadeIn: 'fadeIn 0.5s ease-in-out',
     },
+
   },
   theme: {
     extend: {
+      keyframes: {
+        fadeInSlide: {
+          '0%': { opacity: '0', transform: 'translateY(20px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+      },
+      animation: {
+        fadeInSlide: 'fadeInSlide 0.5s ease-out',
+      },
       colors: {
+        white: '#f9f5fc', // override only this!
         brand1: {
           10: '#f9fafc',
           100: '#edf1f7',
@@ -63,16 +74,16 @@ export default {
           900: '#052a47',
         },
         secondary: {
-          50: '#f5f0ff',   // dreamy lavender fog
-          100: '#e0d8fc',   // soft lilac
-          200: '#d1c5fa',   // candy orchid
-          300: '#c2b1f9',   // lavender jelly
-          400: '#b39ef7',   // periwinkle pop
-          500: '#a48bf6',   // saturated indigo violet
-          600: '#9577f4',   // rich soft blue-violet
-          700: '#8664f3',   // cooler blueish purple
-          800: '#7751f1',   // sky-indigo punch
-          900: '#683ef0',   // playful soft blue
+          50: '#f5f0ff',
+          100: '#e0d8fc',
+          200: '#d1c5fa',
+          300: '#c2b1f9',
+          400: '#b39ef7',
+          500: '#a48bf6',
+          600: '#9577f4',
+          700: '#8664f3',
+          800: '#7751f1',
+          900: '#683ef0',
           1000: '#5d37d8'
         },
         neutral: {

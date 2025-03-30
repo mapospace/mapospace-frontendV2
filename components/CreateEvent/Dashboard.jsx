@@ -50,7 +50,7 @@ const Dashboard = () => {
 
             <div className='pb-s border-b text-f-2xl mt-s'>Highlight</div>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-m py-m text-gray-700 mt-l">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-m py-m text-gray-700 mt-l ">
                 {[0, 1, 2, 3].map((i) => (
                     <motion.div
                         key={i}
@@ -86,28 +86,90 @@ const Dashboard = () => {
 
 export default Dashboard
 
-const ViewCard = () => {
-    const [highlight, setHighLight] = useState(false)
-    return <div className='col-span-1 h-[200px] bg-white rounded-bs  text-black border p-s flex flex-col justify-between'>
-        <div>
+const randomCards = [
+    {
+      location: "Kerala",
+      summary: "Spike in vegetation index after 2024 monsoon suggests floodplain recovery in affected districts.",
+      updated: "28-03-2025"
+    },
+    {
+      location: "Delhi",
+      summary: "Unusual rise in surface temperature observed in industrial zones post-winter; urban heat island effect suspected.",
+      updated: "25-03-2025"
+    },
+    {
+      location: "Maharashtra",
+      summary: "Increased fire alerts in Vidarbha region detected through thermal satellite layers since early March.",
+      updated: "27-03-2025"
+    },
+    {
+      location: "Rajasthan",
+      summary: "Sand dune movement and vegetation loss evident in Jaisalmer and Barmer zones using NDVI difference layers.",
+      updated: "24-03-2025"
+    },
+    {
+      location: "Assam",
+      summary: "Riverine changes along Brahmaputra detected using time-series analysis — risk of displacement flagged.",
+      updated: "26-03-2025"
+    },
+    {
+      location: "Tamil Nadu",
+      summary: "Chennai coast saw a 12% drop in coastal vegetation cover; correlated with urban expansion zones.",
+      updated: "23-03-2025"
+    }
+  ];
+  
+  const getRandomCard = () => {
+    const index = Math.floor(Math.random() * randomCards.length);
+    return randomCards[index];
+  };
+  
+  const ViewCard = () => {
+    const [highlight, setHighLight] = useState(false);
+    const [card, setCard] = useState(getRandomCard());
+  
+    // Optional: refresh on every render
+    // useEffect(() => {
+    //   setCard(getRandomCard());
+    // }, []);
+  
+    // Optional: refresh on button click
+    const refreshCard = () => {
+      setCard(getRandomCard());
+      setHighLight(false);
+    };
+  
+    return (
+      <div className="max-w-md mx-auto">
+        <div className='h-[200px] bg-white rounded-bs text-black border p-s flex flex-col justify-between flat-card'>
+          <div>
             <div className='text-f-2xl flex items-center justify-between'>
-                <div>{toCapitalizedCase("delhi")}</div>
-                <TiStarFullOutline className={clsx('w-xl h-xl cursor-pointer', highlight ? 'text-yellow-500' : 'text-neutral-600 ')} onClick={() => { setHighLight(prev => !prev) }} />
-
+              <div>{card.location}</div>
+              <TiStarFullOutline
+                className={clsx('w-xl h-xl cursor-pointer', highlight ? 'text-yellow-500' : 'text-neutral-600')}
+                onClick={() => setHighLight(prev => !prev)}
+              />
             </div>
-            <div className='text-f-l mt-s text-neutral-900'>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Veritatis, velit.</div>
+            <div className='text-f-l mt-s text-neutral-900'>{card.summary}</div>
             <div className='text-neutral-600 mt-s tex-f-s'>Polygon</div>
+          </div>
+          <div className='text-neutral-600'>Updated by : {card.updated}</div>
         </div>
-        <div>
-            <div></div>
-            <div className='text-neutral-600'>Updated by : 12-03-2024</div>
-        </div>
+  
+        <button
+          onClick={refreshCard}
+          className="mt-4 px-4 py-2 bg-primary text-white rounded hover:bg-primary-dark"
+        >
+          Show Another Card
+        </button>
+      </div>
+    );
+  };
 
-    </div>
-}
+
 const OtherViewCard = () => {
     const [highlight, setHighLight] = useState(false)
-    return <div className='w-[400px] h-[200px] bg-white rounded-bs  text-black border p-s flex justify-between flex-col'>
+    return <div className='w-[400px] h-[200px] bg-white rounded-bs  text-black border p-s flex justify-between flex-col flat-card'>
         <div>
             <div className='text-f-2xl flex items-center justify-between'>
                 <div>{toCapitalizedCase("delhi")}</div>

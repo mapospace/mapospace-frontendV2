@@ -268,19 +268,19 @@ const SegmentationFilterInstructions = ({ setOpenQuery }) => {
                         Icon: FaFilter,
                         title: "Custom Event Stages",
                         desc: "Define different event stages to segment user behavior.",
-                        iconClass: "text-primary-700"
+                        iconClass: "text-primary-900"
                     },
                     {
                         Icon: FaMapMarkerAlt,
                         title: "Geo Map",
                         desc: "Select geographical regions to segment user data based on location.",
-                        iconClass: "text-brand1-700"
+                        iconClass: "text-green-700"
                     },
                     {
                         Icon: FaClock,
                         title: "Duration",
                         desc: "Specify time frames to segment user behavior over a selected period.",
-                        iconClass: "text-secondary-900"
+                        iconClass: "text-orange-500"
                     },
                     {
                         Icon: FaLayerGroup,
@@ -291,7 +291,7 @@ const SegmentationFilterInstructions = ({ setOpenQuery }) => {
                 ].map(({ Icon, title, desc, iconClass }, i) => (
                     <motion.div
                         key={i}
-                        className="p-xl flex flex-col items-center border rounded-bs"
+                        className="p-xl flex flex-col items-center border rounded-bs fancy-card"
                         custom={i}
                         initial="hidden"
                         animate="visible"

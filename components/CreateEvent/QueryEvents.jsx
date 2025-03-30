@@ -250,7 +250,7 @@ const QueryEvents = ({ queryData, setOpenQuery, setLoading, selectedRange }) => 
                                 <div className='flex flex-col w-full'>
                                     <div className='flex bg-yellow-300 w-full '>
                                         {uniqueKeys.map((labels, index) => (
-                                            <div className={clsx('min-w-[200px] flex-1 bg-neutral-300 text-center py-s ', index % 2 != 0 && 'border-x border-neutral-600')} key={index}>{toCapitalizedCase(labels)}</div>
+                                            <div className={clsx('min-w-[200px] flex-1 bg-neutral-200 text-center py-s ', index % 2 != 0 && 'border-x border-neutral-600')} key={index}>{toCapitalizedCase(labels)}</div>
                                         ))}
 
                                     </div>
@@ -259,7 +259,7 @@ const QueryEvents = ({ queryData, setOpenQuery, setLoading, selectedRange }) => 
                                             <div className='flex' key={index}>
 
                                                 {uniqueKeys.map((labels, index) => (
-                                                    <div className={clsx('min-w-[200px] flex-1 bg-white text-center py-s border-b', index % 2 != 0 && 'border-x ')} key={index}>
+                                                    <div className={clsx('min-w-[200px] flex-1  text-center py-s border-b', index % 2 != 0 && 'border-x ')} key={index}>
                                                         {typeof result[labels] === 'boolean'
                                                             ? result[labels].toString()
                                                             : (isISODateTime(result[labels]) ? formatTimestamp(result[labels]) : (result[labels] ?? 'NA'))}
@@ -368,7 +368,7 @@ const EventFilterInstructions = ({ setOpenQuery }) => {
                 }].map(({ Icon, title, desc, iconClass }, i) => (
                     <motion.div
                         key={i}
-                        className="p-xl flex flex-col items-center border rounded-bs"
+                        className="p-xl flex flex-col items-center border rounded-bs fancy-card"
                         custom={i}
                         initial="hidden"
                         animate="visible"

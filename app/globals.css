@@ -22,6 +22,52 @@ body {
   color: white
 }
 
+/* @layer utilities {
+  .bg-white {
+    @apply bg-gradient-to-br from-[#f8f5ff] via-[#f3edf7] to-[#eceeff];
+  }
+} */
+
+@layer utilities {
+  .bg-white {
+    @apply bg-gradient-to-br from-[#f0f4ff] via-[#eef3fb] to-[#f8fafc];
+  }
+
+  .bg-neutral-200 {
+    @apply bg-gradient-to-br from-[#f1f2f7] via-[#e9eaf2] to-[#dee0ec] shadow-[0_1px_6px_0_rgba(220,220,250,0.5)];
+  }
+
+  .sidebar-icon-glow {
+    @apply transition-all hover:drop-shadow-[0_0_6px_rgba(128,90,213,0.5)];
+  }
+
+  .fancy-card {
+    @apply bg-gradient-to-br from-[#f1f2f7] via-[#e9eaf2] to-[#dee0ec] 
+           rounded-xl p-l shadow-[0_4px_12px_rgba(180,180,200,0.2)] 
+           transition-all duration-300 ease-in-out 
+           hover:shadow-[0_6px_20px_rgba(150,150,220,0.3)] 
+           hover:scale-[1.015];
+  }
+
+  .flat-card {
+    @apply bg-neutral-100 border border-neutral-300 rounded-lg p-l 
+           text-neutral-800 transition-colors duration-300 
+           hover:bg-neutral-200;
+  }
+}
+
+/* @layer utilities {
+  .bg-white {
+    @apply bg-gradient-to-br from-[#fdfaf7] via-[#f9f7f1] to-[#f4f3ef];
+  }
+} */
+
+/* @layer utilities {
+  .bg-white {
+    @apply bg-gradient-to-br from-[#f8f5ff] via-[#f5f0fa] to-[#f0f4ff];
+  }
+} */
+
 .hide-scrollbar {
   -ms-overflow-style: none;
   /* IE and Edge */
