@@ -217,7 +217,7 @@ const QueryEvents = ({ queryData, setOpenQuery, setLoading, selectedRange }) => 
                     <div>
                         {!(queryData.filterPrompt) && (
                             <button
-                                className={clsx('flex rounded-bs items-center gap-s px-l py-xs  shadow-lg shadow-secondary-400 group  bg-secondary-900 hover:bg-secondary-1000')}
+                                className={clsx('flex rounded-bs items-center gap-s px-l py-xs  shadow-lg shadow-secondary-400 group  ', enableInsights ? 'bg-secondary-900  hover:bg-secondary-1000' : 'bg-secondary-600  hover:bg-secondary-700')}
                                 onClick={lumoInsightsHandler}
                             >
 
