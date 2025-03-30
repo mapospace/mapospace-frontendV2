@@ -451,7 +451,7 @@ const ComputedMetrics = ({ metrics }) => {
                                             className="h-10xl bg-red-500 rounded-md text-center text-white text-sm flex justify-center items-center "
                                             style={{ width: `${(drop.dropOffRate ? drop.dropOffRate > 100 ? (drop.dropOffRate % 100) : drop.dropOffRate : 0)}%` }}
                                         >
-                                            <div className='text-f-2xl'>
+                                            <div className={clsx('text-f-2xl', drop.dropOffRate.toFixed(2) == 0 && ' ml-[100px]')}>
                                                 {drop.dropOffRate ? drop.dropOffRate.toFixed(2) : 0}%
                                             </div>
 
