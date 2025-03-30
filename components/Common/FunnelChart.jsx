@@ -54,8 +54,8 @@ const FunnelChart = ({ funnelData }) => {
         indexAxis: "y",
         layout: {
             padding: {
-                left: 0,
-                right: 150,
+                left: 50,
+                right: 250,
             },
         },
         plugins: {

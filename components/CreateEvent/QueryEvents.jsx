@@ -16,7 +16,7 @@ import { FaMapMarkerAlt, FaClock, FaFilter, FaList } from "react-icons/fa";
 import { motion } from "framer-motion";
 import ChatBot from './ChatBot';
 
-const QueryEvents = ({ queryData, setOpenQuery, setLoading, selectedRange }) => {
+const QueryEvents = ({ queryData, setOpenQuery, setLoading, selectedRange, setShowRanges }) => {
     const [uniqueKeys, setUniqueKeys] = useState([]);
     const [queryResult, setQueryResult] = useState([]);
     const [enableInsights, setEnableInsights] = useState(false);
@@ -59,7 +59,7 @@ const QueryEvents = ({ queryData, setOpenQuery, setLoading, selectedRange }) => 
             console.log("resolutionTimeOverTimeHandler", response.data)
             setQueryResult(response.data)
 
-
+            setShowRanges(true)
             const keys = getUniqueKeys(response.data.results)
             console.log("queryResult", keys)
             setUniqueKeys(keys);

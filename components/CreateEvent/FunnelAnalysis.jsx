@@ -194,7 +194,7 @@ const computedMetrics2 = {
     ]
 }
 
-const FunnelAnalysis = ({ queryFunnelData, setOpenQuery, setLoading, selectedRange }) => {
+const FunnelAnalysis = ({ queryFunnelData, setOpenQuery, setLoading, selectedRange, setShowRanges }) => {
     const [queryFunnelResult, setQueryFunnelResult] = useState(null)
     const [enableInsights, setEnableInsights] = useState(false);
     const [funnelData, setFunnelData] = useState(null)
@@ -220,6 +220,7 @@ const FunnelAnalysis = ({ queryFunnelData, setOpenQuery, setLoading, selectedRan
             setTimeout(() => {
                 setLoading(false)
             }, 1000)
+            setShowRanges(true)
             setQueryFunnelResult(response.data)
             setFunnelData(response.data.funnelData)
             setFunnelAnalysisInsights(response.data.funnelAnalysisInsights.analysis)
