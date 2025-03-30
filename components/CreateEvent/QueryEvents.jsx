@@ -16,7 +16,7 @@ import { FaMapMarkerAlt, FaClock, FaFilter, FaList } from "react-icons/fa";
 import { motion } from "framer-motion";
 import ChatBot from './ChatBot';
 
-const QueryEvents = ({ queryData, setOpenQuery, setLoading, selectedRange }) => {
+const QueryEvents = ({ queryData, setOpenQuery, setLoading, selectedRange, setShowRanges }) => {
     const [uniqueKeys, setUniqueKeys] = useState([]);
     const [queryResult, setQueryResult] = useState([]);
     const [enableInsights, setEnableInsights] = useState(false);
@@ -59,7 +59,7 @@ const QueryEvents = ({ queryData, setOpenQuery, setLoading, selectedRange }) => 
             console.log("resolutionTimeOverTimeHandler", response.data)
             setQueryResult(response.data)
 
-
+            setShowRanges(true)
             const keys = getUniqueKeys(response.data.results)
             console.log("queryResult", keys)
             setUniqueKeys(keys);
@@ -295,6 +295,10 @@ const QueryEvents = ({ queryData, setOpenQuery, setLoading, selectedRange }) => 
                     </div> */}
                 </div>
             </>}
+
+            {queryData != null && uniqueKeys.length == 0 &&
+                <EmptyState />
+            }
             {/* {uniqueKeys.length > 0 && */}
             <ChatBot conversationId={conversationId} />
             {/*   } */}
@@ -395,3 +399,21 @@ const EventFilterInstructions = ({ setOpenQuery }) => {
         </motion.div>
     );
 };
+
+
+function EmptyState() {
+    return (
+        <div className="flex flex-col items-center justify-center min-h-[500px] text-center px-4">
+            <Image
+                src="/no-data-found.png"
+                alt="No Data Found"
+                width={400}
+                height={400}
+            />
+            <h2 className="text-f-4xl font-semibold text-neutral-600 mb-2">
+                No data found with current filters.
+            </h2>
+
+        </div>
+    )
+}

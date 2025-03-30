@@ -39,7 +39,8 @@ const page = () => {
     const [showCustom, setShowCustom] = useState(false);
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
-    const [selectedRange, setSelectedRange] = useState(null)
+    const [selectedRange, setSelectedRange] = useState(null);
+    const [showRanges, setShowRanges] = useState(false)
 
     useEffect(() => {
         function handleClickOutside(event) {
@@ -123,6 +124,7 @@ const page = () => {
                             onClick={() => {
                                 chnageRouteHandler('/dashboard/create-event?event=dashboard');
                                 setLoading(false);
+                                setShowRanges(false)
                             }}
                         >
                             Dashboard
@@ -132,6 +134,7 @@ const page = () => {
                             onClick={() => {
                                 chnageRouteHandler('/dashboard/create-event?event=events');
                                 setLoading(false);
+                                setShowRanges(false)
                             }}
                         >
                             Events
@@ -141,6 +144,7 @@ const page = () => {
                             onClick={() => {
                                 chnageRouteHandler('/dashboard/create-event?event=funnels');
                                 setLoading(false);
+                                setShowRanges(false)
                             }}
                         >
                             Funnels
@@ -150,6 +154,7 @@ const page = () => {
                             onClick={() => {
                                 chnageRouteHandler('/dashboard/create-event?event=retention');
                                 setLoading(false);
+                                setShowRanges(false)
                             }}
                         >
                             Retention
@@ -159,6 +164,7 @@ const page = () => {
                             onClick={() => {
                                 chnageRouteHandler('/dashboard/create-event?event=segmentation');
                                 setLoading(false);
+                                setShowRanges(false)
                             }}
                         >
                             Segmentation
@@ -168,6 +174,7 @@ const page = () => {
                             onClick={() => {
                                 chnageRouteHandler('/dashboard/create-event?event=event-manager');
                                 setLoading(false);
+                                setShowRanges(false)
                             }}
                         >
                             Event Manager
@@ -219,7 +226,7 @@ const page = () => {
                     </div>
 
                 </div>
-                {(currentEventType == "events" || currentEventType == "funnels" || currentEventType == "segmentation" || currentEventType == "retention") && queryData != null && <div className=' flex  flex-1 flex-col  gap-s mt-s  '>
+                {(currentEventType == "events" || currentEventType == "funnels" || currentEventType == "segmentation" || currentEventType == "retention") && showRanges && <div className=' flex  flex-1 flex-col  gap-s mt-s  '>
                     <div className='flex gap-s '>
                         <div className='flex'>
                             <div className='flex bg-neutral-300 rounded-bs p-xs text-f-m font-normal gap-xs relative '>
@@ -274,11 +281,11 @@ const page = () => {
                 {loading && <AnalyticsSkeleton />}
 
                 {currentEventType == "dashboard" && <Dashboard />}
-                {currentEventType == "events" && <QueryEvents queryData={queryData} setOpenQuery={setOpenQuery} setLoading={setLoading} selectedRange={selectedRange} />}
+                {currentEventType == "events" && <QueryEvents queryData={queryData} setOpenQuery={setOpenQuery} setLoading={setLoading} selectedRange={selectedRange} setShowRanges={setShowRanges} />}
                 {currentEventType == "event-manager" && <EventManager />}
-                {currentEventType == "funnels" && <FunnelAnalysis queryFunnelData={queryFunnelData} setOpenQuery={setOpenQuery} setLoading={setLoading} selectedRange={selectedRange} />}
-                {currentEventType == "segmentation" && <Segmentation querySegmentsData={querySegmentsData} setOpenQuery={setOpenQuery} setLoading={setLoading} selectedRange={selectedRange} />}
-                {currentEventType == "retention" && <Retention queryRetentionData={queryRetentionData} setOpenQuery={setOpenQuery} setLoading={setLoading} selectedRange={selectedRange} />}
+                {currentEventType == "funnels" && <FunnelAnalysis queryFunnelData={queryFunnelData} setOpenQuery={setOpenQuery} setLoading={setLoading} selectedRange={selectedRange} setShowRanges={setShowRanges} />}
+                {currentEventType == "segmentation" && <Segmentation querySegmentsData={querySegmentsData} setOpenQuery={setOpenQuery} setLoading={setLoading} selectedRange={selectedRange} setShowRanges={setShowRanges} />}
+                {currentEventType == "retention" && <Retention queryRetentionData={queryRetentionData} setOpenQuery={setOpenQuery} setLoading={setLoading} selectedRange={selectedRange} setShowRanges={setShowRanges} />}
                 {currentEventType == "lumo" && <AIGeneration />}
 
             </div>

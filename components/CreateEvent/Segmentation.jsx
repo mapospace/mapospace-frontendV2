@@ -24,7 +24,7 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 //     { ipAddress: "4", make: "OnePlus", userCount: 1 },
 // ];
 
-const Segmentation = ({ querySegmentsData, setOpenQuery, setLoading, selectedRange }) => {
+const Segmentation = ({ querySegmentsData, setOpenQuery, setLoading, selectedRange, setShowRanges }) => {
     const [segmentData, setSegmentData] = useState(null);
     const [uniqueKeys, setUniqueKeys] = useState([]);
     useEffect(() => {
@@ -48,6 +48,7 @@ const Segmentation = ({ querySegmentsData, setOpenQuery, setLoading, selectedRan
             setUniqueKeys(Unique)
             console.log("query Segmentation Handler", response.data, Unique)
             setSegmentData(response.data)
+            setShowRanges(true)
             setTimeout(() => {
                 setLoading(false)
             }, 1000)
