@@ -1,18 +1,16 @@
 "use client";
 
-import React, { useRef, useEffect } from "react";
+import React, { useRef } from "react";
 import { Chart as ChartJS, registerables } from "chart.js";
 import { FunnelController, TrapezoidElement } from "chartjs-chart-funnel";
 import { Chart } from "react-chartjs-2";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 
-// Register Chart.js components
 ChartJS.register(...registerables, FunnelController, TrapezoidElement, ChartDataLabels);
 
 const FunnelChart = ({ funnelData }) => {
     const chartRef = useRef(null);
 
-    // Function to create gradient effect
     const getGradient = (ctx, color1, color2) => {
         const gradient = ctx.createLinearGradient(0, 0, 0, 300);
         gradient.addColorStop(0, color1);
@@ -20,34 +18,29 @@ const FunnelChart = ({ funnelData }) => {
         return gradient;
     };
 
-    // Reverse gradient colors to go from DARK to LIGHT based on data values
-    const colorShades = [
+    const  colorShades = [
+        ["#ff6b6b", "#ff8e72"],     // Vivid Red → Coral
+        ["#ff9f68", "#fbc687"],     // Orange → Soft Gold
+        ["#fcd34d", "#fde68a"],     // Yellow → Pale Yellow
+        ["#a78bfa", "#c4b5fd"],     // Violet → Light Purple
+        ["#7dd3fc", "#bae6fd"],     // Sky Blue → Ice Blue
+      ];
 
-        ["#0136f8", "#1a4af9"],
-        ["#345ef9", "#4d72fa"],
-        ["#6786fb", "#809bfc"],
-        ["#99affc", "#b3c3fd"],
-        ["#ccd7fe", "#e6ebfe"],  // Lightest shade (Smallest Value)
-    ]; // Reversing the array to go from DARK to LIGHT
-
-    // Data for the funnel chart
     const data = {
-        labels: funnelData.map((value) => { return value.stage ? value.stage : "Undefined" }), // Funnel Stages
+        labels: funnelData.map((value) => value.stage || "Undefined"),
         datasets: [
             {
                 label: "Conversion Funnel",
-                data: funnelData.map((value) => { return value.count ? value.count : 0 }), // Funnel values
+                data: funnelData.map((value) => value.count || 0),
                 backgroundColor: (ctx) => {
-                    const chart = ctx.chart;
-                    const { ctx: chartCtx } = chart;
+                    const { ctx: chartCtx } = ctx.chart;
                     return colorShades.map(([start, end]) => getGradient(chartCtx, start, end));
                 },
-                hoverBackgroundColor: colorShades.map(([start, end]) => end), // Darker shade on hover
+                hoverBackgroundColor: colorShades.map(([start, end]) => end),
             },
         ],
     };
 
-    // Chart options
     const options = {
         responsive: true,
         maintainAspectRatio: false,
@@ -55,35 +48,47 @@ const FunnelChart = ({ funnelData }) => {
         layout: {
             padding: {
                 left: 0,
-                right: 150,
+                right: 100,
             },
         },
         plugins: {
             legend: { display: false },
-            tooltip: { enabled: true },
+            tooltip: {
+                enabled: true,
+                backgroundColor: "#0f172a",
+                titleColor: "#fff",
+                bodyColor: "#e2e8f0",
+                titleFont: { size: 14 },
+                bodyFont: { size: 14 },
+                padding: 10,
+                cornerRadius: 6,
+            },
             datalabels: {
-                color: "#FFF",
-                font: { weight: "bold", size: 16 },
+                color: "#ffffff",
+                font: { weight: "600", size: 14 },
                 align: "end",
                 anchor: "end",
-                backgroundColor: "rgba(0,0,0,0.6)",
-                borderRadius: 6,
-                padding: 8,
+                backgroundColor: "#334155",
+                borderRadius: 8,
+                padding: 6,
                 formatter: (value, context) => {
-                    return `Stage : ${context.chart.data.labels[context.dataIndex]}\nCount : ${value}`;
+                    return `Stage: ${context.chart.data.labels[context.dataIndex]}\nCount: ${value}`;
                 },
             },
-
         },
         scales: {
             y: {
                 reverse: false,
+                ticks: {
+                    color: "#334155",
+                    font: { weight: "500" },
+                },
             },
         },
     };
 
     return (
-        <div className="w-full mt-6 h-[60vh] ">
+        <div className="w-full mt-6 h-[60vh]">
             <Chart ref={chartRef} type="funnel" data={data} options={options} />
         </div>
     );

@@ -88,34 +88,34 @@ export default Dashboard
 
 const randomCards = [
     {
-      location: "Kerala",
-      summary: "Spike in vegetation index after 2024 monsoon suggests floodplain recovery in affected districts.",
-      updated: "28-03-2025"
+      "location": "Kerala",
+      "summary": "Regional ads with Malayalam influencers boosted FMCG brand recall by 22%.",
+      "updated": "28-03-2025"
     },
     {
-      location: "Delhi",
-      summary: "Unusual rise in surface temperature observed in industrial zones post-winter; urban heat island effect suspected.",
-      updated: "25-03-2025"
+      "location": "Delhi",
+      "summary": "Metro and billboard campaign drove a 30% sales spike in tech gadget launch.",
+      "updated": "25-03-2025"
     },
     {
-      location: "Maharashtra",
-      summary: "Increased fire alerts in Vidarbha region detected through thermal satellite layers since early March.",
-      updated: "27-03-2025"
+      "location": "Maharashtra",
+      "summary": "AR filters and campus activations tripled fashion brand’s Instagram engagement.",
+      "updated": "27-03-2025"
     },
     {
-      location: "Rajasthan",
-      summary: "Sand dune movement and vegetation loss evident in Jaisalmer and Barmer zones using NDVI difference layers.",
-      updated: "24-03-2025"
+      "location": "Rajasthan",
+      "summary": "Wedding jewelry pop-ups in malls saw strong early bookings.",
+      "updated": "24-03-2025"
     },
     {
-      location: "Assam",
-      summary: "Riverine changes along Brahmaputra detected using time-series analysis — risk of displacement flagged.",
-      updated: "26-03-2025"
+      "location": "Assam",
+      "summary": "Bundled mobile offer with local telecom stores lifted footfall by 18%.",
+      "updated": "26-03-2025"
     },
     {
-      location: "Tamil Nadu",
-      summary: "Chennai coast saw a 12% drop in coastal vegetation cover; correlated with urban expansion zones.",
-      updated: "23-03-2025"
+      "location": "Tamil Nadu",
+      "summary": "Smart kitchen launch in Chennai got 2.3M impressions via live demos.",
+      "updated": "23-03-2025"
     }
   ];
   

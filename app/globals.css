@@ -54,6 +54,15 @@ body {
            text-neutral-800 transition-colors duration-300 
            hover:bg-neutral-200;
   }
+  .react-loading-skeleton {
+    background-color: #e5e7eb !important; /* Tailwind's gray-200 */
+    background-image: linear-gradient(90deg, #e5e7eb, #f3f4f6, #e5e7eb) !important; /* subtle shimmer */
+    border-radius: 0.75rem !important; /* rounded corners */
+    height: 1rem !important;
+    opacity: 0.9 !important;
+    animation-duration: 1.2s !important;
+    animation-timing-function: ease-in-out !important;
+  }
 }
 
 /* @layer utilities {
