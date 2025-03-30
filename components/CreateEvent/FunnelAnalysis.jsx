@@ -392,86 +392,24 @@ const FunnelDataAnalysis = ({ analysis, funnelData }) => {
                 </div>
             )}
 
-            {/* Bottlenecks */}
-            {/* {analysis.bottlenecks?.length > 0 && (
-                <div className="bg-white p-6 rounded-bs border mt-6">
-                    <h2 className="text-xl font-semibold text-gray-800">Bottlenecks</h2>
-                    <ul className="text-gray-700 mt-2">
-                        {analysis.bottlenecks.map((bottleneck, index) => (
-                            <li key={index} className="list-disc ml-6">{bottleneck}</li>
-                        ))}
-                    </ul>
-                </div>
-            )} */}
-
-            {/* Recommendations */}
-            {/* {analysis.recommendations?.length > 0 && (
-                <div className="bg-white p-6 rounded-bs border mt-6">
-                    <h2 className="text-xl font-semibold text-gray-800">Recommendations</h2>
-                    <ul className="text-gray-700 mt-2">
-                        {analysis.recommendations.map((rec, index) => (
-                            <li key={index} className="list-disc ml-6">{rec}</li>
-                        ))}
-                    </ul>
-                </div>
-            )} */}
-
-            {/* Performance Metrics */}
             {analysis.performanceMetrics && (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
                     <div className="bg-white p-xl rounded-bs border">
                         <h3 className="text-f-2xl font-semibold text-gray-800">Top Performing Stage</h3>
-                        <p className="text-gray-700 text-f-4xl mt-s">{analysis.performanceMetrics.topPerformingStage}</p>
+                        <p className="text-gray-700 text-f-4xl mt-s">{analysis.performanceMetrics.topPerformingStage ? analysis.performanceMetrics.topPerformingStage : 0}</p>
                     </div>
                     <div className="bg-white p-xl rounded-bs border">
                         <h3 className="text-f-2xl font-semibold text-gray-800">Lowest Performing Stage</h3>
-                        <p className="text-gray-700 text-f-4xl mt-s">{analysis.performanceMetrics.lowestPerformingStage}</p>
+                        <p className="text-gray-700 text-f-4xl mt-s">{analysis.performanceMetrics.lowestPerformingStage ? analysis.performanceMetrics.lowestPerformingStage : 0}</p>
                     </div>
                     <div className="bg-white p-xl rounded-bs border">
                         <h3 className="text-f-2xl font-semibold text-gray-800">Avg. Conversion Rate</h3>
-                        <p className="text-gray-700 text-f-4xl mt-s">{analysis.performanceMetrics.averageConversionRate.toFixed(2)}%</p>
+                        <p className="text-gray-700 text-f-4xl mt-s">{analysis.performanceMetrics.averageConversionRate ? analysis.performanceMetrics.averageConversionRate.toFixed(2) : 0}%</p>
                     </div>
                 </div>
             )}
 
-            {/* Drop-Off & Conversion Rates */}
-            {/* {computedMetrics.dropOffs?.length > 0 && (
-                <div className="mt-6 bg-white p-6 rounded-bs border">
-                    <h2 className="text-xl font-semibold text-gray-800">Drop-Off Rates</h2>
-                    {computedMetrics.dropOffs.map((drop, index) => (
-                        <div key={index} className="mb-4">
-                            <p className="text-gray-600">{drop.fromStage} → {drop.toStage}</p>
-                            <div className="relative w-full bg-gray-200 rounded-md h-6 mt-2">
-                                <div
-                                    className="h-6 bg-red-500 rounded-md text-center text-white text-sm"
-                                    style={{ width: `${drop.dropOffRate}%` }}
-                                >
-                                    {drop.dropOffRate.toFixed(2)}%
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            )} */}
 
-            {/* {computedMetrics.conversionRates?.length > 0 && (
-                <div className="mt-6 bg-white p-6 rounded-bs border">
-                    <h2 className="text-xl font-semibold text-gray-800">Conversion Rates</h2>
-                    {computedMetrics.conversionRates.map((conv, index) => (
-                        <div key={index} className="mb-4">
-                            <p className="text-gray-600">{conv.fromStage} → {conv.toStage}</p>
-                            <div className="relative w-full bg-gray-200 rounded-md h-6 mt-2">
-                                <div
-                                    className="h-6 bg-green-500 rounded-md text-center text-white text-sm"
-                                    style={{ width: `${conv.rate}%` }}
-                                >
-                                    {conv.rate.toFixed(2)}%
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            )} */}
         </div>
     );
 };
@@ -511,10 +449,10 @@ const ComputedMetrics = ({ metrics }) => {
                                     <div className="relative w-full bg-neutral-300 rounded-md h-10xl mt-2">
                                         <div
                                             className="h-10xl bg-red-500 rounded-md text-center text-white text-sm flex justify-center items-center "
-                                            style={{ width: `${drop.dropOffRate % 100}%` }}
+                                            style={{ width: `${(drop.dropOffRate ? drop.dropOffRate : 0) % 100}%` }}
                                         >
                                             <div className='text-f-2xl'>
-                                                {drop.dropOffRate.toFixed(2)}%
+                                                {drop.dropOffRate ? drop.dropOffRate.toFixed(2) : 0}%
                                             </div>
 
                                         </div>
@@ -676,3 +614,5 @@ const FunnelFilterInstructions = ({ setOpenQuery }) => {
         </motion.div>
     );
 };
+
+

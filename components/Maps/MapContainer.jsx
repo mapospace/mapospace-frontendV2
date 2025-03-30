@@ -50,6 +50,8 @@ const MapContainer = ({ catalogList, setAppliedFilter, appliedFilter }) => {
     const [showCustom, setShowCustom] = useState(false);
     const [showMap, setShowMap] = useState(false);
     const datePickerRef = useRef(null);
+    const param = usePathname();
+
 
     useEffect(() => {
         function handleClickOutside(event) {
@@ -354,9 +356,9 @@ const MapContainer = ({ catalogList, setAppliedFilter, appliedFilter }) => {
                     </div>
                 </div>
                 <div className=' flex items-end justify-end gap-s'>
-                    <button className='bg-neutral-200 text-f-m text-neutral-1200 rounded-md flex px-l py-s items-center ' onClick={() => { setShowFilter(prev => !prev) }}>
+                    {param != '/dashboard/scat' && <button className='bg-neutral-200 text-f-m text-neutral-1200 rounded-md flex px-l py-s items-center ' onClick={() => { setShowFilter(prev => !prev) }}>
                         <LuFilter /> <span className='ml-s'>Filter</span>
-                    </button>
+                    </button>}
                     <button className='bg-neutral-200 text-f-m text-neutral-1200 rounded-md flex px-l py-s items-center ' onClick={() => { setShowMap(prev => !prev) }}>
                         <FiMap /> <span className='ml-s'>Map</span>
                     </button>
