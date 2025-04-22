@@ -233,7 +233,7 @@ const QueryFilter = ({ setShowFilter, setShowStageFilter, setShowGeo, setPropert
     return (
         <div className='filter h-[calc(100%-50px)] overflow-scroll hide-scrollbar '>
             {/*FUNNEL EVENT */}
-            {currentEventType == "funnels" && <div className='p-xs border mt-m mx-s rounded-bs'>
+            {currentEventType == "funnels" && currentEventType != "lumo" && <div className='p-xs border mt-m mx-s rounded-bs'>
                 <div className='flex justify-between items-center cursor-pointer' onClick={() => { setOpenFunnelsEvent(prev => !prev) }}>
                     <div className='flex items-center gap-xs py-xs'>
                         <TbTag />
@@ -292,7 +292,7 @@ const QueryFilter = ({ setShowFilter, setShowStageFilter, setShowGeo, setPropert
             </div>}
 
             {/* EVENT TYPE */}
-            {currentEventType != "funnels" && currentEventType != "retention" && <div className='p-xs border mt-m mx-s rounded-bs'>
+            {currentEventType != "funnels" && currentEventType != "retention" && currentEventType != "lumo" && <div className='p-xs border mt-m mx-s rounded-bs'>
                 <div className='flex justify-between items-center cursor-pointer' onClick={() => { setOpenEventType(prev => !prev) }}>
                     <div className='flex items-center gap-xs py-xs'>
                         <TbTag />
@@ -513,7 +513,7 @@ const QueryFilter = ({ setShowFilter, setShowStageFilter, setShowGeo, setPropert
                         </div>
 
                         <div className={clsx('border w-full p-s mt-s rounded-bs text-f-l flex justify-center items-center  h-10xl  border-dashed', polygonCreated ? 'border-secondary-900 bg-secondary-200 cursor-default' : 'bg-neutral-200 border-neutral-600 cursor-pointer')}
-                            onClick={polygonCreated ? undefined : setShowGeo}>
+                            onClick={setShowGeo}>
                             <div className='relative flex items-center justify-center text-neutral-900 gap-s'>
                                 {polygonCreated ? <SiTicktick className=' w-xl h-xl' /> : <PiPolygonFill className=' w-xl h-xl' />}
                                 <div>

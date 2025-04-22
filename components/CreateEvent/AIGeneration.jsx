@@ -149,7 +149,7 @@ const style = {
     }),
 }
 
-const AIGeneration = () => {
+const AIGeneration = ({ queryLumoData }) => {
     const [eventNameList, setEventNameList] = useState([]);
     const [result, setResult] = useState([]);
     const [selectedValueOption, setSelectedValueOption] = useState(null);
@@ -189,6 +189,11 @@ const AIGeneration = () => {
         getEventHandler();
     }, [])
 
+    useEffect(() => {
+        if (queryLumoData != null) {
+            generateAIVisualizationHandler()
+        }
+    }, [queryLumoData])
 
     const getEventHandler = async () => {
         try {
@@ -199,6 +204,7 @@ const AIGeneration = () => {
                 console.log(response.message || "Failed to fetch data.");
                 return;
             }
+
 
             const data = response.data.customEventTypes.map((event) => {
                 return { value: event.name, label: event.name }
@@ -246,12 +252,14 @@ const AIGeneration = () => {
             setLoading(true);
             setShowResult(false);
             const authService = new AuthServices();
-            const response = await authService.postApiCallHandler(API_ENDPOINTS.AI.CustomEvents, {
+            const payload = {
                 aggregationPrompt: query,
                 customEventTypeName: selectedValueOption,
-                "startDate": "2023-01-01T00:00:00Z",
-                "endDate": "2026-02-28T23:59:59Z",
-            });
+                startDate: "2023-01-01T00:00:00Z",
+                endDate: "2026-02-28T23:59:59Z",
+                ...(queryLumoData || {})
+            };
+            const response = await authService.postApiCallHandler(API_ENDPOINTS.AI.CustomEvents, payload);
 
             if (response?.error) {
                 console.log(response)
@@ -261,7 +269,7 @@ const AIGeneration = () => {
             console.log("total sales over all", response?.data);
             setTimeout(() => {
                 setLoading(false);
-                setShowResult(true)
+                setShowResult(true);
             }, 1500)
             setResult(response?.data.results)
         } catch (err) {
@@ -445,7 +453,7 @@ const AIGeneration = () => {
 
             {/* loading */}
             {loading &&
-                <div className="p-4 space-y-6 min-h-screen">
+                <div className="p-4 space-y-6 min-h-screen ">
                     {/* Title */}
                     <div className="w-1/3">
                         <Skeleton height={30} />

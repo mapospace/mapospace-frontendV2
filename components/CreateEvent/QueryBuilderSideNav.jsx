@@ -17,7 +17,7 @@ import { PiPolygonFill } from "react-icons/pi";
 import { GrLocationPin } from "react-icons/gr";
 import { IoCloseSharp } from "react-icons/io5";
 import { useSearchParams } from 'next/navigation';
-const QueryBuilderSideNav = ({ setQueryData, setQueryFunnelData, setQuerySegmentsData, setQueryRetentionData, openQuery, setOpenQuery, setActiveLoading }) => {
+const QueryBuilderSideNav = ({ setQueryData, setQueryFunnelData, setQuerySegmentsData, setQueryLumoData, setQueryRetentionData, openQuery, setOpenQuery, setActiveLoading }) => {
     // const [openQuery, setOpenQuery] = useState(false);
     const [showFilter, setShowFilter] = useState(false);
     const [showStageFilter, setShowStageFilter] = useState(false);
@@ -278,6 +278,7 @@ const QueryBuilderSideNav = ({ setQueryData, setQueryFunnelData, setQuerySegment
             return;
         }
         setActiveLoading(true);
+        showGeo && setShowGeo(false);
         const newData = {
             ...queryFilterData,
             filters: query,
@@ -383,6 +384,17 @@ const QueryBuilderSideNav = ({ setQueryData, setQueryFunnelData, setQuerySegment
             setOpenQuery(false)
             console.log("runQueryHandler retention", data)
         }
+        else if (currentEventType == "lumo") {
+            let data = {};
+            if (geo) {
+                data = { geojson: geo.geojson }
+            }
+
+            setQueryLumoData(data)
+            setOpenQuery(false)
+            console.log("lumo filter", data)
+        }
+
     }
 
     return (

@@ -48,7 +48,7 @@ function AIChartRenderer({ results }) {
     }
 
     const chart = results[0] // We'll work with the first chart for now
-    const formattedData = chart.data.map(item => ({
+    const formattedData = chart.data && chart.data.map(item => ({
         name: item.label || 'Unknown',
         value: typeof item.value === 'number' ? item.value : parseFloat(item.value) || 0,
         percentage: item.percentage,
@@ -56,6 +56,10 @@ function AIChartRenderer({ results }) {
     }))
 
     // Calculate summary data
+    if (!formattedData) {
+        return;
+    }
+
     const totalValue = formattedData.reduce((sum, item) => sum + item.value, 0)
     const averageValue = totalValue / formattedData.length
     const highest = formattedData.reduce((max, item) => Math.max(max, item.value), 0)

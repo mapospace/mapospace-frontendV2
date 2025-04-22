@@ -33,6 +33,7 @@ const page = () => {
     const [queryFunnelData, setQueryFunnelData] = useState(null);
     const [querySegmentsData, setQuerySegmentsData] = useState(null);
     const [queryRetentionData, setQueryRetentionData] = useState(null);
+    const [queryLumoData, setQueryLumoData] = useState(null);
     const [loading, setLoading] = useState(false);
     const [ranges, SetRanges] = useState([])
     const [currentRange, setCurrentRange] = useState(null);
@@ -114,7 +115,7 @@ const page = () => {
 
     return (
         <div className={clsx("  max-h-screen pt-6xl flex overflow-hidden bg-white")} >
-            {currentEventType != "dashboard" && currentEventType != "event-manager" && currentEventType != "lumo" && <QueryBuilderSideNav setQueryData={setQueryData} setQueryFunnelData={setQueryFunnelData} setQuerySegmentsData={setQuerySegmentsData} setQueryRetentionData={setQueryRetentionData} openQuery={openQuery} setOpenQuery={setOpenQuery} setActiveLoading={setLoading} />}
+            {currentEventType != "dashboard" && currentEventType != "event-manager" && <QueryBuilderSideNav setQueryData={setQueryData} setQueryFunnelData={setQueryFunnelData} setQuerySegmentsData={setQuerySegmentsData} setQueryRetentionData={setQueryRetentionData} setQueryLumoData={setQueryLumoData} openQuery={openQuery} setOpenQuery={setOpenQuery} setActiveLoading={setLoading} />}
             <div className="flex-1 pt-xl px-l overflow-y-scroll ">
                 <div className=' flex justify-start  items-end '>
                     {/* <div className='text-neutral-1300 font-semibold text-2xl'>{toCapitalizedCase(currentEventType?.replace("-", " "))}</div> */}
@@ -278,7 +279,7 @@ const page = () => {
 
                     </div>
                 </div>}
-                {loading && <AnalyticsSkeleton />}
+                {loading && currentEventType != "lumo" && <AnalyticsSkeleton />}
 
                 {currentEventType == "dashboard" && <Dashboard />}
                 {currentEventType == "events" && <QueryEvents queryData={queryData} setOpenQuery={setOpenQuery} setLoading={setLoading} selectedRange={selectedRange} setShowRanges={setShowRanges} />}
@@ -286,7 +287,7 @@ const page = () => {
                 {currentEventType == "funnels" && <FunnelAnalysis queryFunnelData={queryFunnelData} setOpenQuery={setOpenQuery} setLoading={setLoading} selectedRange={selectedRange} setShowRanges={setShowRanges} />}
                 {currentEventType == "segmentation" && <Segmentation querySegmentsData={querySegmentsData} setOpenQuery={setOpenQuery} setLoading={setLoading} selectedRange={selectedRange} setShowRanges={setShowRanges} />}
                 {currentEventType == "retention" && <Retention queryRetentionData={queryRetentionData} setOpenQuery={setOpenQuery} setLoading={setLoading} selectedRange={selectedRange} setShowRanges={setShowRanges} />}
-                {currentEventType == "lumo" && <AIGeneration />}
+                {currentEventType == "lumo" && <AIGeneration queryLumoData={queryLumoData} />}
 
             </div>
 
