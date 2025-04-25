@@ -160,6 +160,7 @@ const AIGeneration = ({ queryLumoData }) => {
     const [error, setError] = useState("");
     const [tableData, setTableData] = useState(null);
     const [uniqueKeys, setUniqueKeys] = useState([]);
+    const [customError, setCustomError] = useState(false);
 
     const handleGenerate = () => {
         if (!selectedValueOption) {
@@ -262,10 +263,14 @@ const AIGeneration = ({ queryLumoData }) => {
             const response = await authService.postApiCallHandler(API_ENDPOINTS.AI.CustomEvents, payload);
 
             if (response?.error) {
-                console.log(response)
-                customError(response.message || "Failed to fetch data.");
+                console.log(response);
+                setCustomError(true);
+                setLoading(false);
+                setShowResult(true);
+                // customError(response.message || "Failed to fetch data.");
                 return;
             }
+            setCustomError(false);
             console.log("total sales over all", response?.data);
             setTimeout(() => {
                 setLoading(false);
@@ -476,8 +481,9 @@ const AIGeneration = ({ queryLumoData }) => {
                 </div>
             }
 
+            {!loading && customError && <div className="text-red-500 text-center mt-4">No data found</div>}
             {/* Results */}
-            {showResult && result.length > 0 &&
+            {showResult && !customError && result.length > 0 &&
                 <div className="mt-xl mb-xl ">
                     <div className="text-f-4xl font-bold mb-xl pb-s text-black  border-b">
                         <div>AI-Generated Data Insights</div>

@@ -103,6 +103,9 @@ export default {
           1400: '#070d17',
           1500: '#050a12',
         },
+        customData: {
+          100: '#e0dce2'
+        }
       },
       screens: {
         'sc-xs': '576px',

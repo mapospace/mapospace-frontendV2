@@ -135,13 +135,13 @@ const page = () => {
     return (
         <div className='text-black py-9xl px-xl bg-white'>
             <div className='flex'>
-                <div className='flex bg-neutral-200 rounded-bs p-xs text-f-m font-normal gap-xs'>
+                <div className='flex bg-customData-100 rounded-bs p-xs text-f-m font-normal gap-xs'>
                     {ranges.length > 0 && ranges.map((range) => (
-                        <div className={`px-xl py-xs cursor-pointer hover:bg-neutral-300 rounded-bs  ${range.id == currentRange.id && 'bg-white hover:bg-white'}`} key={range.id} onClick={() => { selectedRangeHandler(range) }}>{range.title}</div>
+                        <div className={`px-xl py-xs cursor-pointer hover:bg-neutral-200 rounded-bs  ${range.id == currentRange.id && 'bg-white hover:bg-white'}`} key={range.id} onClick={() => { selectedRangeHandler(range) }}>{range.title}</div>
                     ))}
                 </div>
             </div>
-            <div className=" grid  grid-cols-2 gap-xl font-sans    mt-xl">
+            <div className=" grid  grid-cols-2 gap-xl font-sans  mt-xl">
                 <div className="col-span-1 p-xl bg-white rounded-bs border">
                     <h2 className="text-f-l font-bold">TOTAL events in this Month</h2>
                     <p className="text-gray-500">All events across all platforms</p>

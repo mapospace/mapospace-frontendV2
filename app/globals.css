@@ -7,14 +7,14 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #ffffff;
+  --background: #f9f5fc;
+  --foreground: #f9f5fc;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #ffffff;
-    --foreground: #ededed;
+    --background: #f9f5fc;
+    --foreground: #f9f5fc;
   }
 }
 
@@ -28,42 +28,37 @@ body {
   }
 } */
 
-@layer utilities {
+/* @layer utilities {
   .bg-white {
     @apply bg-gradient-to-br from-[#f0f4ff] via-[#eef3fb] to-[#f8fafc];
   }
 
   .bg-neutral-200 {
-    @apply bg-gradient-to-br from-[#f1f2f7] via-[#e9eaf2] to-[#dee0ec] shadow-[0_1px_6px_0_rgba(220,220,250,0.5)];
+    @apply bg-gradient-to-br from-[#f1f2f7] via-[#e9eaf2] to-[#dee0ec] shadow-[0_1px_6px_0_rgba(220, 220, 250, 0.5)];
   }
 
   .sidebar-icon-glow {
-    @apply transition-all hover:drop-shadow-[0_0_6px_rgba(128,90,213,0.5)];
+    @apply transition-all hover:drop-shadow-[0_0_6px_rgba(128, 90, 213, 0.5)];
   }
 
   .fancy-card {
-    @apply bg-gradient-to-br from-[#f1f2f7] via-[#e9eaf2] to-[#dee0ec] 
-           rounded-xl p-l shadow-[0_4px_12px_rgba(180,180,200,0.2)] 
-           transition-all duration-300 ease-in-out 
-           hover:shadow-[0_6px_20px_rgba(150,150,220,0.3)] 
-           hover:scale-[1.015];
+    @apply bg-gradient-to-br from-[#f1f2f7] via-[#e9eaf2] to-[#dee0ec] rounded-xl p-l shadow-[0_4px_12px_rgba(180, 180, 200, 0.2)] transition-all duration-300 ease-in-out hover:shadow-[0_6px_20px_rgba(150, 150, 220, 0.3)] hover:scale-[1.015];
   }
 
   .flat-card {
-    @apply bg-neutral-100 border border-neutral-300 rounded-lg p-l 
-           text-neutral-800 transition-colors duration-300 
-           hover:bg-neutral-200;
+    @apply bg-neutral-100 border border-neutral-300 rounded-lg p-l text-neutral-800 transition-colors duration-300 hover:bg-neutral-200;
   }
+
   .react-loading-skeleton {
-    background-color: #e5e7eb !important; /* Tailwind's gray-200 */
-    background-image: linear-gradient(90deg, #e5e7eb, #f3f4f6, #e5e7eb) !important; /* subtle shimmer */
-    border-radius: 0.75rem !important; /* rounded corners */
+    background-color: #e5e7eb !important;
+    background-image: linear-gradient(90deg, #e5e7eb, #f3f4f6, #e5e7eb) !important;
+    border-radius: 0.75rem !important;
     height: 1rem !important;
     opacity: 0.9 !important;
     animation-duration: 1.2s !important;
     animation-timing-function: ease-in-out !important;
   }
-}
+} */
 
 /* @layer utilities {
   .bg-white {

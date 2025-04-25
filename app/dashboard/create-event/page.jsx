@@ -119,7 +119,7 @@ const page = () => {
             <div className="flex-1 pt-xl px-l overflow-y-scroll ">
                 <div className=' flex justify-start  items-end '>
                     {/* <div className='text-neutral-1300 font-semibold text-2xl'>{toCapitalizedCase(currentEventType?.replace("-", " "))}</div> */}
-                    <div className={clsx('flex  rounded-l-bs p-xs text-f-m font-normal gap-xs relative h-[38px] bg-neutral-300 text-black')}>
+                    <div className={clsx('flex  rounded-l-bs p-xs text-f-m font-normal gap-xs relative h-[38px] bg-customData-100 text-black')}>
                         <div
                             className={clsx("px-s py-xs cursor-pointer hover:bg-white rounded-bs hover:text-black", currentEventType == "dashboard" && 'bg-white hover:bg-white')}
                             onClick={() => {
@@ -183,7 +183,7 @@ const page = () => {
 
 
                     </div>
-                    <div className={clsx('flex rounded-r-bs p-xs text-f-m font-normal gap-xs relative h-[38px] bg-neutral-300 ')} >
+                    <div className={clsx('flex rounded-r-bs p-xs text-f-m font-normal gap-xs relative h-[38px] bg-customData-100 ')} >
 
                         <button className={clsx("ai_button", currentEventType == "lumo" && 'before:bg-gradient-to-b before:from-secondary-700 before:to-secondary-900')} onClick={() => {
                             chnageRouteHandler('/dashboard/create-event?event=lumo')
@@ -230,10 +230,10 @@ const page = () => {
                 {(currentEventType == "events" || currentEventType == "funnels" || currentEventType == "segmentation" || currentEventType == "retention") && showRanges && <div className=' flex  flex-1 flex-col  gap-s mt-s  '>
                     <div className='flex gap-s '>
                         <div className='flex'>
-                            <div className='flex bg-neutral-300 rounded-bs p-xs text-f-m font-normal gap-xs relative '>
+                            <div className='flex bg-customData-100 rounded-bs p-xs text-f-m font-normal gap-xs relative '>
                                 <div className={`px-s py-xs cursor-pointer hover:bg-neutral-300 rounded-bs text-black ${currentRange && 10 == currentRange.id && 'bg-white hover:bg-white'} `} onClick={() => { selectedRangeHandler({ id: 10 }) }} >Custom</div>
                                 {ranges.length > 0 && ranges.map((range) => (
-                                    <div className={`px-s py-xs cursor-pointer hover:bg-neutral-300 rounded-bs text-black  ${range.id == currentRange.id && 'bg-white hover:bg-white'}`} key={range.id} onClick={() => { selectedRangeHandler(range) }}>{range.title}</div>
+                                    <div className={`px-s py-xs cursor-pointer hover:bg-neutral-200 rounded-bs text-black  ${range.id == currentRange.id && 'bg-white hover:bg-white'}`} key={range.id} onClick={() => { selectedRangeHandler(range) }}>{range.title}</div>
                                 ))}
                                 {showCustom && <div ref={datePickerRef} className='absolute bg-white border z-40 left-0 top-12 rounded-bs flex flex-col items-start p-s gap-s'>
                                     <div className='flex justify-between items-center w-full'>

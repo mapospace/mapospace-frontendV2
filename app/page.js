@@ -1,25 +1,42 @@
-import BentoGrid from "@/components/LandingPage/BentoGrid";
-import CompanyName from "@/components/LandingPage/CompanyName";
-import Faq from "@/components/LandingPage/Faq";
-import Footer from "@/components/LandingPage/Footer";
-import Header from "@/components/LandingPage/Header";
-import How from "@/components/LandingPage/How";
-import MainComponent from "@/components/LandingPage/MainComponent";
-import Plan from "@/components/LandingPage/Plan";
-import Stories from "@/components/LandingPage/Stories";
+'use client'
+
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+
+// import BentoGrid from "@/components/LandingPage/BentoGrid";
+// import CompanyName from "@/components/LandingPage/CompanyName";
+// import Faq from "@/components/LandingPage/Faq";
+// import Footer from "@/components/LandingPage/Footer";
+// import Header from "@/components/LandingPage/Header";
+// import How from "@/components/LandingPage/How";
+// import MainComponent from "@/components/LandingPage/MainComponent";
+// import Plan from "@/components/LandingPage/Plan";
+// import Stories from "@/components/LandingPage/Stories";
 
 export default function Home() {
-  return (
-    <div className="overflow-hidden bg-white" >
-      < Header />
-      <MainComponent />
-      <How />
-      <BentoGrid />
-      <CompanyName />
-      <Stories />
-      <Plan />
-      <Faq />
-      <Footer />
-    </div >
-  );
+  const router = useRouter();
+
+  useEffect(() => {
+    router.replace('/sign-in'); // your sign-in route
+  }, [router]);
+
+  return null; // prevent any content from rendering while redirecting
 }
+
+
+// export default function Home() {
+
+//   return (
+//     <div className="overflow-hidden bg-white" >
+//       < Header />
+//       <MainComponent />
+//       <How />
+//       <BentoGrid />
+//       <CompanyName />
+//       <Stories />
+//       <Plan />
+//       <Faq />
+//       <Footer />
+//     </div >
+//   );
+// }

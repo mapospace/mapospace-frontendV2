@@ -15,16 +15,16 @@ const SideNav = ({ routeHandler }) => {
         <div>
           {/* Home */}
           <div
-            className="relative flex flex-col items-center justify-center py-m border-b border-neutral-300 group cursor-pointer transition-all duration-300 hover:bg-gradient-to-br hover:from-[#f3e8ff] hover:to-[#f0f4ff] rounded-lg"
+            className="relative flex flex-col items-center justify-center py-m border-b border-neutral-300 group cursor-pointer transition-all duration-300  rounded-lg"
             onClick={() => routeHandler('/dashboard')}
           >
             <GoHomeFill
               className={clsx(
-                'w-7 h-7 text-gray-400 transition-all duration-300 group-hover:scale-[1.15] group-hover:drop-shadow-[0_0_8px_rgba(128,90,213,0.3)]',
+                'w-7 h-7 text-gray-400 transition-all duration-300 group-hover:scale-[1.05] group-hover:text-secondary-800 ',
                 param === "/dashboard" && "text-secondary-900"
               )}
             />
-            <p className="text-f-xs text-gray-600 mt-xs group-hover:text-secondary-800 transition-all duration-300">Home</p>
+            <p className="text-f-xs text-gray-600 mt-xs group-hover:text-secondary-800 group-hover:font-semibold transition-all duration-300">Home</p>
           </div>
 
           {/* Menu Items */}
@@ -75,16 +75,16 @@ const SideNav = ({ routeHandler }) => {
 
 const SidebarItem = ({ icon: Icon, label, path, param, onClick }) => (
   <div
-    className="relative flex flex-col items-center justify-center py-m group cursor-pointer transition-all duration-300 hover:bg-gradient-to-br hover:from-[#f1f2f7] hover:to-[#e6e7f3] rounded-lg"
+    className="relative flex flex-col items-center justify-center py-m group cursor-pointer transition-all duration-300 rounded-lg"
     onClick={onClick}
   >
     <Icon
       className={clsx(
-        'w-7 h-7 text-gray-400 transition-all duration-300 group-hover:scale-[1.15] group-hover:drop-shadow-[0_0_8px_rgba(128,90,213,0.3)]',
+        'w-7 h-7 text-gray-400 transition-all duration-300 group-hover:scale-[1.05] group-hover:text-secondary-800 ',
         param.includes(path) && "text-secondary-900"
       )}
     />
-    <p className="text-f-xs mt-xs text-gray-600 group-hover:text-secondary-800 transition-all duration-300">{label}</p>
+    <p className="text-f-xs mt-xs text-gray-600 group-hover:text-secondary-800 group-hover:font-semibold transition-all duration-300">{label}</p>
   </div>
 );
 

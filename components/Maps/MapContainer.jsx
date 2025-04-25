@@ -306,10 +306,10 @@ const MapContainer = ({ catalogList, setAppliedFilter, appliedFilter }) => {
                 <div className=' flex  flex-1 flex-col  gap-s'>
                     <div className='flex gap-s '>
                         <div className='flex'>
-                            <div className='flex bg-neutral-200 rounded-bs p-xs text-f-m font-normal gap-xs relative '>
-                                <div className={`px-s py-xs cursor-pointer hover:bg-neutral-300 rounded-bs text-black ${currentRange && 10 == currentRange.id && 'bg-white hover:bg-white'} `} onClick={() => { selectedRangeHandler({ id: 10 }) }} >Custom</div>
+                            <div className='flex bg-customData-100 rounded-bs p-xs text-f-m font-normal gap-xs relative '>
+                                <div className={`px-s py-xs cursor-pointer hover:bg-neutral-200 rounded-bs text-black ${currentRange && 10 == currentRange.id && 'bg-white hover:bg-white'} `} onClick={() => { selectedRangeHandler({ id: 10 }) }} >Custom</div>
                                 {ranges.length > 0 && ranges.map((range) => (
-                                    <div className={`px-s py-xs cursor-pointer hover:bg-neutral-300 rounded-bs text-black  ${range.id == currentRange.id && 'bg-white hover:bg-white'}`} key={range.id} onClick={() => { selectedRangeHandler(range) }}>{range.title}</div>
+                                    <div className={`px-s py-xs cursor-pointer hover:bg-neutral-200 rounded-bs text-black  ${range.id == currentRange.id && 'bg-white hover:bg-white'}`} key={range.id} onClick={() => { selectedRangeHandler(range) }}>{range.title}</div>
                                 ))}
                                 {showCustom && <div ref={datePickerRef} className='absolute bg-white border z-40 left-0 top-12 rounded-bs flex flex-col items-start p-s gap-s'>
                                     <div className='flex justify-between items-center w-full'>
@@ -356,10 +356,10 @@ const MapContainer = ({ catalogList, setAppliedFilter, appliedFilter }) => {
                     </div>
                 </div>
                 <div className=' flex items-end justify-end gap-s'>
-                    {param != '/dashboard/scat' && <button className='bg-neutral-200 text-f-m text-neutral-1200 rounded-md flex px-l py-s items-center ' onClick={() => { setShowFilter(prev => !prev) }}>
+                    {param != '/dashboard/scat' && <button className='bg-customData-100 text-f-m text-neutral-1200 rounded-md flex px-l py-s items-center ' onClick={() => { setShowFilter(prev => !prev) }}>
                         <LuFilter /> <span className='ml-s'>Filter</span>
                     </button>}
-                    <button className='bg-neutral-200 text-f-m text-neutral-1200 rounded-md flex px-l py-s items-center ' onClick={() => { setShowMap(prev => !prev) }}>
+                    <button className='bg-customData-100 text-f-m text-neutral-1200 rounded-md flex px-l py-s items-center ' onClick={() => { setShowMap(prev => !prev) }}>
                         <FiMap /> <span className='ml-s'>Map</span>
                     </button>
                 </div>

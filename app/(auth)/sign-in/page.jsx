@@ -21,6 +21,7 @@ const schema = yup.object().shape({
 const LoginPage = () => {
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
     const router = useRouter();
     const { token } = getAuthCredentials();
 
@@ -50,6 +51,7 @@ const LoginPage = () => {
             );
 
             if (response.status === 200) {
+                setError(null);
                 customSuccess("Successfully Login.");
                 localStorage.clear();
                 sessionStorage.clear();
@@ -68,19 +70,17 @@ const LoginPage = () => {
                 }
                 setLoading(false);
             }
+
         } catch (error) {
-            if (error.response) {
-                console.error("Sign in failed:", error.response.data);
-                // Example error handling
-                // customToast.error(error.response.data.message || "Sign in failed. Please try again.");
-                // if (error.response.data.data && !error.response.data.data.if_verified) {
-                //     router.push(Routes.VerifyEmail + "?email=" + data.email);
-                // }
-            } else if (error.request) {
-                console.error("No response received from the server", error.request);
-            } else {
-                console.error("Request error:", error.message);
-            }
+            setError(error.response.data.message);
+            setLoading(false);
+            // if (error.response) {
+            //     console.error("Sign in failed:", error.response.data);
+            // } else if (error.request) {
+            //     console.error("No response received from the server", error.request);
+            // } else {
+            //     console.error("Request error:", error.message);
+            // }
         }
     };
 
@@ -88,15 +88,15 @@ const LoginPage = () => {
         <div className='relative text-black bg-white w-screen h-screen overflow-hidden flex justify-around '>
             {/* <div className='absolute -top-20 md:-top-96 -left-36 w-1/2 h-[200%] bg-pink-400 z-10 purple-50 transform rotate-12' /> */}
 
-            <div className='w-full z-20 md:w-[600px] mx-[20px] p-[1px] m-auto min-h-[50%] rounded-xl bg-neutral-200   group '>
-                <div className="flex items-center rounded-xl justify-center bg-white">
-                    <div className=" p-8 rounded-xl shadow-lg w-full">
+            <div className='w-full z-20 md:w-[600px] mx-[20px] p-[1px] m-auto min-h-[50%] rounded-xl bg-white   group '>
+                <div className="flex items-center rounded-xl justify-center ">
+                    <div className=" p-8 rounded-xl shadow-lg w-full bg-white border ">
                         <div className="flex flex-col items-center mb-6">
                             <img src='/assets/logo.png' alt="UI Unicorn" className="w-12 h-12" />
                             <h2 className="text-2xl font-semibold text-gray-900 mt-2">Welcome Back to Mapospace</h2>
                             <p className="text-l text-gray-500 mt-2">Unlock the power of location data for your business</p>
                         </div>
-
+                        {error && <div className='mb-xs text-red-500'>{error}</div>}
                         {/* Form with validation */}
                         <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
                             {/* Email Field */}

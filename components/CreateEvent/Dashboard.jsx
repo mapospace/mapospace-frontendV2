@@ -64,7 +64,7 @@ const Dashboard = () => {
                 ))}
             </div>
 
-            <div className='pb-s border-b text-f-2xl mt-s'>Other Views</div>
+            {/* <div className='pb-s border-b text-f-2xl mt-s'>Other Views</div>
 
             <div className="w-full mt-4 overflow-x-auto py-s hide-scrollbar">
                 <div className="h-full flex w-max gap-m">
@@ -79,7 +79,7 @@ const Dashboard = () => {
                         </motion.div>
                     ))}
                 </div>
-            </div>
+            </div> */}
         </div>
     )
 }
@@ -88,83 +88,83 @@ export default Dashboard
 
 const randomCards = [
     {
-      "location": "Kerala",
-      "summary": "Regional ads with Malayalam influencers boosted FMCG brand recall by 22%.",
-      "updated": "28-03-2025"
+        "location": "Kerala",
+        "summary": "Regional ads with Malayalam influencers boosted FMCG brand recall by 22%.",
+        "updated": "28-03-2025"
     },
     {
-      "location": "Delhi",
-      "summary": "Metro and billboard campaign drove a 30% sales spike in tech gadget launch.",
-      "updated": "25-03-2025"
+        "location": "Delhi",
+        "summary": "Metro and billboard campaign drove a 30% sales spike in tech gadget launch.",
+        "updated": "25-03-2025"
     },
     {
-      "location": "Maharashtra",
-      "summary": "AR filters and campus activations tripled fashion brand’s Instagram engagement.",
-      "updated": "27-03-2025"
+        "location": "Maharashtra",
+        "summary": "AR filters and campus activations tripled fashion brand’s Instagram engagement.",
+        "updated": "27-03-2025"
     },
     {
-      "location": "Rajasthan",
-      "summary": "Wedding jewelry pop-ups in malls saw strong early bookings.",
-      "updated": "24-03-2025"
+        "location": "Rajasthan",
+        "summary": "Wedding jewelry pop-ups in malls saw strong early bookings.",
+        "updated": "24-03-2025"
     },
     {
-      "location": "Assam",
-      "summary": "Bundled mobile offer with local telecom stores lifted footfall by 18%.",
-      "updated": "26-03-2025"
+        "location": "Assam",
+        "summary": "Bundled mobile offer with local telecom stores lifted footfall by 18%.",
+        "updated": "26-03-2025"
     },
     {
-      "location": "Tamil Nadu",
-      "summary": "Smart kitchen launch in Chennai got 2.3M impressions via live demos.",
-      "updated": "23-03-2025"
+        "location": "Tamil Nadu",
+        "summary": "Smart kitchen launch in Chennai got 2.3M impressions via live demos.",
+        "updated": "23-03-2025"
     }
-  ];
-  
-  const getRandomCard = () => {
+];
+
+const getRandomCard = () => {
     const index = Math.floor(Math.random() * randomCards.length);
     return randomCards[index];
-  };
-  
-  const ViewCard = () => {
+};
+
+const ViewCard = () => {
     const [highlight, setHighLight] = useState(false);
     const [card, setCard] = useState(getRandomCard());
-  
+
     // Optional: refresh on every render
     // useEffect(() => {
     //   setCard(getRandomCard());
     // }, []);
-  
+
     // Optional: refresh on button click
     const refreshCard = () => {
-      setCard(getRandomCard());
-      setHighLight(false);
+        setCard(getRandomCard());
+        setHighLight(false);
     };
-  
+
     return (
-      <div className="max-w-md mx-auto">
-        <div className='h-[200px] bg-white rounded-bs text-black border p-s flex flex-col justify-between flat-card'>
-          <div>
-            <div className='text-f-2xl flex items-center justify-between'>
-              <div>{card.location}</div>
-              <TiStarFullOutline
-                className={clsx('w-xl h-xl cursor-pointer', highlight ? 'text-yellow-500' : 'text-neutral-600')}
-                onClick={() => setHighLight(prev => !prev)}
-              />
+        <div className="max-w-md mx-auto">
+            <div className='h-[200px] bg-white rounded-bs text-black border p-s flex flex-col justify-between flat-card'>
+                <div>
+                    <div className='text-f-2xl flex items-center justify-between'>
+                        <div>{card.location}</div>
+                        <TiStarFullOutline
+                            className={clsx('w-xl h-xl cursor-pointer', highlight ? 'text-yellow-500' : 'text-neutral-600')}
+                            onClick={() => setHighLight(prev => !prev)}
+                        />
+                    </div>
+                    <div className='text-f-l mt-s text-neutral-900'>{card.summary}</div>
+                    <div className='text-neutral-600 mt-s tex-f-s'>Polygon</div>
+                </div>
+                <div className='text-neutral-600'>Updated by : {card.updated}</div>
             </div>
-            <div className='text-f-l mt-s text-neutral-900'>{card.summary}</div>
-            <div className='text-neutral-600 mt-s tex-f-s'>Polygon</div>
-          </div>
-          <div className='text-neutral-600'>Updated by : {card.updated}</div>
+
+            <button
+                onClick={refreshCard}
+                className="mt-4 px-4 py-2 bg-primary text-white rounded hover:bg-primary-dark"
+            >
+                Show Another Card
+            </button>
         </div>
-  
-        <button
-          onClick={refreshCard}
-          className="mt-4 px-4 py-2 bg-primary text-white rounded hover:bg-primary-dark"
-        >
-          Show Another Card
-        </button>
-      </div>
     );
-  };
+};
 
 
 const OtherViewCard = () => {
